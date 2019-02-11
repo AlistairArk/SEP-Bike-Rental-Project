@@ -1,0 +1,463 @@
+/*------------------------- CSS Guide -----------------------
+Admin dashboard written by Christopher Feneley.
+
+	1. Core Css (for dashboard)
+	2. Login Core
+	3. Admin/Employee Menu
+		3.1. Sidebar menu
+		3.2. Horizontal Menu
+		3.3. Header Area
+
+		... Continue index
+
+-----------------------------------------------------------*/
+
+/*------------------------- 1. Core Css -------------------*/
+
+body {
+	font-family: "Open Sans", sans-serif;
+	color: #2c3e50;
+}
+
+
+.page-container {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    padding-left: 250px;
+    -webkit-transition: padding-left 0.3s ease 0s;
+    transition: padding-left 0.3s ease 0s;
+}
+
+.sbar_collapsed.page-container {
+    padding-left: 0;
+}
+
+.card {
+    border: none;
+    border-radius: 4px;
+    background-color: #fff;
+    -webkit-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+}
+
+.card:hover {
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.02);
+}
+
+.card-body {
+    padding: 25.6px;
+    padding: 1.6rem;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.main-content {
+    width: 100%;
+    background: #F3F8FB;
+}
+
+.main-content-inner {
+    padding: 0 30px 50px;
+}
+
+/*------------------------- END Core Css -------------------*/
+
+/*-------------------------- 2. Login Core ---------------------*/
+
+.login-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background: #dcdcdc;
+}
+
+.login-wrapper {
+	width: 670px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+ }
+
+.login-header {
+	width: 100%;
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: center;
+	background-color: #263544;
+	padding: 60px 15px 60px 15px;
+}
+
+.login-header h3 {
+	color: #fff;
+}
+
+
+.login-form {
+	width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 43px 88px 93px 88px;
+}
+
+.login-form p{
+	font-size: 14px;
+	color: #eb8836;
+}
+
+.login-entry {
+	font-size: 15px;
+	color: #555555;
+	line-height: 1.2;
+	display: block;
+	width: 100%;
+	background: transparent;
+	border: transparent;
+	padding: 0 5px;
+	border-bottom: 1px solid #b2b2b2;
+}
+
+.login-entry:focus{
+	outline: none;
+	border-bottom: 1px solid #eb8836;
+}
+.wrap-input100 {
+	width: 100%;
+	position: relative;
+	border-bottom: 1px solid #b2b2b2;
+}
+
+input.login-entry {
+    height: 45px;
+}
+
+.login-toolchain {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding-bottom: 35px;
+	padding-left: 130px;
+	padding-right: 35px;
+}
+
+.forgot-pass-txt {
+	color: #999999;
+	font-size: 13px;
+	transition: all 0.4s;
+	font-weight: bold;
+}
+
+.forgot-pass-txt:hover {
+	text-decoration: none;
+	color: #eb8836;
+}
+
+.remember-me-checkbox {
+	color: #999999;
+	font-size: 14px;
+}
+
+.login-button-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.login-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0 20px;
+	min-width: 180px;
+	height: 45px;
+	background-color: #eb8836;
+	border-radius: 25px;
+	font-size: 16px;
+	color: #fff;
+	line-height: 1.2;
+	transition: all 0.4s;
+	border: none;
+	outline-style: none;
+}
+
+.login-button:hover {
+	background-color: #263544;
+}
+
+.login-button:focus {
+	outline: none;
+}
+
+
+/* Responsive Login */
+
+
+@media (max-width: 576px) {
+  .login100-form {
+    padding: 43px 15px 57px 117px;
+  }
+  .login-toolchain {
+	  display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    padding: 43px 15px 57px 15px;
+  }
+
+  .label-input1 {
+    text-align: left;
+    position: unset;
+    top: unset;
+    left: unset;
+    width: 100%;
+    padding: 0 5px;
+  }
+}
+
+
+
+/*------------------------- End Login ---------------------*/
+
+/*-------------------- 3.1 Sidebar Menu -------------------*/
+
+.sidebar-menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    height: 100vh;
+    width: 250px;
+    overflow: hidden;
+    background: #263544;
+    box-shadow: 2px 0 32px rgba(0, 0, 0, 0.05);
+    -webkit-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+}
+
+.sbar_collapsed .sidebar-menu {
+    left: -280px;
+}
+
+.main-menu {
+    height: calc(100% - 100px);
+    overflow: hidden;
+    padding: 20px 10px 0 0;
+    -webkit-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+}
+
+.menu-inner {
+    height: 100%;
+}
+
+.slimScrollBar {
+    background: #2942fa!important;
+    opacity: 0.1!important;
+}
+
+.sidebar-header {
+    padding: 19px 32px 20px;
+    background: #263544;
+    border-bottom: 1px solid #263544;
+}
+.sidebar-menu .logo{
+    text-align: center;
+}
+.logo a {
+    display: inline-block;
+    max-width: 120px;
+	font-weight: 900;
+}
+
+
+/*-------------------- End Sidebar Menu -------------------*/
+
+
+/*-------------------- 3.2 Horizontal Menu -------------------*/
+
+.body-bg {
+    background: #F3F8FB;
+}
+
+.horizontal-main-wrapper {
+    min-height: 100vh;
+}
+
+.horizontal-main-wrapper .container {
+    max-width: 1440px;
+}
+
+.horizontal-main-wrapper .header-area,
+.horizontal-main-wrapper .mainheader-area {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.horizontal-main-wrapper .main-content-inner {
+    padding: 0 0 50px;
+}
+
+.mainheader-area .notification-area {
+    -webkit-transform: translateY(-11px);
+            transform: translateY(-11px);
+}
+
+.mainheader-area {
+    background: #fff;
+    border-bottom: 1px solid #f3f8fb;
+    padding-left: 15px;
+    position: relative;
+    z-index: 99;
+}
+
+.mainheader-area .logo a span {
+    color: #843df9;
+}
+
+.horizontal-menu {
+    position: relative;
+}
+
+.horizontal-menu ul li {
+    display: inline-block;
+    position: relative;
+}
+
+.horizontal-menu ul li a {
+    display: block;
+    font-size: 13px;
+    padding: 10px 20px;
+    color: #000000;
+    text-transform: capitalize;
+}
+
+.horizontal-menu ul li:hover>a,
+.horizontal-menu ul li.active>a {
+    color: #007BFF;
+}
+
+.horizontal-menu nav>ul>li:first-child>a {
+    padding-left: 0;
+}
+
+.horizontal-menu ul li a i {
+    margin-right: 5px;
+}
+
+.horizontal-menu .submenu {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 99;
+    width: 200px;
+    background: #fff;
+    opacity: 0;
+    visibility: hidden;
+    border-top: 4px solid #007BFF;
+    border-radius: 3px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
+}
+
+.horizontal-menu .submenu li {
+    display: block;
+}
+
+.horizontal-menu ul li:hover>.submenu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.horizontal-menu .mega-menu {
+    position: inherit;
+}
+
+.horizontal-menu .mega-menu .submenu {
+    width: 100%;
+    max-width: 900px;
+}
+
+.horizontal-menu .mega-menu .submenu li {
+    display: inline-block;
+    width: calc(100% * (1/3) - 5px);
+}
+
+.header-bottom .search-box input {
+    max-width: 350px;
+    width: 100%;
+}
+
+
+/*-------------------- End Horizontal Menu -------------------*/
+
+
+/*-------------------- 3.3 Header Area -------------------*/
+
+.header-area {
+    padding: 10px 15px;
+    background: #fff;
+    border-bottom: 1px solid #d8e3e7;
+}
+
+.nav-btn {
+    margin-right: 30px;
+    margin-top: 10px;
+	margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.nav-btn span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #b3aaaa;
+    margin: 4px 0;
+    border-radius: 15px;
+    -webkit-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    box-shadow: 0 0 0 4px rgba(99, 96, 96, 0.03);
+}
+
+.nav-btn span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-btn span:first-child {
+    -webkit-transform: rotate(45deg)translate(5px, 5px);
+            transform: rotate(45deg)translate(5px, 5px);
+}
+
+.nav-btn span:last-child {
+    -webkit-transform: rotate(-45deg)translate(3px, -3px);
+            transform: rotate(-45deg)translate(3px, -3px);
+}
+
+.sbar_collapsed .nav-btn span:nth-child(2) {
+    opacity: 1;
+}
+
+.sbar_collapsed .nav-btn span:first-child {
+    -webkit-transform: rotate(180deg)translate(0px, 0px);
+            transform: rotate(180deg)translate(0px, 0px);
+}
+
+.sbar_collapsed .nav-btn span:last-child {
+    -webkit-transform: rotate(-180deg)translate(0px, 0px);
+            transform: rotate(-180deg)translate(0px, 0px);
+}
