@@ -25,7 +25,7 @@ class Card(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     card_number = db.Column(db.String(15), unique=True, nullable=False)
     card_name = db.Column(db.String(40), nullable=False)
-    security_no = (db.Integer, nullable=False)
+    security_no = db.Column(db.Integer, nullable=False)
     expiry_date = db.Column(db.Date, nullable=False)
     card_type = db.Column(db.String(20), nullable=False)
     addr_first = db.Column(db.String(20), nullable=False)
