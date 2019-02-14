@@ -89,6 +89,6 @@ class Booking(db.Model):
 class Bike(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     in_use = db.Column(db.Boolean, nullable=False)
-    status = db.Column(db.String, nullable=False)
+    status = db.Column(db.String(20), nullable=False)
 
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
