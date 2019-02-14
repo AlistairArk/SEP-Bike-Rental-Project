@@ -26,3 +26,17 @@ def login_present(f):
 def index():
     #Just rendering login as a test
     return render_template("staffLogin.html")
+
+
+# Logging function used for testing
+import datetime
+logging = 1
+def log(*args):
+    if logging:
+        for line in args:
+            if isinstance(line, str):
+                with open('log.log', 'a') as the_file:
+                    time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+                    the_file.write("\n["+str(time)+"] "+line)
+            elif debug:
+                raise line
