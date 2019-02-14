@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    tools:context=".LoginActivity">
 
     <Button
-        android:id="@+id/completeRegistration"
+        android:id="@+id/loginSubmitBtn"
         android:layout_width="186dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -17,7 +17,7 @@
         android:layout_marginRight="8dp"
         android:background="@drawable/rounded_button"
         android:minWidth="180px"
-        android:text="Register"
+        android:text="Login"
         android:textAllCaps="false"
         android:textColor="#ffffff"
         android:textSize="18sp"
@@ -27,11 +27,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="fill_parent"
-        android:layout_height="61dp"
+        android:layout_height="180dp"
         android:background="@color/darkBlue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,17 +38,23 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="98dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/leeds_ride_logo" />
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="LeedsRide Register"
+                android:text="Login"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -59,11 +64,10 @@
 
     </FrameLayout>
 
-
     <Space
         android:id="@+id/space"
         android:layout_width="36dp"
-        android:layout_height="22dp"
+        android:layout_height="33dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -85,7 +89,7 @@
         tools:layout_editor_absoluteX="20dp">
 
         <TextView
-            android:id="@+id/usernameLabel"
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Username"
@@ -94,7 +98,7 @@
             app:fontFamily="@font/open_sans_light" />
 
         <EditText
-            android:id="@+id/usernameRegisterEntry"
+            android:id="@+id/usernameLoginEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -110,7 +114,7 @@
             android:layout_height="20dp" />
 
         <TextView
-            android:id="@+id/passwordLabel"
+            android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Password"
@@ -119,7 +123,7 @@
             app:fontFamily="@font/open_sans_light" />
 
         <EditText
-            android:id="@+id/passwordRegisterEntry"
+            android:id="@+id/passwordLoginEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -130,83 +134,33 @@
             android:theme="@style/EditTextTheme"
             app:fontFamily="@font/open_sans_light" />
 
-        <Space
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/passwordLabel2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Re-enter Password"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:fontFamily="@font/open_sans_light" />
+            <CheckBox
+                android:id="@+id/rememberMeCB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Remember me"
+                android:textColor="@color/lightGrey"
+                app:buttonTint="@color/Orange"
+                app:fontFamily="@font/open_sans_light" />
 
-        <EditText
-            android:id="@+id/passwordCheckerRegisterEntry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:ems="10"
-            android:hint="Enter Password"
-            android:inputType="textPassword"
-            android:theme="@style/EditTextTheme"
-            app:fontFamily="@font/open_sans_light" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <TextView
-            android:id="@+id/emailLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Email Address"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:fontFamily="@font/open_sans_light" />
-
-
-        <EditText
-            android:id="@+id/emailRegisterEntry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:ems="10"
-            android:hint="youremail@example.con"
-            android:inputType="textEmailAddress"
-            android:theme="@style/EditTextTheme"
-            app:fontFamily="@font/open_sans_light" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <TextView
-            android:id="@+id/emailLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Phone number"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:fontFamily="@font/open_sans_light" />
-
-
-        <EditText
-            android:id="@+id/emailRegisterEntry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:ems="10"
-            android:hint="Enter Phone number"
-            android:inputType="phone"
-            android:theme="@style/EditTextTheme"
-            app:fontFamily="@font/open_sans_light" />
-
+            <Button
+                android:id="@+id/forgotPasswordBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="Forgot password?"
+                android:textAllCaps="false"
+                android:textColor="@color/lightGrey"
+                android:textStyle="bold"
+                app:fontFamily="@font/open_sans_light" />
+        </LinearLayout>
 
     </LinearLayout>
 
