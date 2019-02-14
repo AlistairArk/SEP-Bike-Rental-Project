@@ -1,4 +1,4 @@
-package com.games.chris.testapplication;
+package com.leedsride.rentalapp.LeedsRide;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.games.chris.testapplication", appContext.getPackageName());
+        assertEquals("com.leedsride.rentalapp.LeedsRide", appContext.getPackageName());
     }
 }

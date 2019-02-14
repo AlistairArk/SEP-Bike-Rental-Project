@@ -30,7 +30,7 @@
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="fill_parent"
-        android:layout_height="205dp"
+        android:layout_height="191dp"
         android:background="@color/darkBlue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +86,7 @@
             android:ems="10"
             android:hint="Enter username"
             android:inputType="textPersonName"
+            android:theme="@style/EditTextTheme"
             app:fontFamily="@font/open_sans_light"/>
 
         <Space
@@ -110,6 +111,7 @@
             android:ems="10"
             android:hint="Enter Password"
             android:inputType="textPassword"
+            android:theme="@style/EditTextTheme"
             app:fontFamily="@font/open_sans_light"/>
 
         <LinearLayout
@@ -124,7 +126,8 @@
                 android:layout_weight="1"
                 android:text="Remember me"
                 android:textColor="@color/lightGrey"
-                app:fontFamily="@font/open_sans_light"/>
+                app:fontFamily="@font/open_sans_light"
+                app:buttonTint="@color/Orange"/>
 
             <Button
                 android:id="@+id/button"
@@ -135,6 +138,7 @@
                 android:text="Forgot password?"
                 android:textAllCaps="false"
                 android:textColor="@color/lightGrey"
+                android:textStyle="bold"
                 app:fontFamily="@font/open_sans_light"/>
         </LinearLayout>
 

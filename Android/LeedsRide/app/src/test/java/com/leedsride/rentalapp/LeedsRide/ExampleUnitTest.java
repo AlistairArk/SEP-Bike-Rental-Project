@@ -1,4 +1,4 @@
-package com.games.chris.testapplication;
+package com.leedsride.rentalapp.LeedsRide;
 
 import org.junit.Test;
 
