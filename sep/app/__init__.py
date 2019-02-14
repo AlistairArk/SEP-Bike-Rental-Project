@@ -9,7 +9,7 @@ SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostnam
     username="sc17gs",
     password="Bikes2468",
     hostname="sc17gs.mysql.pythonanywhere-services.com",
-    databasename="sc17gs$DummyDB",
+    databasename="sc17gs$LeedsRideDB",
 )
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
