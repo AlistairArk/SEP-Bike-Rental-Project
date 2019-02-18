@@ -17,7 +17,7 @@
                 <img src="static/assets/logo.png" style="width:297px;height:51px">
                 <h5 style="color: #fff;">Employee Login</h5>
             </div>
-            <form class="login-form">
+            <form class="login-form" action="/login" method="POST">
                 <div class="form-group row" style="width: 100%;">
                     <label for="username" class="col-sm-3 col-form-label text-md-right" style="padding-top: 11px;">Username</label>
                     <div class="col-sm-9">
@@ -31,25 +31,26 @@
                     </div>
                 </div>
                 <div class="login-toolchain">
-	                <div class="contact100-form-checkbox">
-    					<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-    					<label class="remember-me-checkbox" for="ckb1">
-    						Remember me
-    					</label>
-    				</div>
-    				<div>
-    					<a href="#" class="forgot-pass-txt">
-    						Forgot Password?
-    					</a>
-    				</div>
+                    <div class="contact100-form-checkbox">
+                        <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                        <label class="remember-me-checkbox" for="ckb1">
+                            Remember me
+                        </label>
+                    </div>
+                    <div>
+                        <a href="/resetPassword" class="forgot-pass-txt">
+                            Forgot Password?
+                        </a>
+                    </div>
                 </div>
-                <div class="login-button-container">
-                    <button type="button" class="login-button">Login</button>
+                <div class="login-button-container" action="/login" method="POST">
+                    <!-- <button href='/login' type="submit" class="login-button">Login</button> -->
+                    <input type="submit" value="Log in" class="login-button"></input>
                 </div>
             </form>
         </div>
     </div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </body>
 
 </html>
