@@ -36,12 +36,10 @@ def resetPassword():
 @app.route('/resetRequest', methods=['POST'])
 def resetRequest():
     '''Send an password email to a user given an input email''' 
-    log("test")
-    
-    # email = str(request.form['email']) # Takes input password from web-page   
+    email = str(request.form['email']) # Takes input password from web-page   
 
-    # log("Reset Password Test")
-    # log("Email: "+ email)
+    log("Reset Password Test")
+    log("Email: "+ email)
 
     # # Perform database check to validate if input email exists? 
 
@@ -81,7 +79,7 @@ def login():
 
 # Logging function used for testing
 import datetime
-logging = 1
+logging = 0
 def log(*args):
     if logging:
         for line in args:
