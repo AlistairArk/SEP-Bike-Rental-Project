@@ -11,7 +11,7 @@ class User(UserMixin,db.Model):
     name = db.Column(db.String(40))
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
-    image = db.Column(db.String(80), nullable=False, default='default_icon')
+    image = db.Column(db.String(75), nullable=False, default='default_icon')
     phone = db.Column(db.String(20), nullable=False)
 
     cards = db.relationship('Card', backref='user', lazy=True)
@@ -25,7 +25,7 @@ class Card(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     card_number = db.Column(db.String(15), unique=True, nullable=False)
     card_name = db.Column(db.String(40), nullable=False)
-    security_no = (db.Integer, nullable=False)
+    security_no = db.Column(db.Integer, nullable=False)
     expiry_date = db.Column(db.Date, nullable=False)
     card_type = db.Column(db.String(20), nullable=False)
     addr_first = db.Column(db.String(20), nullable=False)
@@ -89,6 +89,6 @@ class Booking(db.Model):
 class Bike(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     in_use = db.Column(db.Boolean, nullable=False)
-    status = db.Column(db.String, nullable=False)
+    status = db.Column(db.String(20), nullable=False)
 
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
