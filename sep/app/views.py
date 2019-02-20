@@ -1,4 +1,4 @@
-from app import app
+from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 
 
@@ -24,53 +24,53 @@ def loginPresent(f):
 
 @app.route('/')
 def index():
-    #Just rendering login as a test
+    # Just rendering login as a test
     return render_template("staffLogin.html")
-
 
 
 @app.route('/resetPassword')
-def resetPassword():
+def webResetPassword():
     return render_template("resetPassword.html")
 
+
 @app.route('/resetRequest', methods=['POST'])
-def resetRequest():
-    '''Send an password email to a user given an input email''' 
-    email = str(request.form['email']) # Takes input password from web-page   
+def webResetRequest():
+    # Send a password reset email to user
+    email = str(request.form['email'])
 
-    log("Reset Password Test")
-    log("Email: "+ email)
-
-    # # Perform database check to validate if input email exists? 
-
-    # # Send reset email
-
-    return render_template("staffLogin.html")
+    if function.resetRequest(email=email):
+        message = "A reset link has been sent to to the provided email."
+        return render_template("resetPassword.html", success = message)
+    else:
+        message = "Invalid email provided. Please try again."
+        return render_template("resetPassword.html", fail = message)
 
 
 @app.route('/login', methods=['POST'])
-def login():
-    log("test")
-    username = str(request.form['username']) # Takes input username from web-page 
-    password = str(request.form['password']) # Takes input password from web-page   
-    
-    log("Login Test")
-    log("Username: "+ username)
-    log("Password: "+ password+"\n")
-
+def webLogin():
     # Hand username and password to login function
     # Return 1 if valid login is found
-    validLogin = 1 # Assume valid login as a test
-    
-
-    if validLogin:
-        session["log_in_fail"] = False
-        session["logged_in"] = True
+    username = str(request.form['username'])
+    password = str(request.form['password'])
+    if function.login(username=username, password=password):
+        session["loggedIn"] = True
         return render_template("index.html")
-
     else:
-        session["log_in_fail"] = True   # Variable used to display "incorrect username or password entered" message
-        return render_template("resetPassword.html")
+        session["loggedIn"] = False
+        message = "Error: The User Name or Password entered is incorrect. Please try again."
+        return render_template("staffLogin.html", message = message)
+
+
+
+
+
+def appLogin(*args):
+    pass
+
+def appResetPassword(*args):
+    pass
+
+
 
 
 
@@ -89,5 +89,3 @@ def log(*args):
                     the_file.write("\n["+str(time)+"] "+line)
             elif debug:
                 raise line
-
-

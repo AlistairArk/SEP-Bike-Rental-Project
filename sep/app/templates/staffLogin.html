@@ -19,6 +19,7 @@
             </div>
             <form class="login-form" action="/login" method="POST">
                 <div class="form-group row" style="width: 100%;">
+                    <p style="color:red;">{{ message }}</p>
                     <label for="username" class="col-sm-3 col-form-label text-md-right" style="padding-top: 11px;">Username</label>
                     <div class="col-sm-9">
                         <input type="text" id="username" class="login-entry" name="username" placeholder="Enter username" required autofocus>
