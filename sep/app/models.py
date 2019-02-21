@@ -13,6 +13,7 @@ class User(UserMixin,db.Model):
     password = db.Column(db.String(80), nullable=False)
     image = db.Column(db.String(75), nullable=False, default='default_icon')
     phone = db.Column(db.String(20), nullable=False)
+    user_type = db.Column(db.String(20), nullable=False) 
 
     cards = db.relationship('Card', backref='user', lazy=True)
     bookings = db.relationship('Booking', backref='user', lazy=True)
