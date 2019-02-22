@@ -14,5 +14,17 @@
         <item name="colorControlHighlight">@color/Orange</item>
     </style>
 
+    <style name="CalendarDatePickerDialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
+        <item name="colorAccent">@color/Orange</item>
+        <item name="colorControlActivated">@color/Orange</item>
+        <item name="colorControlHighlight">@color/lightGrey</item>
+    </style>
+
+    <style name="CalendarTimePickerDialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
+        <item name="colorAccent">@color/Orange</item>
+        <item name="colorControlActivated">@color/Orange</item>
+        <item name="colorControlHighlight">@color/lightGrey</item>
+    </style>
+
 </resources>
 

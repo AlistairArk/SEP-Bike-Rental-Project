@@ -6,6 +6,7 @@
     <color name="darkBlue">#263544</color>
     <color name="Orange">#EB8836</color>
     <color name="lightGrey">#999999</color>
+    <color name="extraLightGrey">#d3d3d3</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
 </resources>

@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent startMainMenuCHANGE = new Intent(getApplicationContext(), OnBookingActivity.class);
+                Intent startMainMenuCHANGE = new Intent(getApplicationContext(), CreateBooking.class);
                 startActivity(startMainMenuCHANGE);
             }
         });
