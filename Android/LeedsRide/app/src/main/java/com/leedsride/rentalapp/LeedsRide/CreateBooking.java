@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
 import org.w3c.dom.Text;
 
@@ -24,8 +27,16 @@ public class CreateBooking extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener dateDataSetListener;
     private TimePickerDialog.OnTimeSetListener timeDataSetListener;
-    private TextView selectBookingDateBtn;
-    private TextView selectBookingTimeBtn;
+
+    private LinearLayout dateViewContainer;
+    private LinearLayout timeViewContainer;
+    private TextView textViewDayOfMonth;
+    private TextView textViewMonth;
+    private TextView textViewDayOfWeek;
+    private TextView textViewTimeOfDay;
+    private TextView textViewTimeId;
+    private ElegantNumberButton bikeNumberWidget;
+
     private Boolean is24HourView = false;
 
     @Override
@@ -33,10 +44,19 @@ public class CreateBooking extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_booking);
 
-        selectBookingDateBtn = (TextView) findViewById(R.id.selectBookingDateBtn);
-        selectBookingTimeBtn = (TextView) findViewById(R.id.selectBookingTimeBtn);
+        textViewDayOfMonth = (TextView) findViewById(R.id.textViewDayOfMonth);
+        textViewMonth = (TextView) findViewById(R.id.textViewMonth);
+        textViewDayOfWeek = (TextView) findViewById(R.id.textViewDayOfWeek);
 
-        selectBookingDateBtn.setOnClickListener(new View.OnClickListener() {
+        textViewTimeOfDay = (TextView) findViewById(R.id.textViewTimeOfDay);
+        textViewTimeId = (TextView) findViewById(R.id.textViewTimeId);
+
+        dateViewContainer = (LinearLayout) findViewById(R.id.dateViewContainer);
+        timeViewContainer = (LinearLayout) findViewById(R.id.timeViewContainer);
+
+        bikeNumberWidget = (ElegantNumberButton) findViewById(R.id.bikeNumber);
+
+        dateViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
@@ -56,22 +76,28 @@ public class CreateBooking extends AppCompatActivity {
         dateDataSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                Date date = new Date(year, month, day);
+                Date date = new Date(year, month, day-1);
                 Calendar cal = Calendar.getInstance();
                 Locale locale = Locale.getDefault();
 
                 cal.setTime(date);
                 String dayOfWeek = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
-                String monthOfYear = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, locale);
+
+                date = new Date(year, month, day);
+                cal.setTime(date);
+                String monthOfYear = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale);
 
 
 
-                String stringDate = dayOfWeek + " " + convertDate(day) + " " + monthOfYear + ", " + year;
-                selectBookingDateBtn.setText(stringDate);
+                String stringDate = monthOfYear + " " + year;
+
+                textViewDayOfWeek.setText(dayOfWeek);
+                textViewMonth.setText(stringDate);
+                textViewDayOfMonth.setText(convertDate(day));
             }
         };
 
-        selectBookingTimeBtn.setOnClickListener(new View.OnClickListener() {
+        timeViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar currentTime = Calendar.getInstance();
@@ -98,8 +124,9 @@ public class CreateBooking extends AppCompatActivity {
                     timeOfDay = "(PM)";
                 }
 
-                String date = hour + ":" + convertDate(minute) + " " + timeOfDay;
-                selectBookingTimeBtn.setText(date);
+                String date = hour + ":" + convertDate(minute);
+                textViewTimeOfDay.setText(date);
+                textViewTimeId.setText(timeOfDay);
             }
         };
 
