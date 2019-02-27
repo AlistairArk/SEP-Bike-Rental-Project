@@ -9,24 +9,19 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class ServerAPI {
 
-    private URL url;
-    private HttpsURLConnection connection;
+    private Retrofit retrofit;
 
     public ServerAPI() throws IOException, MalformedURLException{
-        /* Establish http connection with the server */
-
-        url = new URL("http://www.sc17gs.pythonanywhere.com");
-        connection = (HttpsURLConnection)url.openConnection();
-    }
-
-    public void ServerLogin(String username, String password) {
-
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://jsonplaceholder.typicode.com/todos/1")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
     }
 
-    public void ServerLogout() {
-
-    }
 }
