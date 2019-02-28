@@ -1,10 +1,12 @@
 package com.leedsride.rentalapp.LeedsRide;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
@@ -20,6 +22,8 @@ import android.view.MenuItem;
 
 public class navDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = CreateBooking.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +91,10 @@ public class navDrawer extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the home action
+            Log.d(TAG, "onNavigationItemSelected: home");
         } else if (id == R.id.nav_orders) {
-
+            Intent seeOrders = new Intent(getApplicationContext(), CreateBooking.class);
+            startActivity(seeOrders);
         } else if (id == R.id.nav_payment) {
 
         } else if (id == R.id.nav_help) {
