@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -67,26 +68,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.setMyLocationEnabled(true);
+
+        LatLng lubs = new LatLng(53.808832, -1.561353);
+        mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School").snippet("Available: 15\nParking Spaces: 1"));
+
+        LatLng theLight = new LatLng(53.800661, -1.545673);
+        mMap.addMarker(new MarkerOptions().position(theLight).title("The Light").snippet("Available: 10\nParking Spaces: 4"));
+
+        LatLng artsUniversity = new LatLng(53.809512, -1.551420);
+        mMap.addMarker(new MarkerOptions().position(artsUniversity).title("Leeds Arts University").snippet("Available: 5\nParking Spaces: 13"));
+
+        LatLng initial = new LatLng(53.803690, -1.551385);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initial, 14));
+
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
-                mMap.clear();
-
-                /////Do these need to be here because of the clear?
-                LatLng lubs = new LatLng(53.808832, -1.561353);
-                mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School"));
-
-                LatLng theLight = new LatLng(53.800661, -1.545673);
-                mMap.addMarker(new MarkerOptions().position(theLight).title("The Light"));
-
-                LatLng artsUniversity = new LatLng(53.809512, -1.551420);
-                mMap.addMarker(new MarkerOptions().position(artsUniversity).title("Leeds Arts University"));
-
-                LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(user).title("Your location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(user, 14));
+//                mMap.clear();
+//
+//                /////Do these need to be here because of the clear?
+//                LatLng lubs = new LatLng(53.808832, -1.561353);
+//                mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School"));
+//
+//                LatLng theLight = new LatLng(53.800661, -1.545673);
+//                mMap.addMarker(new MarkerOptions().position(theLight).title("The Light"));
+//
+//                LatLng artsUniversity = new LatLng(53.809512, -1.551420);
+//                mMap.addMarker(new MarkerOptions().position(artsUniversity).title("Leeds Arts University"));
+//
+//                LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
+//                mMap.addMarker(new MarkerOptions().position(user).title("Your location").snippet("Available: 10").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+//                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(user, 14));
 
             }
 
