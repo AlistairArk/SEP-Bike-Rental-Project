@@ -17,13 +17,29 @@
         <div class="sidebar-menu">
             <div class="sidebar-header">
                 <div class="logo">
-                    <img src="logo.png" style="width:260px;height:35px;">
+                    <img src="/static/assets/logo.png" style="width:260px;height:35px;">
                 </div>
             </div>
             <div class="main-menu">
                 <div class="menu-inner">
                     <nav>
-
+                        <ul>
+                            <li class="sidebar-button-container">
+                              <button type="button" class="sidebar-button">Create Booking</button>
+                            </li>
+                            <li class="sidebar-button-container">
+                              <button type="button" class="sidebar-button">Add Bikes</button>
+                            </li>
+                            <li class="sidebar-button-container">
+                              <button type="button" class="sidebar-button">Add Employee</button>
+                            </li>
+                            <li class="sidebar-button-container">
+                              <button type="button" class="sidebar-button">New Location</button>
+                            </li>
+                            <li class="sidebar-button-container">
+                              <button type="button" class="sidebar-button">Settings</button>
+                            </li>
+                        </ul>
                     </nav>
                 </div>
             </div>
@@ -43,15 +59,27 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- This is going to be changed to the current users username and their image -->
+                <div class="clearfix header-name">
+                    <div class="float-right">
+                        <a href="#">Ola Nordmann</a>
+                    </div>
+                </div>
+
             </div>
+
             <!-- header area end -->
             <!-- page title area start -->
                     <!-- page title area end -->
-            <div class="main-content-inner">
+            <!-- <div class="main-content-inner">
 
-            </div>
+            </div> -->
         </div>
         <!-- main content area end -->
+
+        {% block content %}{% endblock %}
+
         <!-- footer area start-->
 
         <!-- footer area end-->
