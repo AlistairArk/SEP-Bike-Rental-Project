@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+{% block content %}
+
+  <div class="standard-form-container">
+      <div class="standard-form-wrapper">
+          <div class="standard-form-header">
+              <h3>Add Bikes:</h3>
+          </div>
+          <form class="standard-form-form">
+              <div class="form-group row" style="width: 100%;">
+                  <label for="number-of-bikes" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Number of Bikes</label>
+                  <div class="col-sm-8">
+                      <input type="integer" id="number-of-bikes" class="standard-form-entry" name="number-of-bikes" placeholder="Enter Number of bikes" required autofocus>
+                  </div>
+              </div>
+
+              <!-- change to dropdown menu of all the locations in the database -->
+              <div class="form-group row" style="width: 100%;">
+                  <label for="location" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Location</label>
+                  <div class="col-sm-8">
+                      <input type="text" id="location" class="standard-form-entry" name="location" placeholder="Enter Location" required autofocus>
+                  </div>
+              </div>
+
+              <div class="standard-form-button-container">
+                  <button type="button" class="standard-form-button">Add Bikes</button>
+              </div>
+          </form>
+      </div>
+  </div>
+
+{% endblock content %}

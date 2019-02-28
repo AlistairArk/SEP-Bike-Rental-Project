@@ -10,6 +10,9 @@ Admin dashboard written by Christopher Feneley.
 
 		... Continue index
 
+	4. Forms
+	5. Owner Main Page
+
 -----------------------------------------------------------*/
 
 /*------------------------- 1. Core Css -------------------*/
@@ -286,6 +289,35 @@ input.login-entry {
 	font-weight: 900;
 }
 
+.sidebar-button-container {
+	width: 100%;
+	margin-top: 10px;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.sidebar-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0 20px;
+	min-width: 180px;
+	height: 45px;
+	background-color: #eb8836;
+	border-radius: 15px;
+	font-size: 16px;
+	color: #fff;
+	line-height: 1.2;
+	transition: all 0.4s;
+	border: none;
+	outline-style: none;
+}
+
+.sidebar-button:hover {
+	transform:scale(1.1,1.1);
+}
+
 
 /*-------------------- End Sidebar Menu -------------------*/
 
@@ -460,4 +492,172 @@ input.login-entry {
 .sbar_collapsed .nav-btn span:last-child {
     -webkit-transform: rotate(-180deg)translate(0px, 0px);
             transform: rotate(-180deg)translate(0px, 0px);
+}
+
+/*-------------------- End Header Area -------------------*/
+
+
+/*-------------------- 4. Forms  -------------------*/
+
+.standard-form-container {
+	  width: 100%;
+	  min-height: 100vh;
+	  display: flex;
+	  flex-wrap: wrap;
+	  justify-content: center;
+	  align-items: center;
+	  background: #dcdcdc;
+}
+
+.standard-form-wrapper {
+		width: 670px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+		/*border: solid;
+		border-width: thin;
+		border-color: #263544;*/
+ }
+
+.standard-form-header {
+		width: 100%;
+		position: relative;
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: center;
+		background-color: #263544;
+		padding: 60px 15px 60px 15px;
+}
+
+.standard-form-header h3 {
+		color: #fff;
+}
+
+
+.standard-form-form {
+		width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 43px 88px 93px 88px;
+}
+
+.standard-form-form p{
+		font-size: 14px;
+		color: #eb8836;
+}
+
+.standard-form-entry {
+		font-size: 15px;
+		color: #555555;
+		line-height: 1.2;
+		display: block;
+		width: 100%;
+		background: transparent;
+		border: transparent;
+		padding: 0 5px;
+		border-bottom: 1px solid #b2b2b2;
+}
+
+.standard-form-entry:focus{
+		outline: none;
+		border-bottom: 1px solid #eb8836;
+}
+.standard-form-input100 {
+		width: 100%;
+		position: relative;
+		border-bottom: 1px solid #b2b2b2;
+}
+
+input.standard-form-entry {
+    height: 45px;
+}
+
+.standard-form-button-container {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+}
+
+.standard-form-button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0 20px;
+		min-width: 180px;
+		height: 45px;
+		background-color: #eb8836;
+		border-radius: 25px;
+		font-size: 16px;
+		color: #fff;
+		line-height: 1.2;
+		transition: all 0.4s;
+		border: none;
+		outline-style: none;
+}
+
+.standard-form-button:hover {
+		background-color: #263544;
+}
+
+.standard-form-button:focus {
+		outline: none;
+}
+
+
+/* Responsive Login */
+
+
+@media (max-width: 576px) {
+  .login100-form {
+    padding: 43px 15px 57px 117px;
+  }
+  .login-toolchain {
+	  display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    padding: 43px 15px 57px 15px;
+  }
+
+  .label-input1 {
+    text-align: left;
+    position: unset;
+    top: unset;
+    left: unset;
+    width: 100%;
+    padding: 0 5px;
+  }
+}
+
+/*-------------------- End Forms -------------------*/
+
+
+/*-------------------- 5. Owner Main Page  -------------------*/
+
+
+.ownerMainPage-container {
+	  width: 100%;
+	  min-height: 100vh;
+	  display: flex;
+	  flex-wrap: wrap;
+	  justify-content: center;
+	  align-items: center;
+	  background: #dcdcdc;
+}
+
+/*-------------------- End Owner Main Page -------------------*/
+
+
+.header-name {
+	margin-top: -25px;
 }
