@@ -89,3 +89,29 @@ def log(*args):
                     the_file.write("\n["+str(time)+"] "+line)
             elif debug:
                 raise line
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route('/dbtesting',methods=['GET','POST'])
+def dbTest():
+    users=User.query.all()
+    return render_template('dbtesting.html',users=users)
+
+
+
+@app.route('/addBikes',methods=['GET','POST'])
+def addBikes():
+    return render_template('addBikes.html')
+
+@app.route('/addEmployee',methods=['GET','POST'])
+def addEmployee():
+    return render_template('addEmployee.html')
