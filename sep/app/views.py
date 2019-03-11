@@ -1,6 +1,6 @@
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
-
+from app import app, models, db, 
 
 '''
 #Check if user is needed to be logged in for a page:
