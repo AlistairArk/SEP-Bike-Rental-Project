@@ -88,15 +88,17 @@ public class navDrawer extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Log.v(TAG, " clicked");
 
         if (id == R.id.nav_home) {
             // Handle the home action
-            Log.d(TAG, "onNavigationItemSelected: home");
+            Log.v(TAG, "onNavigationItemSelected: home");
         } else if (id == R.id.nav_orders) {
             Intent seeOrders = new Intent(getApplicationContext(), CreateBooking.class);
             startActivity(seeOrders);
         } else if (id == R.id.nav_payment) {
-
+            Intent test = new Intent(getApplicationContext(), OnBookingActivity.class);
+            startActivity(test);
         } else if (id == R.id.nav_help) {
 
         } else if (id == R.id.nav_changePassword) {
