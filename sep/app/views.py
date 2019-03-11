@@ -1,6 +1,7 @@
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
+from .forms import addBikesForm
 
 '''
 #Check if user is needed to be logged in for a page:
@@ -107,10 +108,14 @@ def dbTest():
     return render_template('dbtesting.html',users=users)
 
 
-
 @app.route('/addBikes',methods=['GET','POST'])
 def addBikes():
-    return render_template('addBikes.html')
+    # bikes=models.Bike.query.all()
+    locations=['Leeds','Manchester','Newcastle','Durham','Sheffield']
+    form=addBikesForm(request.form)
+    return render_template('addBikes.html',
+                            form=form,
+                            locations=locations)
 
 @app.route('/addEmployee',methods=['GET','POST'])
 def addEmployee():
