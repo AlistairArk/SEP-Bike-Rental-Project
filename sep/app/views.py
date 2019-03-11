@@ -103,7 +103,7 @@ def log(*args):
 
 @app.route('/dbtesting',methods=['GET','POST'])
 def dbTest():
-    users=User.query.all()
+    users=models.User.query.all()
     return render_template('dbtesting.html',users=users)
 
 
