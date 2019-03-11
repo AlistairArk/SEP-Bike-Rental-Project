@@ -27,7 +27,7 @@ def index():
     # Just rendering login as a test
     return render_template("staffLogin.html")
 
-
+'''
 @app.route('/resetPassword')
 def webResetPassword():
     return render_template("resetPassword.html")
@@ -89,7 +89,7 @@ def log(*args):
                     the_file.write("\n["+str(time)+"] "+line)
             elif debug:
                 raise line
-
+'''
 
 
 
