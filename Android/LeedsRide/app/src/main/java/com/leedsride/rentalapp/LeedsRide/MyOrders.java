@@ -5,17 +5,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+
+import com.leedsride.rentalapp.LeedsRide.Adapter.NewOrderAdapter;
 
 import java.util.ArrayList;
 
 public class MyOrders extends AppCompatActivity {
     private RecyclerView ordersRecyclerView;
-    private OrderAdapter ordersAdapter;
+    private NewOrderAdapter ordersAdapter;
     private RecyclerView.LayoutManager ordersLayoutManager;
+    private Dialog collectBikesDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +52,14 @@ public class MyOrders extends AppCompatActivity {
         ordersRecyclerView = findViewById(R.id.ordersRecyclerView);
         ordersRecyclerView.setHasFixedSize(true);
         ordersLayoutManager = new LinearLayoutManager(this);
-        ordersAdapter = new OrderAdapter(ordersList, this);
+        ordersAdapter = new NewOrderAdapter(ordersList, this);
 
         ordersRecyclerView.setLayoutManager(ordersLayoutManager);
         ordersRecyclerView.setAdapter(ordersAdapter);
 
-        ordersAdapter.SetOnItemClickListener(new OrderAdapter.OnItemClickListener() {
+        collectBikesDialog = new Dialog(this);
+
+        ordersAdapter.SetOnItemClickListener(new NewOrderAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 String type = ordersList.get(position).getItemOrderType();
@@ -57,9 +68,43 @@ public class MyOrders extends AppCompatActivity {
                     Intent startActiveBookingIntent = new Intent(getApplicationContext(), OnBookingActivity.class);
                     startActivity(startActiveBookingIntent);
                 }
+
+                else if (type.equals("available")) {
+                    CollectBikesOnCreate();
+                }
             }
         });
 
+    }
+
+    public void CollectBikesOnCreate(){
+
+        Button collectBikesButton;
+        final ImageButton collectBikesCancelButton;
+
+        collectBikesDialog.setContentView(R.layout.collect_bike_popup);
+
+        collectBikesButton =(Button)collectBikesDialog.findViewById(R.id.collectBikesButton);
+        collectBikesCancelButton=(ImageButton)collectBikesDialog.findViewById(R.id.collectBikesCancelButton);
+
+        collectBikesCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collectBikesDialog.dismiss();
+            }
+        });
+
+        collectBikesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collectBikesDialog.dismiss();
+                Intent startBarcodeScanner = new Intent(getApplicationContext(), BarcodeScanner.class);
+                startActivity(startBarcodeScanner);
+            }
+        });
+
+        collectBikesDialog.show();
 
     }
+
 }

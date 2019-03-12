@@ -11,4 +11,5 @@
     <color name="white">#ffffff</color>
     <color name="lightGreen">#6BB726</color>
     <color name="primaryBlue">#007bff</color>
+    <color name="darkGreyBlue">#5e7599</color>
 </resources>
