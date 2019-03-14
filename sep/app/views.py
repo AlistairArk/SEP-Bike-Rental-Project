@@ -109,9 +109,9 @@ def dbTest():
         bikeInfo = request.form
         for key,value in bikeInfo.items():
             if key=='amount':
-                amount=value
+                amount=int(value)
             elif key=='location':
-                locationid=value
+                locationid=int(value)
         for i in range(amount):
             bike=models.Bike(location_id=locationid,in_use=0,status="new")
             # db.session.add(bike)
