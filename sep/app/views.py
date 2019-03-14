@@ -130,8 +130,8 @@ def dbTest():
 @app.route('/addBikes',methods=['GET','POST'])
 def addBikes():
     # bikes=models.Bike.query.all()
-    form.location.choices=[(l.id,l.name) for l in models.Location.query.all()]
     form=addBikesForm(request.form)
+    form.location.choices=[(l.id,l.name) for l in models.Location.query.all()]
     # form.location.choices=[(1,'Leeds'),(2,'Manchester'),(3,'Newcastle'),(4,'Durham'),(5,'Sheffield')]
     flash("hello")
     # if form.validate_on_submit():
