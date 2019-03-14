@@ -114,12 +114,12 @@ def dbTest():
                 locationid=int(value)
         for i in range(amount):
             bike=models.Bike(location_id=locationid,in_use=0,status="new")
-            # db.session.add(bike)
-            # db.session.commit()
+            db.session.add(bike)
+            db.session.commit()
         l = models.Location.query.get(locationid)
         l.bike_amount+=amount
-        # db.session.add(l)
-        # db.session.commit()
+        db.session.add(l)
+        db.session.commit()
         #later return back to addBikes page?? or make this page pretty
         return render_template('dbtesting.html',
                                 # bikeInfo=bikeInfo)
