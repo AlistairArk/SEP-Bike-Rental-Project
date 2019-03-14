@@ -1,7 +1,7 @@
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
-from .forms import addBikesForm
+from .forms import *
 
 '''
 #Check if user is needed to be logged in for a page:
@@ -104,18 +104,46 @@ def log(*args):
 
 @app.route('/dbtesting',methods=['GET','POST'])
 def dbTest():
-    users=models.User.query.all()
-    return render_template('dbtesting.html',users=users)
+    bikeForm=addBikesForm(request.form)
+    if request.method == 'POST':
+        bikeInfo = request.form
+        for key,value in bikeInfo.items():
+            if key=='amount':
+                amount=value
+            elif key=='location':
+                locationid=value
+        for i in range(amount):
+            bike=models.Bike(location_id=locationid,in_use=0,status="new")
+            # db.session.add(bike)
+            # db.session.commit()
+        l = models.Location.query.get(locationid)
+        l.bike_amount+=amount
+        # db.session.add(l)
+        # db.session.commit()
+        #later return back to addBikes page?? or make this page pretty
+        return render_template('dbtesting.html',
+                                # bikeInfo=bikeInfo)
+                                amount=amount,
+                                location=locationid)
 
 
 @app.route('/addBikes',methods=['GET','POST'])
 def addBikes():
     # bikes=models.Bike.query.all()
-    locations=['Leeds','Manchester','Newcastle','Durham','Sheffield']
+    form.location.choices=[(l.id,l.name) for l in models.Location.query.all()]
     form=addBikesForm(request.form)
+    # form.location.choices=[(1,'Leeds'),(2,'Manchester'),(3,'Newcastle'),(4,'Durham'),(5,'Sheffield')]
+    flash("hello")
+    # if form.validate_on_submit():
+    #     amount = form.amount.data
+    #     location = form.location.data
+
+        # flash("Successfully received form data: %s at %s"%(form.amount.data,form.location.data))
+        # return render_template('dbtesting.html',
+        #                         amount=amount,
+        #                         location=location)
     return render_template('addBikes.html',
-                            form=form,
-                            locations=locations)
+                            form=form)
 
 @app.route('/addEmployee',methods=['GET','POST'])
 def addEmployee():
