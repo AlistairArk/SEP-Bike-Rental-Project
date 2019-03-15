@@ -1,4 +1,16 @@
 {% extends "index.html" %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 {% block content %}
 
   <div class="standard-form-container">
@@ -6,26 +18,36 @@
           <div class="standard-form-header">
               <h3>New Location:</h3>
           </div>
-          <form class="standard-form-form">
+          <form action="{{ url_for('locationAdded') }}" method="POST" class="standard-form-form">
+              {{ form.hidden_tag() }}
               <div class="form-group row" style="width: 100%;">
                   <label for="name" class="col-sm-5 col-form-label text-md-right" style="padding-top: 11px;">Name</label>
                   <div class="col-sm-7">
                       <input type="text" id="name" class="standard-form-entry" name="name" placeholder="Enter Name" required autofocus>
                   </div>
+                  {% for error in form.name.errors %}
+                  <span style="color:red;">[{{ error }}]</span>
+                  {% endfor %}<br>
               </div>
 
               <div class="form-group row" style="width: 100%;">
-                  <label for="Address" class="col-sm-5 col-form-label text-md-right" style="padding-top: 11px;">Address</label>
+                  <label for="addr" class="col-sm-5 col-form-label text-md-right" style="padding-top: 11px;">Address</label>
                   <div class="col-sm-7">
-                      <input type="text" id="Address" class="standard-form-entry" name="Address" placeholder="Enter Address" required autofocus>
+                      <input type="text" id="Address" class="standard-form-entry" name="addr" placeholder="Enter Address" required autofocus>
                   </div>
+                  {% for error in form.addr.errors %}
+                  <span style="color:red;">[{{ error }}]</span>
+                  {% endfor %}<br>
               </div>
 
               <div class="form-group row" style="width: 100%;">
-                  <label for="max-capacity" class="col-sm-5 col-form-label text-md-right" style="padding-top: 11px;">Maximum Capacity</label>
+                  <label for="max_capacity" class="col-sm-5 col-form-label text-md-right" style="padding-top: 11px;">Maximum Capacity</label>
                   <div class="col-sm-7">
-                      <input type="integer" id="max-capacity" class="standard-form-entry" name="max-capacity" placeholder="Enter Maximum Capacity" required autofocus>
+                      <input type="integer" id="max_capacity" class="standard-form-entry" name="max_capacity" placeholder="Enter Maximum Capacity" required autofocus>
                   </div>
+                  {% for error in form.max_capacity.errors %}
+                  <span style="color:red;">[{{ error }}]</span>
+                  {% endfor %}<br>
               </div>
 
               <div class="form-group row" style="width: 100%;">
@@ -33,6 +55,9 @@
                   <div class="col-sm-7">
                       <input type="text" id="longt" class="standard-form-entry" name="longt" placeholder="Enter Longtitude" required autofocus>
                   </div>
+                  {% for error in form.longt.errors %}
+                  <span style="color:red;">[{{ error }}]</span>
+                  {% endfor %}<br>
               </div>
 
               <div class="form-group row" style="width: 100%;">
@@ -40,10 +65,13 @@
                   <div class="col-sm-7">
                       <input type="text" id="latt" class="standard-form-entry" name="latt" placeholder="Enter Lattitude" required autofocus>
                   </div>
+                  {% for error in form.latt.errors %}
+                  <span style="color:red;">[{{ error }}]</span>
+                  {% endfor %}<br>
               </div>
 
               <div class="standard-form-button-container">
-                  <button type="button" class="standard-form-button">Add Location</button>
+                  <button type="submit" class="standard-form-button">Add Location</button>
               </div>
           </form>
       </div>

@@ -102,9 +102,9 @@ def log(*args):
 
 
 
-@app.route('/dbtesting',methods=['GET','POST'])
-def dbTest():
-    bikeForm=addBikesForm(request.form)
+@app.route('/bikesAdded',methods=['GET','POST'])
+def bikesAdded():
+    # bikeForm=addBikesForm(request.form)
     if request.method == 'POST':
         bikeInfo = request.form
         for key,value in bikeInfo.items():
@@ -121,8 +121,7 @@ def dbTest():
         db.session.add(l)
         db.session.commit()
         #later return back to addBikes page?? or make this page pretty
-        return render_template('dbtesting.html',
-                                # bikeInfo=bikeInfo)
+        return render_template('bikesAdded.html',
                                 amount=amount,
                                 location=locationid)
 
@@ -148,3 +147,36 @@ def addBikes():
 @app.route('/addEmployee',methods=['GET','POST'])
 def addEmployee():
     return render_template('addEmployee.html')
+
+@app.route('/addLocation',methods=['GET','POST'])
+def addLocation():
+    form=addLocationForm(request.form)
+    return render_template('newLocation.html',
+                            form=form)
+
+@app.route('/locationAdded',methods=['GET','POST'])
+def locationAdded():
+    if request.method == 'POST':
+        locationInfo = request.form
+        for key,value in locationInfo.items():
+            if key=='name':
+                name=value
+            elif key=='addr':
+                addr=value
+            elif key=='max_capacity':
+                max_capacity=value
+            elif key=='longt':
+                longt=float(value)
+            elif key=='latt':
+                latt=float(value)
+        l = models.Location(models.Location(name=name,
+                                            bike_amount=0,
+                                            max_capacity=max_capacity,
+                                            addr=addr,
+                                            longt=longt,
+                                            latt=latt))
+        # db.session.add(l)
+        # db.session.commit()
+        return render_template('locationAdded.html',
+                                locationInfo=locationInfo,
+                                name=name)

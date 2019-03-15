@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% block content %}
+
+<p> Form request: {{ amount }} bikes in location id {{ location }}</p>
+
+
+
+{% endblock content %}
