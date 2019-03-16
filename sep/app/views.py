@@ -169,12 +169,7 @@ def locationAdded():
                 longt=float(value)
             elif key=='latt':
                 latt=float(value)
-        l = models.Location(models.Location(name=name,
-                                            bike_amount=0,
-                                            max_capacity=max_capacity,
-                                            addr=addr,
-                                            longt=longt,
-                                            latt=latt))
+        l = models.Location(models.Location(name=name,bike_amount=0,max_capacity=max_capacity,addr=addr,longt=longt,latt=latt))
         # db.session.add(l)
         # db.session.commit()
         return render_template('locationAdded.html',
