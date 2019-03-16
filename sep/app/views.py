@@ -113,13 +113,16 @@ def bikesAdded():
             elif key=='location':
                 locationid=int(value)
         l = models.Location.query.get(locationid)
+        max = l.max_capacity
+        bike_amount = l.bike_amount
         amount_added=0
         for i in range(amount):
-            if l.bike_amount<l.max_capacity:
+            if bike_amount<max:
                 bike=models.Bike(location_id=locationid,in_use=0,status="new")
                 db.session.add(bike)
                 db.session.commit()
                 amount_added+=1
+                bike_amount+=1
         l = models.Location.query.get(locationid)
         l.bike_amount+=amount_added
         db.session.add(l)
