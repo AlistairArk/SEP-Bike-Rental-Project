@@ -15,7 +15,7 @@
 
 <p> Form request: {{ amount }} bikes in location {{ location }}</p>
 <p> all_added = {{ all_added }}</p>
-{% if all_added is equalto True %}
+{% if all_added == False %}
   <p> Location full. {{ amount_added }}/{{ amount }} bikes were added. </p>
 {% else %}
   <p> All bikes successfully added! </p>
