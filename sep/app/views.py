@@ -124,10 +124,15 @@ def bikesAdded():
         l.bike_amount+=amount_added
         db.session.add(l)
         db.session.commit()
+        if amount_added<amount:
+            all_added=False
+        else:
+            all_added=True
         #later return back to addBikes page?? or make this page pretty
         return render_template('bikesAdded.html',
                                 amount=amount,
                                 amount_added=amount_added,
+                                all_added=all_added,
                                 location=l.name)
 
 
