@@ -14,7 +14,7 @@
 {% block content %}
 
 <p> Form request: {{ amount }} bikes in location {{ location }}</p>
-{% if {{ all_added }} == True %}
+{% if all_added == True %}
   <p> Location full. Only {{ amount_added }}/{{ amount }} bikes added. </p>
 {% else %}
   <p> All bikes successfully added! </p>
