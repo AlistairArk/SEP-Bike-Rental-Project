@@ -13,8 +13,12 @@
 {% endwith %}
 {% block content %}
 
-<p> Form request: {{ amount }} bikes in location id {{ location }}</p>
-
+<p> Form request: {{ amount }} bikes in location {{ location }}</p>
+{% if {{ amount_added }} < {{ amount }} %}
+  <p> Location full. Only {{ amount_added }}/{{ amount }} bikes added. </p>
+{% else %}
+  <p> All bikes successfully added! </p>
+{% endif %}
 
 
 {% endblock content %}

@@ -112,18 +112,23 @@ def bikesAdded():
                 amount=int(value)
             elif key=='location':
                 locationid=int(value)
-        for i in range(amount):
-            bike=models.Bike(location_id=locationid,in_use=0,status="new")
-            db.session.add(bike)
-            db.session.commit()
         l = models.Location.query.get(locationid)
-        l.bike_amount+=amount
+        amount_added=0
+        for i in range(amount):
+            if l.bike_amount<l.max_capacity:
+                bike=models.Bike(location_id=locationid,in_use=0,status="new")
+                db.session.add(bike)
+                db.session.commit()
+                amount_added+=1
+        l = models.Location.query.get(locationid)
+        l.bike_amount+=amount_added
         db.session.add(l)
         db.session.commit()
         #later return back to addBikes page?? or make this page pretty
         return render_template('bikesAdded.html',
                                 amount=amount,
-                                location=locationid)
+                                amount_added=amount_added,
+                                location=l.name)
 
 
 @app.route('/addBikes',methods=['GET','POST'])
