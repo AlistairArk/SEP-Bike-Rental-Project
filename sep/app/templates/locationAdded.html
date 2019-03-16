@@ -12,13 +12,5 @@
   {% endif %}
 {% endwith %}
 {% block content %}
-
-<p>Successfully added new location </p>
-
 <p>Location {{ name }} successfully added!</p>
-<p>
-{% for key,value in locationInfo.items() %}
-  {{ key }}: {{ value }}
-{% endfor %}
-</p>
 {% endblock content %}

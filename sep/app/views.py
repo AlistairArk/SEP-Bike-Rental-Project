@@ -175,8 +175,7 @@ def locationAdded():
                             addr=addr,
                             longt=longt,
                             latt=latt)
-        # db.session.add(l)
-        # db.session.commit()
+        db.session.add(l)
+        db.session.commit()
         return render_template('locationAdded.html',
-                                locationInfo=locationInfo,
                                 name=name)
