@@ -2,7 +2,7 @@ from flask import Flask
 from flask_mail import Mail, Message
 import MySQLdb
 
-conn = MySQLdb.connect("sysql.server","sc17gs","Bikes246","sc17gs$LeedsRideDB")
+conn = MySQLdb.connect("sc17gs.mysql.pythonanywhere-services.com","sc17gs","Bikes246","sc17gs$LeedsRideDB")
 c = conn.cursor()
 
 '''
