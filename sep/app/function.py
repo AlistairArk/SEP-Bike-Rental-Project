@@ -1,13 +1,19 @@
 from flask import Flask
 from flask_mail import Mail, Message
 
-import mysql.connector
-import sshtunnel
+import MySQL
+
+conn = MySQLdb.connect("sysql.server","sc17gs","Bikes246","sc17gs$LeedsRideDB")
+c = conn.cursor()
+
+
 
 
 def login(*args, **kwargs):
     username = kwargs.get("username", 0)
     password = kwargs.get("password", 0)
+
+    
 
     return 1 # Assume username and password are valid as a test
 
