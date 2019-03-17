@@ -13,7 +13,7 @@ class User(UserMixin,db.Model):
     password = db.Column(db.String(80), nullable=False)
     image = db.Column(db.String(75), nullable=False, default='default_icon')
     phone = db.Column(db.String(20), nullable=False)
-    user_type = db.Column(db.String(20), nullable=False) 
+    user_type = db.Column(db.String(20), nullable=False)
 
     cards = db.relationship('Card', backref='user', lazy=True)
     bookings = db.relationship('Booking', backref='user', lazy=True)
@@ -54,7 +54,7 @@ class Location(db.Model):
     latt = db.Column(db.Float)
 
     bikes = db.relationship('Bike', backref='location', lazy=True)
-
+    bookings = db.relationship('Booking', backref='location', lazy=True)
 
 #stores information about a single bike each time it is involved in a booking
 #implements many to many relationship between booking and bike with an association table
@@ -81,6 +81,8 @@ class Booking(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     card_id = db.Column(db.Integer, db.ForeignKey('card.id'), nullable=False)
+    start_location = db.Column(db.Integer, db.ForeignKey('start.id'), nullable=False)
+    end_location = db.Column(db.Integer, db.ForeignKey('end.id'), nullable=False)
 
     bikes = db.relationship('Bike',secondary=booked_bike, backref=db.backref('booked',lazy='dynamic'))
 
