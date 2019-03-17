@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_mail import Mail, Message
-import MySQL
+import MySQLdb
 
 conn = MySQLdb.connect("sysql.server","sc17gs","Bikes246","sc17gs$LeedsRideDB")
 c = conn.cursor()
