@@ -1,22 +1,38 @@
 from flask import Flask
 from flask_mail import Mail, Message
-
 import MySQL
 
 conn = MySQLdb.connect("sysql.server","sc17gs","Bikes246","sc17gs$LeedsRideDB")
 c = conn.cursor()
 
+'''
+Test data in user table: 
 
++----+--------------------+----------+-----------------------+--------------+--------------+--------------+-----------+
+| id | name               | username | email                 | password     | image        | phone        | user_type |
++----+--------------------+----------+-----------------------+--------------+--------------+--------------+-----------+
+|  1 | Paul Rudd          | prudd    | prudd@gmail.com       | password     | default_icon | 01234567890  | manager   |
+|  2 | Tahani Al Jamil    | Tahani   | taj@gmail.com         | plaintext    | default_icon | 98765432100  | employee  |
+|  3 | Ezekiel Figuero    | Zeke     | books@gmail.com       | mylenecruz   | default_icon | 2468135901   | customer  |
+|  4 | Rogelio De La Vega | Rogelio  | rdlv@gmail.com        | rogeliodlv   | default_icon | 019283746510 | customer  |
+|  5 | Isabelle Lightwood | Izzy     | i.lightwood@gmail.com | sizzyforever | default_icon | 00000000000  | employee  |
+|  6 | NULL               | Alec     | a.lightwood@gmail.com | magnusbane   | default_icon | 11111111111  | employee  |
++----+--------------------+----------+-----------------------+--------------+--------------+--------------+-----------+
+'''
 
 
 def login(*args, **kwargs):
     username = kwargs.get("username", 0)
     password = kwargs.get("password", 0)
 
-    
+    # Check if username & password are true
+    validUser = c.execute("SELECT 1 FROM user WHERE WHERE username = ? AND password = ? ", (username,password,)).fetchall()
 
-    return 1 # Assume username and password are valid as a test
-
+    if validUser:
+        # check user_type
+        return validUser # Assume username and password are valid as a test
+    else:
+        return 0
 
 def emailExists(email):
     # Perform database check to validate if input email exists
