@@ -1,4 +1,16 @@
 {% extends "index.html" %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 {% block content %}
 
   <div class="standard-form-container">
@@ -6,24 +18,36 @@
           <div class="standard-form-header">
               <h3>Add Bikes:</h3>
           </div>
-          <form class="standard-form-form">
+          <form action="{{ url_for('bikesAdded') }}" method="POST" class="standard-form-form">
+            {{ form.hidden_tag() }}
               <div class="form-group row" style="width: 100%;">
                   <label for="number-of-bikes" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Number of Bikes</label>
                   <div class="col-sm-8">
-                      <input type="integer" id="number-of-bikes" class="standard-form-entry" name="number-of-bikes" placeholder="Enter Number of bikes" required autofocus>
+                      <input type="integer" id="number-of-bikes" class="standard-form-entry" name="amount" placeholder="Enter Number of bikes" required autofocus>
+                      <!-- {{ form.amount }} -->
                   </div>
+                  {% for error in form.amount.errors %}
+                  <span style="color:red;">[{{ error }}]</span>
+                  {% endfor %}<br>
               </div>
 
-              <!-- change to dropdown menu of all the locations in the database -->
               <div class="form-group row" style="width: 100%;">
-                  <label for="location" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Location</label>
-                  <div class="col-sm-8">
-                      <input type="text" id="location" class="standard-form-entry" name="location" placeholder="Enter Location" required autofocus>
+                <label for="selLoc" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Select Location</label>
+                <div class="col-sm-8">
+                  <!-- <select class="form-control" id="selLoc">
+                    {% for l in form.location %}
+                      <option name="location">{{l}}</option>
+                    {% endfor %}
+                  </select> -->
+                  {{ form.location }}
                   </div>
+                  {% for error in form.amount.errors %}
+                  <span style="color:red;">[{{ error }}]</span>
+                  {% endfor %}<br>
               </div>
 
               <div class="standard-form-button-container">
-                  <button type="button" class="standard-form-button">Add Bikes</button>
+                  <button type="submit" class="standard-form-button">Add Bikes</button>
               </div>
           </form>
       </div>
