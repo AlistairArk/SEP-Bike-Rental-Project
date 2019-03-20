@@ -25,12 +25,12 @@ def login(*args, **kwargs):
     password = kwargs.get("password", 0)
 
     # Check if username & password are true
-    user = 1 # models.User.query.filter_by(username=username, password=password).first()
+    user = models.User.query.filter_by(username=username, password=password).first()
     
     if user==None: # User not found
         return 0
     else:
-        return 1 # user.user_type  # return user type
+        return user.user_type  # return user type
 
 
 
