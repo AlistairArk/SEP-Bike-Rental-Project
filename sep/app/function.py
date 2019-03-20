@@ -2,7 +2,7 @@ from flask import Flask
 from flask_mail import Mail, Message
 
 import MySQLdb
-from app import db, models
+from . import db, models
 
 
 '''
@@ -25,12 +25,16 @@ def login(*args, **kwargs):
     password = kwargs.get("password", 0)
 
     # Check if username & password are true
-    user = models.User.query.filter_by(username=username, password=password).first()
+    user = None # models.User.query.filter_by(username=username, password=password).first()
     
     if user==None: # User not found
         return 0
     else:
         return user.user_type  # return user type
+
+
+
+
 
 
 def emailExists(email):
@@ -39,6 +43,9 @@ def emailExists(email):
 
     return 1 # Assume email exists as a test
 
+
+def addEmployee(*args, **kwargs):
+    pass
 
 
 def resetRequest(*args, **kwargs):
