@@ -29,8 +29,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:backgroundTint="@color/Orange"
-            app:srcCompat="@drawable/tap" />
+            app:srcCompat="@drawable/tap"
+            android:tint="@color/white"/>
 
         <Space
             android:layout_width="match_parent"

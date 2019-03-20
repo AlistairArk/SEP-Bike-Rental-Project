@@ -72,6 +72,11 @@ public class MyOrders extends AppCompatActivity {
                 else if (type.equals("available")) {
                     CollectBikesOnCreate();
                 }
+
+                else if (type.equals("upComing")) {
+                    Intent startCreateBookingIntent = new Intent(getApplicationContext(), CreateBooking.class);
+                    startActivity(startCreateBookingIntent);
+                }
             }
         });
 

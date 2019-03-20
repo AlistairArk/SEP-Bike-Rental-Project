@@ -29,7 +29,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:backgroundTint="@color/Orange"
+            android:tint="@color/white"
             app:srcCompat="@drawable/location" />
 
         <Space
