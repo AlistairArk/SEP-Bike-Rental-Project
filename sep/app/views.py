@@ -64,28 +64,25 @@ def webLogin():
 
 
 
-def appLogin(*args):
-    pass
+# def appLogin(*args):
+#     pass
 
-def appResetPassword(*args):
-    pass
-
-
+# def appResetPassword(*args):
+#     pass
 
 
 
 
 
-
-# Logging function used for testing
-import datetime
-logging = 0
-def log(*args):
-    if logging:
-        for line in args:
-            if isinstance(line, str):
-                with open('log.log', 'a') as the_file:
-                    time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
-                    the_file.write("\n["+str(time)+"] "+line)
-            elif debug:
-                raise line
+# # Logging function used for testing
+# import datetime
+# logging = 0
+# def log(*args):
+#     if logging:
+#         for line in args:
+#             if isinstance(line, str):
+#                 with open('log.log', 'a') as the_file:
+#                     time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+#                     the_file.write("\n["+str(time)+"] "+line)
+#             elif debug:
+#                 raise line
