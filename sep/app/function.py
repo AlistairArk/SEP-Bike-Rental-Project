@@ -28,9 +28,9 @@ def login(*args, **kwargs):
     user = models.User.query.filter_by(username=username, password=password).first()
     
     if user==None: # User not found
-        return 0
+        return [1, 0]
     else:
-        return user.user_type  # return user type
+        return [1, user.user_type, user.username]  # return user type
 
 
 
