@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_mail import Mail, Message
-import MySQLdb
 
-conn = MySQLdb.connect("sc17gs.mysql.pythonanywhere-services.com","sc17gs","Bikes246","sc17gs$LeedsRideDB")
-c = conn.cursor()
+import MySQLdb
+from app import db, models
+
 
 '''
 Test data in user table: 
@@ -20,19 +20,18 @@ Test data in user table:
 +----+--------------------+----------+-----------------------+--------------+--------------+--------------+-----------+
 '''
 
-
 def login(*args, **kwargs):
     username = kwargs.get("username", 0)
     password = kwargs.get("password", 0)
 
     # Check if username & password are true
-    validUser = c.execute("SELECT 1 FROM user WHERE WHERE username = ? AND password = ? ", (username,password,)).fetchall()
-
-    if validUser:
-        # check user_type
-        return validUser # Assume username and password are valid as a test
-    else:
+    user = models.User.query.filter_by(username=username, password=password).first()
+    
+    if user==None: # User not found
         return 0
+    else:
+        return user.user_type  # return user type
+
 
 def emailExists(email):
     # Perform database check to validate if input email exists
