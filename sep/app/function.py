@@ -2,7 +2,7 @@ from flask import Flask
 from flask_mail import Mail, Message
 
 import MySQLdb
-# from . import db, models
+from . import db, models
 
 
 '''
