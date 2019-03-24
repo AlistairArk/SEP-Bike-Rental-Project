@@ -45,7 +45,21 @@ def emailExists(email):
 
 
 def addEmployee(*args, **kwargs):
-    pass
+    name      = kwargs.get(name,      "")
+    username  = kwargs.get(username,  "")
+    email     = kwargs.get(email,     "")
+    password  = kwargs.get(password,  "")
+    image     = kwargs.get(image,     "")
+    phone     = kwargs.get(phone,     "")
+    userType  = kwargs.get(userType,  "")
+
+    user = models.User.query.filter_by(username=username).first()
+    if user==None: # User not found
+        # add new employee as normal 
+
+        return 1    # if employee was added successfully return 1
+    else: 
+        return 0    # if employee already exists return 0
 
 
 def resetRequest(*args, **kwargs):

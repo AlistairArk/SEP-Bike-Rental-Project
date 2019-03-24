@@ -66,6 +66,23 @@ def webLogout():
     session["loggedIn"] = False
 
 
+@app.route('/addEmployee', methods=['POST'])
+def webAddEmployee():
+    # Take employee details from add employee form and add the new employee
+
+    name      = str(request.form['name'])
+    username  = str(request.form['username'])
+    email     = str(request.form['email'])
+    password  = str(request.form['password'])
+    image     = str(request.form['image'])
+    phone     = str(request.form['phone'])
+    userType  = str(request.form['user_type'])
+
+    # Call add employee function
+    result = function.addEmployee(name=name, username=username, email=email, password=password, image=image, phone=phone, userType=userType )
+
+    message = "Error: The User Name or Password entered is incorrect. Please try again."
+    return render_template("staffLogin.html", message = message)
 
 
 
