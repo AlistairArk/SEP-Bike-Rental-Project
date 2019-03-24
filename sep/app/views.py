@@ -61,14 +61,9 @@ def webLogin():
         return render_template("staffLogin.html", message = message)
 
 
-
-
-
-# def appLogin(*args):
-#     pass
-
-# def appResetPassword(*args):
-#     pass
+@app.route('/logout', methods=['POST'])
+def webLogout():
+    session["loggedIn"] = False
 
 
 
