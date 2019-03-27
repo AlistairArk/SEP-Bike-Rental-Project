@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent startMainMenu = new Intent(getApplicationContext(), MyOrders.class);
+                Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
                 startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(startMainMenu);
                 finish();

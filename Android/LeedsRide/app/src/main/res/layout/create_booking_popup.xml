@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/bottomPopup"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_popup">
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="18dp" />
+
+    <TextView
+        android:id="@+id/CB_popup_title"
+        android:layout_marginLeft="15dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_light"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="Leeds University Union Bikes" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+
+    <Button
+        android:id="@+id/CB_popup_BookNow"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/primaryBlue"
+        android:text="Book Now!"
+        android:minWidth="180dp"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:fontFamily="@font/open_sans_light" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="35dp" />
+
+</LinearLayout>

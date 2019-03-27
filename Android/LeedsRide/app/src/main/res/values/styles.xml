@@ -26,6 +26,10 @@
         <item name="colorControlHighlight">@color/lightGrey</item>
     </style>
 
+    <style name="Theme.DoNotDim" parent="android:Theme">
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
