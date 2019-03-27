@@ -13,15 +13,21 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServerAPI {
+    private static ServerAPI instance = null;
+    private static Retrofit retrofit = null;
 
-    private Retrofit retrofit;
-
-    public ServerAPI() throws IOException, MalformedURLException{
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/todos/1")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    public ServerAPI() throws IOException{
 
     }
 
+    public static ServerAPI getInstance() throws IOException, MalformedURLException {
+        if (instance == null) {
+            instance = new ServerAPI();
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("https://sc17gs.pythonanywhere.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return instance;
+    }
 }

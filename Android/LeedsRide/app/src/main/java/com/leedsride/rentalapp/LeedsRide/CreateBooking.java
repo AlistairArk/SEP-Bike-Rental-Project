@@ -194,8 +194,9 @@ public class CreateBooking extends AppCompatActivity {
         timeDataSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                bookingDateTime.add(Calendar.HOUR_OF_DAY, hour);
-                bookingDateTime.add(Calendar.MINUTE, minute);
+                bookingDateTime.set(Calendar.HOUR_OF_DAY, hour);
+                bookingDateTime.set(Calendar.MINUTE, minute);
+                bookingDateTime.getTime();
                 bookingHour = hour;
                 bookingMinute = minute;
 
