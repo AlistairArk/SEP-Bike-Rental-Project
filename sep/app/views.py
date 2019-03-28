@@ -10,41 +10,46 @@ from .forms import *
 
 @app.route('/newBooking',methods=['GET','POST'])
 def newBooking():
-    form=addLocationForm(request.form)
+    form=addBookingForm(request.form)
     return render_template("newBooking.html", form=form)
 
 @app.route('/bookingAdded',methods=['GET','POST'])
 def bookingAdded():
     if request.method == 'POST':
-    #     bookingInfo = request.form
-    #     for key,value in bookingInfo.items():
-    #         if key=='email':
-    #             email=value
-    #         elif key=='phone':
-    #             phone=value
-    #         elif key=='date':
-    #             date=value
-    #         elif key=='stime':
-    #             stime=value
-    #         elif key=='etime':
-    #             etime=value
-    #         elif key=='slocation':
-    #             slocation=value
-    #         elif key=='elocation':
-    #             elocation=value
-    #     b = models.Booking( cost= ADD THIS,
-    #                         start_time=stime,
-    #                         end_time=etime,
-    #                         bike_amount=numbikes,
-    #                         booking_time= ADD THIS,
-    #                         paid=False,
-    #                         user_id= ADD THIS,
-    #                         card_id= ADD THIS,
-    #                         end_location=elocation,
-    #                         bikes= ADD THIS
-    #                         )
-    #     db.session.add(b)
-    #     db.session.commit()
+        bookingInfo = request.form
+        for key,value in bookingInfo.items():
+            if key=='email':
+                email=value
+            elif key=='phone':
+                phone=value
+            elif key=='date':
+                date=value
+            elif key=='stime':
+                stime=value
+            elif key=='etime':
+                etime=value
+            elif key=='slocation':
+                slocation=value
+            elif key=='elocation':
+                elocation=value
+            elif key=='numbikes':
+                numbikes=value
+
+
+        cost = (numbikes*3.5f)+(time/2*numbikes*0.1f);
+
+        b = models.Booking( cost= cost,
+                            start_time=stime,
+                            end_time=etime,
+                            bike_amount=numbikes,
+                            booking_time= ADD THIS,
+                            paid=False,
+                            user_id= ADD THIS,
+                            end_location=elocation,
+                            bikes= ADD THIS
+                            )
+        db.session.add(b)
+        db.session.commit()
         return render_template('index.html')
 
 

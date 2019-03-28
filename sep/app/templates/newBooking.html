@@ -4,7 +4,6 @@
 
 {% block content %}
 
-
 <div class="standard-form-container">
     <div class="standard-form-wrapper">
         <div class="standard-form-header">
@@ -35,14 +34,14 @@
             <div class="form-group row" style="width: 100%;">
                 <label for="date" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Date</label>
                 <div class="col-sm-8">
-                    <input type="date" class="standard-form-entry" name="date" max="3000-12-31" min="1000-01-01" class="form-control" required autofocus>
+                    <input type="date" class="standard-form-entry" name="date" class="form-control" required autofocus>
                 </div>
             </div>
 
             <div class="form-group row" style="width: 100%;">
-                <label for="sime" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Start Time</label>
+                <label for="stime" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Start Time</label>
                 <div class="col-sm-8">
-                    <input type="datetime" class="standard-form-entry" name="stime" class="form-control" required autofocus>
+                    <input type="time" class="standard-form-entry" name="stime" class="form-control" required autofocus>
                 </div>
             </div>
 
@@ -74,18 +73,8 @@
     </div>
 </div>
 
-<meta charset="utf-8">
-<meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>LeedsRide</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css" integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-<link rel="stylesheet" href="static/css/default-css.css">
-<link rel="stylesheet" href="static/css/styles.css">
+
+
 
 
 {% endblock content %}

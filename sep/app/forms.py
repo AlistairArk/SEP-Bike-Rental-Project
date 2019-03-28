@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, DateField, DateTimeField
+from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 from wtforms_components import TimeField
 
@@ -18,7 +18,8 @@ class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     phone = IntegerField('phone', validators=[DataRequired()])
     numbikes = IntegerField('numbikes', validators=[DataRequired()])
-    stime = DateTimeField('stime', validators=[DataRequired()])
-    etime = DateTimeField('stime', validators=[DataRequired()])
+    date = DateField('date', validators=[DataRequired()])
+    stime = TimeField('stime', validators=[DataRequired()])
+    etime = TimeField('stime', validators=[DataRequired()])
     slocation = StringField('slocation', validators=[DataRequired(), Length(min=1,max=50)])
     elocation = StringField('elocation', validators=[DataRequired(), Length(min=1,max=50)])
