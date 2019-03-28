@@ -99,7 +99,7 @@ def addUser():
                             form=form)
 
 @app.route('/userAdded',methods=['GET','POST'])
-def UserAdded():
+def userAdded():
     if request.method == 'POST':
         userInfo = request.form
         for key,value in userInfo.items():
