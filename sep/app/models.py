@@ -81,8 +81,8 @@ class Booking(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     card_id = db.Column(db.Integer, db.ForeignKey('card.id'), nullable=False)
-    start_location = db.Column(db.Integer, db.ForeignKey('start.id'), nullable=False)
-    end_location = db.Column(db.Integer, db.ForeignKey('end.id'), nullable=False)
+    #start_location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
+    end_location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
 
     bikes = db.relationship('Bike',secondary=booked_bike, backref=db.backref('booked',lazy='dynamic'))
 
