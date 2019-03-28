@@ -11,9 +11,9 @@ from .forms import *
 @app.route('/newBooking',methods=['GET','POST'])
 def newBooking():
     form=addLocationForm(request.form)
-    return render_template("newLocation.html", form=form)
+    return render_template("newBooking.html", form=form)
 
-@app.route('/lbookingAdded',methods=['GET','POST'])
+@app.route('/bookingAdded',methods=['GET','POST'])
 def bookingAdded():
     if request.method == 'POST':
         bookingInfo = request.form

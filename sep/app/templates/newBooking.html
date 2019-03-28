@@ -7,7 +7,8 @@
         <div class="standard-form-header">
             <h3>New Booking:</h3>
         </div>
-        <form class="standard-form-form">
+        <form action="{{ url_for('bookingAdded') }}" method="POST" class="standard-form-form">
+        {{ form.hidden_tag() }}
             <div class="form-group row" style="width: 100%;">
                 <label for="email" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Email</label>
                 <div class="col-sm-8">
@@ -64,7 +65,7 @@
             </div>
 
             <div class="standard-form-button-container">
-                <button type="button" class="standard-form-button">Create New Booking</button>
+                <button type="submit" class="standard-form-button">Create New Booking</button>
             </div>
         </form>
     </div>
