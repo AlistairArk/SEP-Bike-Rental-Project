@@ -121,7 +121,7 @@ def userAdded():
                             user_type='customer')
         db.session.add(u)
         db.session.commit()
-        return render_template('userAdded.html')
+        return render_template('index.html')
 
 
 
