@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, DateField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 from wtforms_components import TimeField
 
 class addBikesForm(Form):
@@ -16,8 +16,8 @@ class addLocationForm(Form):
 
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
-    phone = IntegerField('phone', validators=[DataRequired())
-    numbikes = IntegerField('numbikes', validators=[DataRequired())
+    phone = IntegerField('phone', validators=[DataRequired()])
+    numbikes = IntegerField('numbikes', validators=[DataRequired()])
     date = DateField('date', validators=[DataRequired()])
     stime = TimeField('stime', validators=[DataRequired()])
     etime = TimeField('stime', validators=[DataRequired()])
