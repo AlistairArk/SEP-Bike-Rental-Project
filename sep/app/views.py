@@ -108,7 +108,7 @@ def userAdded():
             elif key=='email':
                 email=value
             elif key=='phone':
-                phone=value
+                phone=int(value)
             elif key=='username':
                 username=value
             elif key=='password':
