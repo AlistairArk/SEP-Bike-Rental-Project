@@ -14,9 +14,10 @@ class addLocationForm(Form):
     longt = FloatField('longt', validators=[DataRequired()])
     latt = FloatField('latt', validators=[DataRequired()])
 
-class addBooking(Form):
+class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     phone = IntegerField('phone', validators=[DataRequired())
+    numbikes = IntegerField('numbikes', validators=[DataRequired())
     date = DateField('date', validators=[DataRequired()])
     stime = TimeField('stime', validators=[DataRequired()])
     etime = TimeField('stime', validators=[DataRequired()])
