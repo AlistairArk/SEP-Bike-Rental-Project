@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.leedsride.rentalapp.LeedsRide.Data.Booking;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -50,7 +51,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationListener locationListener;
     private BottomSheetDialog createBookingDialog;
     private TextView dialogTextView;
-    DrawerLayout drawer;
+    private DrawerLayout drawer;
+
+    private Booking booking;
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -73,6 +77,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        booking = new Booking();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -117,6 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 Intent startBooking = new Intent(getApplicationContext(), CreateBooking.class);
+                startBooking.putExtra("booking", booking);
                 startActivity(startBooking);
             }
         });
@@ -211,6 +218,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
                 String location = marker.getTitle();
+                booking.setBookingLocation(location);
                 dialogTextView.setText(location);
                 createBookingDialog.show();
                 return false;

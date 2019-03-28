@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BarcodeScanner"></activity>
+        <activity android:name=".PaymentActivity"></activity>
+        <activity android:name=".BarcodeScanner" />
         <activity android:name=".MyOrders" />
         <activity
             android:name=".navDrawer"

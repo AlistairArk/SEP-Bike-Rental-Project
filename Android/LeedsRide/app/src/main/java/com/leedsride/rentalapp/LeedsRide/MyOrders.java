@@ -74,8 +74,7 @@ public class MyOrders extends AppCompatActivity {
                 }
 
                 else if (type.equals("upComing")) {
-                    Intent startCreateBookingIntent = new Intent(getApplicationContext(), CreateBooking.class);
-                    startActivity(startCreateBookingIntent);
+
                 }
             }
         });

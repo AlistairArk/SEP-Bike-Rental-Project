@@ -5,6 +5,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.leedsride.rentalapp.LeedsRide.Data.Booking;
 import com.xw.repo.BubbleSeekBar;
 
 import org.w3c.dom.Text;
@@ -37,6 +39,7 @@ public class CreateBooking extends AppCompatActivity {
 
     private LinearLayout dateViewContainer;
     private LinearLayout timeViewContainer;
+    private TextView bookingLocation;
     private TextView textViewDayOfMonth;
     private TextView textViewMonth;
     private TextView textViewDayOfWeek;
@@ -44,6 +47,7 @@ public class CreateBooking extends AppCompatActivity {
     private TextView textViewTimeId;
     private TextView rentalReturnDate;
     private Calendar bookingDateTime;
+    private Button completeBooking;
     private int numberOfBikes;
     private int rentalDuration;
     private int bookingHour, bookingMinute;
@@ -58,9 +62,17 @@ public class CreateBooking extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_booking);
 
+        Intent intent = getIntent();
+        final Booking booking = intent.getParcelableExtra("booking");
+
         /**
          * Initialising UI objects
          */
+
+        completeBooking = (Button) findViewById(R.id.completeBooking);
+
+        bookingLocation = (TextView)findViewById(R.id.bookingLocation);
+        bookingLocation.setText(booking.getBookingLocation());
 
         textViewDayOfMonth = (TextView)findViewById(R.id.textViewDayOfMonth);
         textViewMonth = (TextView)findViewById(R.id.textViewMonth);
@@ -130,6 +142,15 @@ public class CreateBooking extends AppCompatActivity {
         textViewTimeId.setText(timeOfDay);
 
         setReturnDate();
+
+        completeBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                booking.setBikeQuantity(numberOfBikes);
+                booking.setOrderPrice(price);
+                
+            }
+        });
 
 
         dateViewContainer.setOnClickListener(new View.OnClickListener() {
