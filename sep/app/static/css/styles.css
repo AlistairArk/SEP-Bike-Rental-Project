@@ -515,6 +515,8 @@ input.login-entry {
     border-radius: 10px;
     overflow: hidden;
     position: relative;
+		margin-top: 20px;
+		margin-bottom: 20px;
 		/*border: solid;
 		border-width: thin;
 		border-color: #263544;*/
