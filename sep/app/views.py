@@ -117,7 +117,8 @@ def userAdded():
                             email=email,
                             phone=phone,
                             username=username,
-                            password=password)
+                            password=password,
+                            user_type='customer')
         db.session.add(u)
         db.session.commit()
         return render_template('userAdded.html')
