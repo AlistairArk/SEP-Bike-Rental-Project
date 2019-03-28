@@ -1,5 +1,21 @@
-from app import app
+
+from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
+from app import app, models, db
+from .forms import *
+
+
+
+
+
+@app.route('/newBooking')
+def newBooking():
+    #Just rendering newBooking as a test
+    return render_template("newBooking.html")
+
+
+
+
 
 
 @app.route('/')
@@ -36,11 +52,6 @@ def addBikes():
 def newLocation():
     #Just rendering newLocation as a test
     return render_template("newLocation.html")
-
-@app.route('/newBooking')
-def newBooking():
-    #Just rendering newBooking as a test
-    return render_template("newBooking.html")
 
 @app.route('/test')
 def test():
