@@ -35,22 +35,30 @@ def bookingAdded():
             elif key=='numbikes':
                 numbikes=value
 
+        user = User.query.filter_by(email).first()
+        usercheck = User.query.filter_by(phone).first()
 
-        cost = (numbikes*3.5f)+(time/2*numbikes*0.1f);
+        if user == usercheck:
+            sdatetime = datetime.combine(date, stime)
+            edatetime = datetime.combine(date, etime)
+            bookingTime = edatetime - sdatetime
 
-        b = models.Booking( cost= cost,
-                            start_time=stime,
-                            end_time=etime,
-                            bike_amount=numbikes,
-                            booking_time= ADD THIS,
-                            paid=False,
-                            user_id= ADD THIS,
-                            end_location=elocation,
-                            bikes= ADD THIS
-                            )
-        db.session.add(b)
-        db.session.commit()
-        return render_template('index.html')
+            cost = (numbikes*3.5)+(bookingTime/2*numbikes*0.1);
+
+
+            b = models.Booking( cost= cost,
+                                start_time=stime,
+                                end_time=etime,
+                                bike_amount=numbikes,
+                                booking_time= bookingTime,
+                                paid=False,
+                                user_id= user.id,
+                                end_location=elocation,
+                                # bikes= ADD THIS
+                                )
+            db.session.add(b)
+            db.session.commit()
+            return render_template('index.html')
 
 
 
