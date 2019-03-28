@@ -54,7 +54,8 @@ class Location(db.Model):
     latt = db.Column(db.Float)
 
     bikes = db.relationship('Bike', backref='location', lazy=True)
-    bookings = db.relationship('Booking', backref='location', lazy=True)
+    bookings = db.relationship('Booking', back_populates='location')
+
 
 #stores information about a single bike each time it is involved in a booking
 #implements many to many relationship between booking and bike with an association table
@@ -80,13 +81,13 @@ class Booking(db.Model):
     paid = db.Column(db.Boolean, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    card_id = db.Column(db.Integer, db.ForeignKey('card.id'), nullable=False)
-    #start_location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
+    card_id = db.Column(db.Integer, db.ForeignKey('card.id'))
+    start_location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
     end_location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
 
     bikes = db.relationship('Bike',secondary=booked_bike, backref=db.backref('booked',lazy='dynamic'))
 
-
+    locations = db.relationship('Location', back_populates='booking')
 #stores information about each bike owned by the company
 #has a many to one relationship with Location, and a many to many with Booking
 class Bike(db.Model):
