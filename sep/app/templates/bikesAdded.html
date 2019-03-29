@@ -1,4 +1,5 @@
 {% extends "index.html" %}
+{% block content %}
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul>
@@ -11,15 +12,14 @@
     </ul>
   {% endif %}
 {% endwith %}
-{% block content %}
 
-<p> Form request: {{ amount }} bikes in location {{ location }}</p>
+<!-- <p> Form request: {{ amount }} bikes in location {{ location }}</p>
 <p> all_added = {{ all_added }}</p>
 {% if all_added == False %}
   <p> Location full. {{ amount_added }}/{{ amount }} bikes were added. </p>
 {% else %}
   <p> All bikes successfully added! </p>
-{% endif %}
+{% endif %} -->
 
 
 {% endblock content %}
