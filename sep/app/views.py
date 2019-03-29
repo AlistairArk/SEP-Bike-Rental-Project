@@ -3,32 +3,33 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, s
 from app import app, models, db
 from .forms import *
 
-'''
-#Check if user is needed to be logged in for a page:
-def loginRequired(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        return redirect(url_for('login'))
-    return decorated_function
 
-#Check is already logged through sessions:
-def loginPresent(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'logged_in' in session:
-            return redirect(url_for('dashboard'))
-        return f(*args, **kwargs)
-    return decorated_function
-'''
+# #Check if user is needed to be logged in for a page:
+# def loginRequired(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'logged_in' in session:
+#             return f(*args, **kwargs)
+#         return redirect(url_for(''))
+#     return decorated_function
+#
+# #Check is already logged through sessions:
+# def loginPresent(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'logged_in' in session:
+#             return redirect(url_for('index'))
+#         return f(*args, **kwargs)
+#     return decorated_function
+
+
 
 @app.route('/')
 def index():
     # Just rendering login as a test
     return render_template("staffLogin.html")
 
-'''
+
 @app.route('/resetPassword')
 def webResetPassword():
     return render_template("resetPassword.html")
@@ -53,9 +54,16 @@ def webLogin():
     # Return 1 if valid login is found
     username = str(request.form['username'])
     password = str(request.form['password'])
-    if function.login(username=username, password=password):
+
+    loginData = function.login(username=username, password=password)
+
+
+    if loginData[0]:
+        session["userType"] = loginData[1]
+        session["username"] = loginData[2]
+        session["name"] = loginData[3]
         session["loggedIn"] = True
-        return render_template("index.html")
+        return render_template("index.html", name = session["name"])
     else:
         session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
@@ -65,38 +73,25 @@ def webLogin():
 
 
 
-def appLogin(*args):
-    pass
-
-def appResetPassword(*args):
-    pass
-
-
-
-
+@app.route('/logout')
+def webLogout():
+    session["loggedIn"] = False
+    session["userType"] = None
+    session["username"] = None
+    session["name"] = None
+    return render_template("staffLogin.html")
 
 
 
+### ### ###
 
-# Logging function used for testing
-import datetime
-logging = 0
-def log(*args):
-    if logging:
-        for line in args:
-            if isinstance(line, str):
-                with open('log.log', 'a') as the_file:
-                    time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
-                    the_file.write("\n["+str(time)+"] "+line)
-            elif debug:
-                raise line
-'''
 
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
     form=addUserForm(request.form)
     return render_template('addUser.html',
                             form=form)
+
 
 @app.route('/userAdded',methods=['GET','POST'])
 def userAdded():
@@ -172,6 +167,7 @@ def bikesAdded():
                                 location=l.name)
 
 
+
 @app.route('/addBikes',methods=['GET','POST'])
 def addBikes():
     # bikes=models.Bike.query.all()
@@ -190,15 +186,48 @@ def addBikes():
     return render_template('addBikes.html',
                             form=form)
 
-@app.route('/addEmployee',methods=['GET','POST'])
-def addEmployee():
-    return render_template('addEmployee.html')
+#
+# @app.route('/addEmployee',methods=['GET','POST'])
+# def addEmployee():
+#     form = addEmployeeForm(request.form)
+#     return render_template('addEmployee.html', form = from)
+#
+#
+# @app.route('/employeeAdded',methods=['GET','POST'])
+# def employeeAdded():
+#     # return render_template('employeeAdded.html')
+#     if request.method == 'POST':
+#         userInfo = request.form
+#         usertype = "employee"
+#         for key,value in userInfo.items():
+#             if key=='name':
+#                 name=value
+#             elif key=='email':
+#                 email=value
+#             elif key=='phone':
+#                 phone=value
+#             elif key=='username':
+#                 username=value
+#             elif key=='password':
+#                 password=value
+#         u = models.User(name=name,
+#                             email=email,
+#                             phone=phone,
+#                             username=username,
+#                             password=password,
+#                             user_type=usertype)
+#         db.session.add(u)
+#         db.session.commit()
+#         return render_template('employeeAdded.html')
+
+
 
 @app.route('/addLocation',methods=['GET','POST'])
 def addLocation():
     form=addLocationForm(request.form)
     return render_template('newLocation.html',
                             form=form)
+
 
 @app.route('/locationAdded',methods=['GET','POST'])
 def locationAdded():
@@ -226,6 +255,7 @@ def locationAdded():
         flash("Location added!")
         return render_template('locationAdded.html',
                                 name=name)
+
 
 @app.route('/locationStats')
 def locationStats():
