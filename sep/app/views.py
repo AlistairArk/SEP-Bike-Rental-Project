@@ -68,7 +68,7 @@ def webLogin():
         return render_template("staffLogin.html", message = message)
 
 
-@app.route('/index', methods=['POST'])
+@app.route('/index')
 def webIndex():
     if session["loggedIn"]:
         return render_template("index.html", name = session["name"])
