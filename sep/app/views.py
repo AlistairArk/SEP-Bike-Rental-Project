@@ -102,7 +102,7 @@ def addUser():
 def userAdded():
     if request.method == 'POST':
         userInfo = request.form
-        usertype = 'customer'
+        usertype = "customer"
         for key,value in userInfo.items():
             if key=='name':
                 name=value
