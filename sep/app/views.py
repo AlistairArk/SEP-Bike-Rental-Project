@@ -1,6 +1,7 @@
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
+from functools import wraps
 from .forms import *
 
 
