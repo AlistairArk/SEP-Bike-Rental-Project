@@ -190,7 +190,8 @@ def addBikes():
 
 @app.route('/addEmployee',methods=['GET','POST'])
 def addEmployee():
-    return render_template('addEmployee.html')
+    form = addEmployeeForm(request.form)
+    return render_template('addEmployee.html', form = from)
 
 
 @app.route('/employeeAdded',methods=['GET','POST'])
