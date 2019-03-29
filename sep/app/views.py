@@ -52,13 +52,29 @@ def webLogin():
     # Return 1 if valid login is found
     username = str(request.form['username'])
     password = str(request.form['password'])
-    if function.login(username=username, password=password):
+
+    loginData = function.login(username=username, password=password)
+
+
+    if loginData[0]:
+        session["userType"] = loginData[1]
+        session["username"] = loginData[2]
+        session["name"] = loginData[3]
         session["loggedIn"] = True
-        return render_template("index.html")
+        webIndex()
     else:
         session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
+
+
+@app.route('/index', methods=['POST'])
+def webIndex():
+    if session["loggedIn"]:
+        return render_template("index.html", name = session["name"])
+    else:
+        message = "Error: You must be logged in to peform that action."
+        return render_template("staffLogin.html", name = message)
 
 
 @app.route('/logout', methods=['POST'])
