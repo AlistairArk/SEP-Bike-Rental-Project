@@ -92,6 +92,37 @@ def log(*args):
                 raise line
 '''
 
+@app.route('/addUser',methods=['GET','POST'])
+def addUser():
+    form=addUserForm(request.form)
+    return render_template('addUser.html',
+                            form=form)
+
+@app.route('/userAdded',methods=['GET','POST'])
+def userAdded():
+    if request.method == 'POST':
+        userInfo = request.form
+        usertype = "customer"
+        for key,value in userInfo.items():
+            if key=='name':
+                name=value
+            elif key=='email':
+                email=value
+            elif key=='phone':
+                phone=value
+            elif key=='username':
+                username=value
+            elif key=='password':
+                password=value
+        u = models.User(name=name,
+                            email=email,
+                            phone=phone,
+                            username=username,
+                            password=password,
+                            user_type=usertype)
+        db.session.add(u)
+        db.session.commit()
+        return render_template('userAdded.html')
 
 
 
