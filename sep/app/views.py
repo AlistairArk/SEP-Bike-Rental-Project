@@ -86,7 +86,7 @@ def webLogout():
     return render_template("staffLogin.html")
 
 
-@app.route('/addEmployeeForm')
+@app.route('/addEmployeeForm',methods=['GET','POST'])
 def webAddEmployeeForm():
     if session["loggedIn"]:
         return render_template("staffLogin.html")
