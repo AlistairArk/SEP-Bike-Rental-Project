@@ -129,9 +129,11 @@ def bikesAdded():
         db.session.commit()
         if amount_added<amount:
             all_added=False
+            message = "Location full."+amount_added+"/"amount+" bikes added."
+            flash(message)
         else:
             all_added=True
-        #later return back to addBikes page?? or make this page pretty
+            flash("All bikes successfully added!")
         return render_template('bikesAdded.html',
                                 amount=amount,
                                 amount_added=amount_added,
@@ -190,6 +192,7 @@ def locationAdded():
                             latt=latt)
         db.session.add(l)
         db.session.commit()
+        flash("Location added!")
         return render_template('locationAdded.html',
                                 name=name)
 
