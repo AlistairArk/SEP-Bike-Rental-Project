@@ -28,7 +28,9 @@ def index():
     # Just rendering login as a test
     return render_template("staffLogin.html")
 
-'''
+
+### ### ###
+
 @app.route('/resetPassword')
 def webResetPassword():
     return render_template("resetPassword.html")
@@ -53,44 +55,41 @@ def webLogin():
     # Return 1 if valid login is found
     username = str(request.form['username'])
     password = str(request.form['password'])
-    if function.login(username=username, password=password):
+
+    loginData = function.login(username=username, password=password)
+
+
+    if loginData[0]:
+        session["userType"] = loginData[1]
+        session["username"] = loginData[2]
+        session["name"] = loginData[3]
         session["loggedIn"] = True
-        return render_template("index.html")
+        return webIndex()
     else:
         session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
 
+@app.route('/index')
+def webIndex():
+    if session["loggedIn"]:
+        return render_template("index.html", name = session["name"])
+    else:
+        message = "Error: You must be logged in to peform that action."
+        return render_template("staffLogin.html", name = message)
 
 
+@app.route('/logout')
+def webLogout():
+    session["loggedIn"] = False
+    session["userType"] = None
+    session["username"] = None
+    session["name"] = None
+    return render_template("staffLogin.html")
 
-def appLogin(*args):
-    pass
+### ### ###
 
-def appResetPassword(*args):
-    pass
-
-
-
-
-
-
-
-
-# Logging function used for testing
-import datetime
-logging = 0
-def log(*args):
-    if logging:
-        for line in args:
-            if isinstance(line, str):
-                with open('log.log', 'a') as the_file:
-                    time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
-                    the_file.write("\n["+str(time)+"] "+line)
-            elif debug:
-                raise line
-'''
 
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
