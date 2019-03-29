@@ -29,11 +29,8 @@ def index():
     # Just rendering login as a test
     return render_template("staffLogin.html")
 
-@loginRequired
-@app.route('/')
-def index():
-    # Just rendering login as a test
-    return render_template("staffLogin.html")
+
+
 
 @loginRequired
 @app.route('/resetPassword')
