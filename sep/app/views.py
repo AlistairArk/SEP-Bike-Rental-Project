@@ -43,8 +43,8 @@ def bookingAdded():
         #usercheck = models.User.query.filter_by(phone).first()
 
         if user is not None:
-            sdatetime = datetime.combine(date, stime)
-            edatetime = datetime.combine(date, etime)
+            sdatetime = datetime.datetime.combine(date, stime)
+            edatetime = datetime.datetime.combine(date, etime)
             bookingTime = edatetime - sdatetime
 
 
