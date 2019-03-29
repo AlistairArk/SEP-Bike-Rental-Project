@@ -15,13 +15,9 @@
     <tbody>
       {% for l in locations %}
         <tr class="text-center">
-          <!-- <td>{{l[0]}}</td>
-          <td>{{l[1]}}</td>
-          <td>{{l[2]}}</td>
-          <td>{{l[3]}}</td> -->
           <td>{{ l.id }}</td>
           <td>{{ l.name }}</td>
-          <td>{{ l.address }}</td>
+          <td>{{ l.addr }}</td>
           <td>{{ l.bike_amount }}</td>
         </tr>
       {% endfor %}
