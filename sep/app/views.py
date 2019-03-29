@@ -38,10 +38,10 @@ def bookingAdded():
             elif key=='numbikes':
                 numbikes=value
 
-        user = models.User.query.filter_by(email).first()
-        usercheck = models.User.query.filter_by(phone).first()
+        user = models.User.query.filter_by(email=email)
+        #usercheck = models.User.query.filter_by(phone).first()
 
-        if user == usercheck:
+        if user != null:
             sdatetime = datetime.combine(date, stime)
             edatetime = datetime.combine(date, etime)
             bookingTime = edatetime - sdatetime
