@@ -1,4 +1,3 @@
-
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
@@ -20,53 +19,53 @@ def newBooking():
 
     return render_template("newBooking.html", form=form)
 
-@app.route('/bookingAdded',methods=['GET','POST'])
-def bookingAdded():
-    if request.method == 'POST':
-        bookingInfo = request.form
-        for key,value in bookingInfo.items():
-            if key=='email':
-                email=value
-            elif key=='phone':
-                phone=value
-            elif key=='date':
-                date=value
-            elif key=='stime':
-                stime=value
-            elif key=='etime':
-                etime=value
-            elif key=='slocation':
-                slocation=value
-            elif key=='elocation':
-                elocation=value
-            elif key=='numbikes':
-                numbikes=value
+# @app.route('/bookingAdded',methods=['GET','POST'])
+# def bookingAdded():
+#     if request.method == 'POST':
+#         bookingInfo = request.form
+#         for key,value in bookingInfo.items():
+#             if key=='email':
+#                 email=value
+#             elif key=='phone':
+#                 phone=value
+#             elif key=='date':
+#                 date=value
+#             elif key=='stime':
+#                 stime=value
+#             elif key=='etime':
+#                 etime=value
+#             elif key=='slocation':
+#                 slocation=value
+#             elif key=='elocation':
+#                 elocation=value
+#             elif key=='numbikes':
+#                 numbikes=value
 
-        user = models.User.query.filter_by(email=email)
-        #usercheck = models.User.query.filter_by(phone).first()
+#         user = models.User.query.filter_by(email=email)
+#         #usercheck = models.User.query.filter_by(phone).first()
 
-        if user is not None:
-            sdatetime = datetime.datetime.combine(date, stime)
-            edatetime = datetime.datetime.combine(date, etime)
-            bookingTime = edatetime - sdatetime
+#         if user is not None:
+#             sdatetime = datetime.datetime.combine(date, stime)
+#             edatetime = datetime.datetime.combine(date, etime)
+#             bookingTime = edatetime - sdatetime
 
 
-            #cost = (numbikes*3.5)+(bookingTime/2*numbikes*0.1)
-            cost = (numbikes*3.5)+(1.5*numbikes*0.1)
+#             #cost = (numbikes*3.5)+(bookingTime/2*numbikes*0.1)
+#             cost = (numbikes*3.5)+(1.5*numbikes*0.1)
 
-            b = models.Booking( cost= cost,
-                                start_time=stime,
-                                end_time=etime,
-                                bike_amount=numbikes,
-                                booking_time= bookingTime,
-                                paid=False,
-                                user_id= user.id,
-                                end_location=elocation,
-                                # bikes= ADD THIS
-                                )
-            db.session.add(b)
-            db.session.commit()
-            return render_template('index.html')
+#             b = models.Booking( cost= cost,
+#                                 start_time=stime,
+#                                 end_time=etime,
+#                                 bike_amount=numbikes,
+#                                 booking_time= bookingTime,
+#                                 paid=False,
+#                                 user_id= user.id,
+#                                 end_location=elocation,
+#                                 # bikes= ADD THIS
+#                                 )
+#             db.session.add(b)
+#             db.session.commit()
+#             return render_template('index.html')
 
 
 
