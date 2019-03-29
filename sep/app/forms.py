@@ -19,3 +19,10 @@ class addUserForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     phone = IntegerField('phone', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=30)])
+
+class addEmployeeForm(Form):
+    name = StringField('name', validators=[DataRequired(), Length(min=1,max=50)])
+    username = StringField('username', validators=[DataRequired(), Length(min=1,max=50)])
+    email = StringField('email', validators=[DataRequired(), Email()])
+    phone = IntegerField('phone', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=30)])
