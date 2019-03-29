@@ -83,7 +83,16 @@ def webLogout():
     session["userType"] = None
     session["username"] = None
     session["name"] = None
-    return render_template("staffLogin.html", name = session["name"])
+    return render_template("staffLogin.html")
+
+
+@app.route('/addEmployeeForm')
+def webAddEmployeeForm():
+    if session["loggedIn"]:
+        return render_template("staffLogin.html")
+    else:
+        index()
+
 
 
 @app.route('/addEmployee', methods=['POST'])
@@ -102,6 +111,16 @@ def webAddEmployee():
 
     message = "Error: The User Name or Password entered is incorrect. Please try again."
     return render_template("staffLogin.html", message = message)
+
+
+
+
+
+
+
+
+
+
 
 
 
