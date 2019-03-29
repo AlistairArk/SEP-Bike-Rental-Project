@@ -20,17 +20,19 @@ def loginPresent(f):
     def decorated_function(*args, **kwargs):
         if 'loggedIn' in session:
             return redirect(url_for('index'))
+        else:
+            return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
 
 
-@loginPresent
+#@loginPresent
 @app.route('/')
 def index():
     # Just rendering login as a test
     return render_template("staffLogin.html")
 
-@loginPresent
+#@loginPresent
 @app.route('/test')
 def index2():
     # Just rendering login as a test
