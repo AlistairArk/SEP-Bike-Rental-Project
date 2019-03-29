@@ -74,12 +74,11 @@ def webAddEmployee():
     username  = str(request.form['username'])
     email     = str(request.form['email'])
     password  = str(request.form['password'])
-    image     = str(request.form['image'])
     phone     = str(request.form['phone'])
-    userType  = str(request.form['user_type'])
+
 
     # Call add employee function
-    result = function.addEmployee(name=name, username=username, email=email, password=password, image=image, phone=phone, userType=userType )
+    result = function.addUser(name=name, username=username, email=email, password=password, phone=phone, userType="employee" )
 
     message = "Error: The User Name or Password entered is incorrect. Please try again."
     return render_template("staffLogin.html", message = message)
