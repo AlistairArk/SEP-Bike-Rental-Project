@@ -51,7 +51,6 @@ def webResetRequest():
         message = "Invalid email provided. Please try again."
         return render_template("resetPassword.html", fail = message)
 
-@loginRequired
 @app.route('/login', methods=['POST'])
 def webLogin():
     # Hand username and password to login function
@@ -69,7 +68,6 @@ def webLogin():
         session["loggedIn"] = True
         return redirect(url_for('index'))
     else:
-        session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
@@ -83,10 +81,7 @@ def webIndex():
 @loginRequired
 @app.route('/logout')
 def webLogout():
-    session["loggedIn"] = False
-    session["userType"] = None
-    session["username"] = None
-    session["name"] = None
+    session.clear()
     return render_template("staffLogin.html")
 
 
