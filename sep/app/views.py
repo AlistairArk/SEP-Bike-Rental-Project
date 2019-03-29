@@ -192,3 +192,10 @@ def locationAdded():
         db.session.commit()
         return render_template('locationAdded.html',
                                 name=name)
+
+@app.route('/locationStats')
+def locationStats():
+    locations = models.Location.query.all()
+    # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
+    return render_template('locationStats.html',
+                            locations=locations)
