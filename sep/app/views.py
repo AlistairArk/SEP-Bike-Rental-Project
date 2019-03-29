@@ -83,7 +83,7 @@ def webLogout():
     session["userType"] = None
     session["username"] = None
     session["name"] = None
-    return render_template("index.html", name = session["name"])
+    return render_template("staffLogin.html", name = session["name"])
 
 
 @app.route('/addEmployee', methods=['POST'])
