@@ -62,20 +62,20 @@ def webLogin():
         session["username"] = loginData[2]
         session["name"] = loginData[3]
         session["loggedIn"] = True
-        return webIndex()
+        return render_template("index.html", name = session["name"])
     else:
         session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
 
-@app.route('/index')
-def webIndex():
-    if session["loggedIn"]:
-        return render_template("index.html", name = session["name"])
-    else:
-        message = "Error: You must be logged in to peform that action."
-        return render_template("staffLogin.html", name = message)
+# @app.route('/index')
+# def webIndex():
+#     if session["loggedIn"]:
+#         return render_template("index.html", name = session["name"])
+#     else:
+#         message = "Error: You must be logged in to peform that action."
+#         return render_template("staffLogin.html", name = message)
 
 
 @app.route('/logout')
