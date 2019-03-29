@@ -129,7 +129,7 @@ def bikesAdded():
         db.session.commit()
         if amount_added<amount:
             all_added=False
-            message = "Location full."+amount_added+"/"amount+" bikes added."
+            message = "Location full."+amount_added+"/"+amount+" bikes added."
             flash(message)
         else:
             all_added=True
