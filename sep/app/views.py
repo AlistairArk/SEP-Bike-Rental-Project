@@ -197,7 +197,7 @@ def addEmployee():
 @loginRequired
 @app.route('/employeeAdded',methods=['GET','POST'])
 def employeeAdded():
-    return render_template('employeeAdded.html')
+    # return render_template('employeeAdded.html')
     if request.method == 'POST':
         userInfo = request.form
         usertype = "employee"
