@@ -108,7 +108,7 @@ def userAdded():
             elif key=='email':
                 email=value
             elif key=='phone':
-                phone=int(value)
+                phone=value
             elif key=='username':
                 username=value
             elif key=='password':
@@ -121,7 +121,7 @@ def userAdded():
                             user_type='customer')
         db.session.add(u)
         db.session.commit()
-        return render_template('index.html')
+        return render_template('userAdded.html')
 
 
 
