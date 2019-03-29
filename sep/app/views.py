@@ -102,6 +102,7 @@ def addUser():
 def userAdded():
     if request.method == 'POST':
         userInfo = request.form
+        usertype = 'customer'
         for key,value in userInfo.items():
             if key=='name':
                 name=value
@@ -118,7 +119,7 @@ def userAdded():
                             phone=phone,
                             username=username,
                             password=password,
-                            user_type='customer')
+                            user_type=usertype)
         db.session.add(u)
         db.session.commit()
         return render_template('userAdded.html')
