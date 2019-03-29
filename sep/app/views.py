@@ -4,26 +4,26 @@ from app import app, models, db
 from .forms import *
 
 
-#Check if user is needed to be logged in for a page:
-def loginRequired(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        return redirect(url_for(''))
-    return decorated_function
+# #Check if user is needed to be logged in for a page:
+# def loginRequired(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'logged_in' in session:
+#             return f(*args, **kwargs)
+#         return redirect(url_for(''))
+#     return decorated_function
+#
+# #Check is already logged through sessions:
+# def loginPresent(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'logged_in' in session:
+#             return redirect(url_for('index'))
+#         return f(*args, **kwargs)
+#     return decorated_function
 
-#Check is already logged through sessions:
-def loginPresent(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'logged_in' in session:
-            return redirect(url_for('index'))
-        return f(*args, **kwargs)
-    return decorated_function
 
 
-@loginPresent
 @app.route('/')
 def index():
     # Just rendering login as a test
@@ -63,18 +63,16 @@ def webLogin():
         session["username"] = loginData[2]
         session["name"] = loginData[3]
         session["loggedIn"] = True
-        return redirect(url_for('index'))
+        return render_template("index.html", name = session["name"])
     else:
         session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
-@loginRequired
-@app.route('/index')
-def webIndex():
-    return render_template("index.html", name = session["name"])
 
-@loginRequired
+
+
+
 @app.route('/logout')
 def webLogout():
     session["loggedIn"] = False
@@ -87,14 +85,14 @@ def webLogout():
 
 ### ### ###
 
-@loginRequired
+
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
     form=addUserForm(request.form)
     return render_template('addUser.html',
                             form=form)
 
-@loginRequired
+
 @app.route('/userAdded',methods=['GET','POST'])
 def userAdded():
     if request.method == 'POST':
@@ -129,7 +127,7 @@ def userAdded():
 
 
 
-@loginRequired
+
 @app.route('/bikesAdded',methods=['GET','POST'])
 def bikesAdded():
     # bikeForm=addBikesForm(request.form)
@@ -169,7 +167,7 @@ def bikesAdded():
                                 location=l.name)
 
 
-@loginRequired
+
 @app.route('/addBikes',methods=['GET','POST'])
 def addBikes():
     # bikes=models.Bike.query.all()
@@ -188,13 +186,13 @@ def addBikes():
     return render_template('addBikes.html',
                             form=form)
 
-# @loginRequired
+#
 # @app.route('/addEmployee',methods=['GET','POST'])
 # def addEmployee():
 #     form = addEmployeeForm(request.form)
 #     return render_template('addEmployee.html', form = from)
 #
-# @loginRequired
+#
 # @app.route('/employeeAdded',methods=['GET','POST'])
 # def employeeAdded():
 #     # return render_template('employeeAdded.html')
@@ -223,14 +221,14 @@ def addBikes():
 #         return render_template('employeeAdded.html')
 
 
-@loginRequired
+
 @app.route('/addLocation',methods=['GET','POST'])
 def addLocation():
     form=addLocationForm(request.form)
     return render_template('newLocation.html',
                             form=form)
 
-@loginRequired
+
 @app.route('/locationAdded',methods=['GET','POST'])
 def locationAdded():
     if request.method == 'POST':
@@ -258,7 +256,7 @@ def locationAdded():
         return render_template('locationAdded.html',
                                 name=name)
 
-@loginRequired
+
 @app.route('/locationStats')
 def locationStats():
     locations = models.Location.query.all()
