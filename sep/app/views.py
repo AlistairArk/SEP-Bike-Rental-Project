@@ -194,7 +194,7 @@ def addEmployee():
 
 
 @app.route('/employeeAdded',methods=['GET','POST'])
-def userAdded():
+def employeeAdded():
     if request.method == 'POST':
         userInfo = request.form
         usertype = "employee"
