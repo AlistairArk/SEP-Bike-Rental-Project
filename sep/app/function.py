@@ -44,7 +44,7 @@ def emailExists(email):
     return 1 # Assume email exists as a test
 
 
-def addEmployee(*args, **kwargs):
+def addUser(*args, **kwargs):
     name      = kwargs.get("name",      "")
     username  = kwargs.get("username",  "")
     email     = kwargs.get("email",     "")
@@ -57,11 +57,16 @@ def addEmployee(*args, **kwargs):
     if user==None: # User not found
         # add new employee as normal 
 
+        '''
+        Checks before adding user
+            - Password security
+            - Valid number
+
+        '''
         l = models.Location(name      = name,
                             username  = username,
                             email     = email,
                             password  = password,
-                            image     = image,
                             phone     = phone,
                             user_type = userType)
 
