@@ -12,7 +12,7 @@ from .forms import *
 def newBooking():
     form=addBookingForm(request.form)
     form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
-    #form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
 
     return render_template("newBooking.html", form=form)
 

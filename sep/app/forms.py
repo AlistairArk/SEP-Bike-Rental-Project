@@ -22,6 +22,6 @@ class addBookingForm(Form):
     stime = TimeField('stime', validators=[DataRequired()])
     etime = TimeField('stime', validators=[DataRequired()])
     #slocation = StringField('slocation', validators=[DataRequired(), Length(min=1,max=50)])
-    elocation = StringField('elocation', validators=[DataRequired(), Length(min=1,max=50)])
+    #elocation = StringField('elocation', validators=[DataRequired(), Length(min=1,max=50)])
     slocation = SelectField('slocation', validators=[DataRequired()])
-    #elocation = SelectField('elocation', validators=[DataRequired()])
+    elocation = SelectField('elocation', validators=[DataRequired()])
