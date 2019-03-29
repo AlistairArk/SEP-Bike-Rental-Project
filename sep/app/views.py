@@ -188,39 +188,39 @@ def addBikes():
     return render_template('addBikes.html',
                             form=form)
 
-@loginRequired
-@app.route('/addEmployee',methods=['GET','POST'])
-def addEmployee():
-    form = addEmployeeForm(request.form)
-    return render_template('addEmployee.html', form = from)
-
-@loginRequired
-@app.route('/employeeAdded',methods=['GET','POST'])
-def employeeAdded():
-    # return render_template('employeeAdded.html')
-    if request.method == 'POST':
-        userInfo = request.form
-        usertype = "employee"
-        for key,value in userInfo.items():
-            if key=='name':
-                name=value
-            elif key=='email':
-                email=value
-            elif key=='phone':
-                phone=value
-            elif key=='username':
-                username=value
-            elif key=='password':
-                password=value
-        u = models.User(name=name,
-                            email=email,
-                            phone=phone,
-                            username=username,
-                            password=password,
-                            user_type=usertype)
-        db.session.add(u)
-        db.session.commit()
-        return render_template('employeeAdded.html')
+# @loginRequired
+# @app.route('/addEmployee',methods=['GET','POST'])
+# def addEmployee():
+#     form = addEmployeeForm(request.form)
+#     return render_template('addEmployee.html', form = from)
+#
+# @loginRequired
+# @app.route('/employeeAdded',methods=['GET','POST'])
+# def employeeAdded():
+#     # return render_template('employeeAdded.html')
+#     if request.method == 'POST':
+#         userInfo = request.form
+#         usertype = "employee"
+#         for key,value in userInfo.items():
+#             if key=='name':
+#                 name=value
+#             elif key=='email':
+#                 email=value
+#             elif key=='phone':
+#                 phone=value
+#             elif key=='username':
+#                 username=value
+#             elif key=='password':
+#                 password=value
+#         u = models.User(name=name,
+#                             email=email,
+#                             phone=phone,
+#                             username=username,
+#                             password=password,
+#                             user_type=usertype)
+#         db.session.add(u)
+#         db.session.commit()
+#         return render_template('employeeAdded.html')
 
 
 @loginRequired
