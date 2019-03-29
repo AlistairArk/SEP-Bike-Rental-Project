@@ -187,6 +187,7 @@ def addBikes():
         #                         location=location)
     return render_template('addBikes.html',
                             form=form)
+"""
 
 @app.route('/addEmployee',methods=['GET','POST'])
 def addEmployee():
@@ -219,6 +220,8 @@ def employeeAdded():
         db.session.add(u)
         db.session.commit()
         return render_template('employeeAdded.html')
+
+"""
 
 
 @app.route('/addLocation',methods=['GET','POST'])
