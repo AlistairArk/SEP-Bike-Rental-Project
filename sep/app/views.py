@@ -3,7 +3,7 @@ from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
 from .forms import *
-from DateTime import datetime
+import datetime
 
 
 
