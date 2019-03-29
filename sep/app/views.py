@@ -77,7 +77,7 @@ def webIndex():
         return render_template("staffLogin.html", name = message)
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout')
 def webLogout():
     session["loggedIn"] = False
     session["userType"] = None
