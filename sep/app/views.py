@@ -86,6 +86,14 @@ def webLogout():
     session["name"] = None
     return render_template("staffLogin.html")
 
+@app.route('/addEmployee',methods=['GET','POST'])
+def addUser():
+    form=addUserForm(request.form)
+    return render_template('addEmployee.html',
+                            form=form)
+
+
+
 ### ### ###
 
 @app.route('/addUser',methods=['GET','POST'])
