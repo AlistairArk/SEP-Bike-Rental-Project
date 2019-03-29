@@ -61,7 +61,7 @@ def webLogin():
         session["username"] = loginData[2]
         session["name"] = loginData[3]
         session["loggedIn"] = True
-        webIndex()
+        return webIndex()
     else:
         session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
