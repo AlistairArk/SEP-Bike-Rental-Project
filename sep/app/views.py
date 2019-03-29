@@ -4,37 +4,43 @@ from app import app, models, db
 from .forms import *
 
 
-# #Check if user is needed to be logged in for a page:
-# def loginRequired(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'logged_in' in session:
-#             return f(*args, **kwargs)
-#         return redirect(url_for(''))
-#     return decorated_function
-#
-# #Check is already logged through sessions:
-# def loginPresent(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'logged_in' in session:
-#             return redirect(url_for('index'))
-#         return f(*args, **kwargs)
-#     return decorated_function
+#Check if user is needed to be logged in for a page:
+def loginRequired(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'loggedIn' in session:
+            return f(*args, **kwargs)
+        return redirect(url_for(''))
+    return decorated_function
+
+#Check is already logged through sessions:
+def loginPresent(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'loggedIn' in session:
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
-
+@loginPresent
 @app.route('/')
 def index():
     # Just rendering login as a test
     return render_template("staffLogin.html")
 
+@loginRequired
+@app.route('/')
+def index():
+    # Just rendering login as a test
+    return render_template("staffLogin.html")
 
+@loginRequired
 @app.route('/resetPassword')
 def webResetPassword():
     return render_template("resetPassword.html")
 
-
+@loginRequired
 @app.route('/resetRequest', methods=['POST'])
 def webResetRequest():
     # Send a password reset email to user
@@ -47,7 +53,7 @@ def webResetRequest():
         message = "Invalid email provided. Please try again."
         return render_template("resetPassword.html", fail = message)
 
-
+@loginRequired
 @app.route('/login', methods=['POST'])
 def webLogin():
     # Hand username and password to login function
@@ -63,16 +69,23 @@ def webLogin():
         session["username"] = loginData[2]
         session["name"] = loginData[3]
         session["loggedIn"] = True
-        return render_template("index.html", name = session["name"])
+        return webIndex()
     else:
         session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
+@loginRequired
+@app.route('/index')
+def webIndex():
+    if session["loggedIn"]:
+        return render_template("index.html", name = session["name"])
+    else:
+        message = "Error: You must be logged in to peform that action."
+        return render_template("staffLogin.html", name = message)
 
 
-
-
+@loginRequired
 @app.route('/logout')
 def webLogout():
     session["loggedIn"] = False
@@ -85,14 +98,14 @@ def webLogout():
 
 ### ### ###
 
-
+@loginRequired
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
     form=addUserForm(request.form)
     return render_template('addUser.html',
                             form=form)
 
-
+@loginRequired
 @app.route('/userAdded',methods=['GET','POST'])
 def userAdded():
     if request.method == 'POST':
@@ -127,7 +140,7 @@ def userAdded():
 
 
 
-
+@loginRequired
 @app.route('/bikesAdded',methods=['GET','POST'])
 def bikesAdded():
     # bikeForm=addBikesForm(request.form)
@@ -167,7 +180,7 @@ def bikesAdded():
                                 location=l.name)
 
 
-
+@loginRequired
 @app.route('/addBikes',methods=['GET','POST'])
 def addBikes():
     # bikes=models.Bike.query.all()
@@ -221,7 +234,7 @@ def addBikes():
 #         return render_template('employeeAdded.html')
 
 
-
+@loginRequired
 @app.route('/addLocation',methods=['GET','POST'])
 def addLocation():
     form=addLocationForm(request.form)
@@ -229,6 +242,8 @@ def addLocation():
                             form=form)
 
 
+
+@loginRequired
 @app.route('/locationAdded',methods=['GET','POST'])
 def locationAdded():
     if request.method == 'POST':
@@ -257,6 +272,7 @@ def locationAdded():
                                 name=name)
 
 
+@loginRequired
 @app.route('/locationStats')
 def locationStats():
     locations = models.Location.query.all()
