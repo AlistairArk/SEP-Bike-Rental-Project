@@ -11,7 +11,7 @@ def loginRequired(f):
     def decorated_function(*args, **kwargs):
         if 'loggedIn' in session:
             return f(*args, **kwargs)
-        return redirect(url_for(''))
+        return redirect(url_for('test'))
     return decorated_function
 
 #Check is already logged through sessions:
@@ -24,13 +24,17 @@ def loginPresent(f):
     return decorated_function
 
 
-# @loginPresent
+@loginPresent
 @app.route('/')
 def index():
     # Just rendering login as a test
     return render_template("staffLogin.html")
 
-
+@loginPresent
+@app.route('/test')
+def index2():
+    # Just rendering login as a test
+    return render_template("staffLogin.html")
 
 
 @loginRequired
