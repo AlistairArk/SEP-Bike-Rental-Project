@@ -3,6 +3,7 @@ from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
 from .forms import *
+from DateTime import datetime
 
 
 
@@ -46,8 +47,9 @@ def bookingAdded():
             edatetime = datetime.combine(date, etime)
             bookingTime = edatetime - sdatetime
 
-            cost = (numbikes*3.5)+(bookingTime/2*numbikes*0.1);
 
+            #cost = (numbikes*3.5)+(bookingTime/2*numbikes*0.1)
+            cost = (numbikes*3.5)+(1.5*numbikes*0.1)
 
             b = models.Booking( cost= cost,
                                 start_time=stime,
