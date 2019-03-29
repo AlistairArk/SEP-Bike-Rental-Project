@@ -28,11 +28,6 @@ def index():
     # Just rendering login as a test
     return render_template("staffLogin.html")
 
-@app.route('/')
-def index():
-    # Just rendering login as a test
-    return render_template("staffLogin.html")
-
 
 @app.route('/resetPassword')
 def webResetPassword():
