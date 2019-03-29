@@ -23,7 +23,7 @@ def loginPresent(f):
     return decorated_function
 
 
-@loginPresent
+# @loginPresent
 @app.route('/')
 def index():
     # Just rendering login as a test
