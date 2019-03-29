@@ -217,7 +217,7 @@ def employeeAdded():
                             user_type=usertype)
         db.session.add(u)
         db.session.commit()
-        return render_template('userAdded.html')
+        return render_template('employeeAdded.html')
 
 
 @app.route('/addLocation',methods=['GET','POST'])
