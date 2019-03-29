@@ -80,6 +80,10 @@ def webIndex():
 @app.route('/logout', methods=['POST'])
 def webLogout():
     session["loggedIn"] = False
+    session["userType"] = None
+    session["username"] = None
+    session["name"] = None
+    return render_template("index.html", name = session["name"])
 
 
 @app.route('/addEmployee', methods=['POST'])
