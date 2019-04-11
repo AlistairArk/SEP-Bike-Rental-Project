@@ -3,16 +3,32 @@ package com.leedsride.rentalapp.LeedsRide;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,7 +36,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.navigation.NavigationView;
+import com.leedsride.rentalapp.LeedsRide.Data.Booking;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -28,6 +49,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     LocationManager locationManager;
     LocationListener locationListener;
+    private BottomSheetDialog createBookingDialog;
+    private TextView dialogTextView;
+    private DrawerLayout drawer;
+
+    private Booking booking;
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -51,6 +78,62 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        booking = new Booking();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        int id = menuItem.getItemId();
+                        Log.v("TAG", " clicked");
+
+                        if (id == R.id.nav_home) {
+                            // Handle the home action
+                        } else if (id == R.id.nav_orders) {
+                            Intent seeOrders = new Intent(getApplicationContext(), MyOrders.class);
+                            startActivity(seeOrders);
+                        } else if (id == R.id.nav_payment) {
+
+                        } else if (id == R.id.nav_help) {
+
+                        } else if (id == R.id.nav_changePassword) {
+
+                        } else if (id == R.id.nav_logOut) {
+
+                        }
+
+                        drawer.closeDrawer(GravityCompat.START);
+
+                        return true;
+                    }
+                });
+
+        createBookingDialog = new BottomSheetDialog(this);
+        createBookingDialog.setContentView(R.layout.create_booking_popup);
+        createBookingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        createBookingDialog.getWindow().setDimAmount(0);
+        dialogTextView = (TextView) createBookingDialog.findViewById(R.id.CB_popup_title);
+        Button bookNowButton = (Button)createBookingDialog.findViewById(R.id.CB_popup_BookNow);
+
+        bookNowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startBooking = new Intent(getApplicationContext(), CreateBooking.class);
+                startBooking.putExtra("booking", booking);
+                startActivity(startBooking);
+            }
+        });
+
+        ImageButton burgerMenu = (ImageButton)findViewById(R.id.burgerMenu);
+        burgerMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
 
     }
 
@@ -68,7 +151,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMyLocationEnabled(true);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            Toast.makeText(MapsActivity.this, "You have to accept to enjoy all app's services!", Toast.LENGTH_LONG).show();
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            }
+        }
 
         LatLng lubs = new LatLng(53.808832, -1.561353);
         mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School").snippet("Available: 15\nParking Spaces: 1"));
@@ -120,6 +212,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         };
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String location = marker.getTitle();
+                booking.setBookingLocation(location);
+                dialogTextView.setText(location);
+                createBookingDialog.show();
+                return false;
+            }
+        });
 
         if(Build.VERSION.SDK_INT < 23) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);

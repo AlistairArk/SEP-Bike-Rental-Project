@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Test application</string>
+    <string name="app_name">LeedsRide</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_nav_drawer">navDrawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
