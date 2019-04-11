@@ -32,6 +32,7 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class BarcodeScanner extends AppCompatActivity implements BarcodeRetriever {
 
@@ -136,6 +137,20 @@ public class BarcodeScanner extends AppCompatActivity implements BarcodeRetrieve
 
     @Override
     public void onBitmapScanned(SparseArray<Barcode> sparseArray) {
+
+    }
+
+    private Boolean checkBarcode(String code) {
+        String delim = "-";
+
+        StringTokenizer token = new StringTokenizer(code, delim, true);
+
+        boolean expectDelim = false;
+        while (token.hasMoreTokens()) {
+            String strToken = token.nextToken();
+        }
+
+        return true;
 
     }
 

@@ -96,8 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Intent seeOrders = new Intent(getApplicationContext(), MyOrders.class);
                             startActivity(seeOrders);
                         } else if (id == R.id.nav_payment) {
-                            Intent test = new Intent(getApplicationContext(), OnBookingActivity.class);
-                            startActivity(test);
+
                         } else if (id == R.id.nav_help) {
 
                         } else if (id == R.id.nav_changePassword) {
