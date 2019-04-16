@@ -41,7 +41,7 @@ public class Login {
         return "Conversation{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", loginStatus='" + loginStatus + '\'' +
+                ", login status='" + loginStatus + '\'' +
                 '}';
     }
 }
