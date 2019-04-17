@@ -3,15 +3,34 @@ package com.leedsride.rentalapp.LeedsRide;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import com.leedsride.rentalapp.LeedsRide.models.Login;
+
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
+    Login login = new Login();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        login.setUsername("sc17kei");
+        login.setPassword("testing");
+
+        sendNetworkRequest(login);
 
         Button forgotPasswordBtn = (Button)findViewById(R.id.forgotPasswordBtn);
         forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
@@ -32,6 +51,45 @@ public class LoginActivity extends AppCompatActivity {
                 startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(startMainMenu);
                 finish();
+            }
+        });
+    }
+
+    private void sendNetworkRequest(final Login login) {
+
+        ////Create retrofit object for network call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ///implement instance of LexAPI interface
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        //create call which uses getReply method from LexAPI interface
+        Call<Login> call = sampleAPI.getReply(login);
+
+        //add call to queue (in this case nothing in queue)
+        call.enqueue(new Callback<Login>() {
+            @Override
+            public void onResponse(Call<Login> call, Response<Login> response) {
+
+//                if(response.body().getResponse().toString().equals("Perfect, please pay now")){
+//                    onBraintreeSubmit(null);
+//                }
+                String reply = response.body().getLoginStatus();
+                
+                Log.d(TAG, reply);
+
+
+
+                ////send response to TTSManager
+//                ttsManager.initQueue(response.body().getResponse());
+            }
+
+            @Override
+            public void onFailure(Call<Login> call, Throwable t) {
+                Log.e("error", "Could not connect to external API");
             }
         });
     }
