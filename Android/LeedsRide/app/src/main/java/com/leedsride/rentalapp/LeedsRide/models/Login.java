@@ -32,6 +32,10 @@ public class Login {
         this.password = password;
     }
 
+    public void setLoginStatus(String loginStatus) {
+        this.loginStatus = loginStatus;
+    }
+
     public String getLoginStatus() {
         return loginStatus;
     }

@@ -30,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
         login.setUsername("sc17kei");
         login.setPassword("testing");
 
-        sendNetworkRequest(login);
 
         Button forgotPasswordBtn = (Button)findViewById(R.id.forgotPasswordBtn);
         forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
@@ -47,15 +46,24 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
-                startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(startMainMenu);
-                finish();
+                //login.setLoginStatus("HOLAAAAAAAAAA");
+                sendNetworkRequest(login);
+                //Log.d(TAG, "WE ARE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                //Log.d(TAG, "WE ARE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                //String resp = login.getLoginStatus();
+                //Log.d(TAG, resp);
+//                if(login.getLoginStatus().equals("Login Accepted")){
+//                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
+//                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                    startActivity(startMainMenu);
+//                    finish();
+//                }
+
             }
         });
     }
 
-    private void sendNetworkRequest(final Login login) {
+    private void sendNetworkRequest(final Login request) {
 
         ////Create retrofit object for network call
         Retrofit retrofit = new Retrofit.Builder()
@@ -67,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         restAPI sampleAPI = retrofit.create(restAPI.class);
 
         //create call which uses getReply method from LexAPI interface
-        Call<Login> call = sampleAPI.getReply(login);
+        Call<Login> call = sampleAPI.getReply(request);
 
         //add call to queue (in this case nothing in queue)
         call.enqueue(new Callback<Login>() {
@@ -78,9 +86,17 @@ public class LoginActivity extends AppCompatActivity {
 //                    onBraintreeSubmit(null);
 //                }
                 String reply = response.body().getLoginStatus();
-                
-                Log.d(TAG, reply);
+                //login.setLoginStatus(reply);
+//                Log.d(TAG, "WE ARE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//                Log.d(TAG, "WE ARE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                //Log.d(TAG, login.getLoginStatus());
 
+                if(reply.equals("Login Accepted")){
+                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
+                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(startMainMenu);
+                    finish();
+                }
 
 
                 ////send response to TTSManager
@@ -92,5 +108,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("error", "Could not connect to external API");
             }
         });
+        login.setLoginStatus("MAYBE OUT HERE >???????");
+        String resp = login.getLoginStatus();
+        Log.d(TAG, resp);
     }
 }

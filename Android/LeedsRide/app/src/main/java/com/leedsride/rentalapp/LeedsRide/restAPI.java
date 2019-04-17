@@ -10,5 +10,5 @@ import com.leedsride.rentalapp.LeedsRide.models.Login;
 public interface restAPI {
     @Headers("Content-Type: application/json")
     @POST("Live") ////////////Remainder of url from shortened base url in main activity
-    Call<Login> getReply(@Body Login login); //When POST request is made, the body should be an instance of Conversation class called convo
+    Call<Login> getReply(@Body Login login); //When POST request is made, the body should be an instance of Login class called login
 }
