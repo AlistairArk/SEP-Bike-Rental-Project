@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,10 +28,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        login.setUsername("sc17kei");
-        login.setPassword("testing");
-
-
         Button forgotPasswordBtn = (Button)findViewById(R.id.forgotPasswordBtn);
         forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -46,19 +43,13 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //login.setLoginStatus("HOLAAAAAAAAAA");
-                sendNetworkRequest(login);
-                //Log.d(TAG, "WE ARE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                //Log.d(TAG, "WE ARE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                //String resp = login.getLoginStatus();
-                //Log.d(TAG, resp);
-//                if(login.getLoginStatus().equals("Login Accepted")){
-//                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
-//                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                    startActivity(startMainMenu);
-//                    finish();
-//                }
+                EditText username = (EditText) findViewById(R.id.usernameLoginEntry);
+                EditText password = (EditText) findViewById(R.id.passwordLoginEntry);
 
+                login.setUsername(username.getText().toString());
+                login.setPassword(password.getText().toString());
+
+                sendNetworkRequest(login);
             }
         });
     }
@@ -71,10 +62,10 @@ public class LoginActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        ///implement instance of LexAPI interface
+        ///implement instance of restAPI interface
         restAPI sampleAPI = retrofit.create(restAPI.class);
 
-        //create call which uses getReply method from LexAPI interface
+        //create call which uses getReply method from restAPI interface
         Call<Login> call = sampleAPI.getReply(request);
 
         //add call to queue (in this case nothing in queue)
@@ -82,14 +73,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Login> call, Response<Login> response) {
 
-//                if(response.body().getResponse().toString().equals("Perfect, please pay now")){
-//                    onBraintreeSubmit(null);
-//                }
                 String reply = response.body().getLoginStatus();
-                //login.setLoginStatus(reply);
-//                Log.d(TAG, "WE ARE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//                Log.d(TAG, "WE ARE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                //Log.d(TAG, login.getLoginStatus());
+                Log.d(TAG, reply);
 
                 if(reply.equals("Login Accepted")){
                     Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
@@ -97,10 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(startMainMenu);
                     finish();
                 }
-
-
-                ////send response to TTSManager
-//                ttsManager.initQueue(response.body().getResponse());
             }
 
             @Override
@@ -108,8 +89,5 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("error", "Could not connect to external API");
             }
         });
-        login.setLoginStatus("MAYBE OUT HERE >???????");
-        String resp = login.getLoginStatus();
-        Log.d(TAG, resp);
     }
 }
