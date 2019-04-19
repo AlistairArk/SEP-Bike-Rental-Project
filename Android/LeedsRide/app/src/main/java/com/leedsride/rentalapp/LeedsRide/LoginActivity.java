@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,6 +82,9 @@ public class LoginActivity extends AppCompatActivity {
                     startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(startMainMenu);
                     finish();
+                }
+                if(reply.equals("Incorrect Password")){
+                    Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
                 }
             }
 
