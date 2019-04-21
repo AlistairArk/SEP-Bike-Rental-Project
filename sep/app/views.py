@@ -5,67 +5,40 @@ from functools import wraps
 from .forms import *
 
 
+
+
+
 # #Check if user is needed to be logged in for a page:
-# def loginRequired(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'loggedIn' in session:
-#             return f(*args, **kwargs)
-#         return redirect(url_for('test'))
-#     return decorated_function
-
-# #Check is already logged through sessions:
-# def loginPresent(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'loggedIn' in session:
-#             return redirect(url_for('index'))
-#         else:
-#             return redirect(url_for('index'))
-#         return f(*args, **kwargs)
-#     return decorated_function
-
-
 def loginRequired(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if 'auth_token' in session:
+        if 'loggedIn' in session:
             return f(*args, **kwargs)
 
-        log("redirect")
-        return redirect(url_for('webLogin'))
+        else:
+            return redirect(url_for('webLogin'))
 
     return decorated
 
+# #Check is already logged through sessions:
 def loginPresent(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        log("redirect")
-        if 'auth_token' in session:
+        if 'loggedIn' in session:
             return redirect(url_for('webIndex'))
         else:
             return f(*args, **kwargs)
-            # return redirect(url_for('webLogin'))
 
     return decorated
 
-@app.route('/metering')
-@loginRequired
-def getstats():
-    token = session.get('auth_token')
-    log( 'token in metering =', token)
-    return render_template('metering.html', title='Resource Usage') 
 
 @app.route('/logout')
 def logout():
-    session.pop('auth_token', None)
-    session.pop('authenticated', None)
+    session.clear()
     return redirect(url_for('webLogin'))
 
 
-# @app.route('/')
-# def webStart():
-#     return render_template("staffLogin.html")
+
 
 @app.route('/')
 @loginPresent
@@ -76,14 +49,6 @@ def webLogin():
 @loginRequired
 def webIndex():
     return render_template("index.html", name = session["name"])
-
-# @app.route('/logout')
-# @loginRequired
-# def webLogout():
-#     session.clear()
-#     return render_template("staffLogin.html")
-
-
 
 
 
@@ -119,6 +84,7 @@ def webResetRequest():
 
 
 @app.route('/loginRequest', methods=['POST'])
+@loginRequired
 def webLoginRequest():
     # Hand username and password to login function
     # Return 1 if valid login is found
@@ -133,7 +99,6 @@ def webLoginRequest():
     if loginData[0]:
         session["userType"] = loginData[1]
         session["username"] = loginData[2]
-        session["auth_token"] = ""
         session["name"] = loginData[3]
         session["loggedIn"] = True
         return redirect(url_for('webIndex'))
@@ -148,7 +113,6 @@ def webLoginRequest():
 ### ### ###
 
 @app.route('/addUser',methods=['GET','POST'])
-@loginRequired
 def addUser():
     form=addUserForm(request.form)
     return render_template('addUser.html',
