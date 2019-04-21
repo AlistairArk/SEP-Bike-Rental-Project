@@ -5,47 +5,104 @@ from functools import wraps
 from .forms import *
 
 
-#Check if user is needed to be logged in for a page:
+# #Check if user is needed to be logged in for a page:
+# def loginRequired(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'loggedIn' in session:
+#             return f(*args, **kwargs)
+#         return redirect(url_for('test'))
+#     return decorated_function
+
+# #Check is already logged through sessions:
+# def loginPresent(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'loggedIn' in session:
+#             return redirect(url_for('index'))
+#         else:
+#             return redirect(url_for('index'))
+#         return f(*args, **kwargs)
+#     return decorated_function
+
+
 def loginRequired(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'loggedIn' in session:
+    def decorated(*args, **kwargs):
+        if 'auth_token' in session:
             return f(*args, **kwargs)
-        return redirect(url_for('test'))
-    return decorated_function
 
-#Check is already logged through sessions:
+        log("redirect")
+        return redirect(url_for('webLogin'))
+
+    return decorated
+
 def loginPresent(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'loggedIn' in session:
-            return redirect(url_for('index'))
+    def decorated(*args, **kwargs):
+        log("redirect")
+        if 'auth_token' in session:
+            return redirect(url_for('webIndex'))
         else:
-            return redirect(url_for('index'))
-        return f(*args, **kwargs)
-    return decorated_function
+            return f(*args, **kwargs)
+            # return redirect(url_for('webLogin'))
 
+    return decorated
 
-#@loginPresent
-@app.route('/')
-def index():
-    # Just rendering login as a test
-    return render_template("staffLogin.html")
-
-#@loginPresent
-@app.route('/test')
-def index2():
-    # Just rendering login as a test
-    return render_template("staffLogin.html")
-
-
+@app.route('/metering')
 @loginRequired
+def getstats():
+    token = session.get('auth_token')
+    log( 'token in metering =', token)
+    return render_template('metering.html', title='Resource Usage') 
+
+@app.route('/logout')
+def logout():
+    session.pop('auth_token', None)
+    session.pop('authenticated', None)
+    return redirect(url_for('webLogin'))
+
+
+# @app.route('/')
+# def webStart():
+#     return render_template("staffLogin.html")
+
+@app.route('/')
+@loginPresent
+def webLogin():
+    return render_template("staffLogin.html")
+
+@app.route('/index')
+@loginRequired
+def webIndex():
+    return render_template("index.html", name = session["name"])
+
+# @app.route('/logout')
+# @loginRequired
+# def webLogout():
+#     session.clear()
+#     return render_template("staffLogin.html")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/resetPassword')
+@loginRequired
 def webResetPassword():
     return render_template("resetPassword.html")
 
-@loginRequired
 @app.route('/resetRequest', methods=['POST'])
+@loginRequired
 def webResetRequest():
     # Send a password reset email to user
     email = str(request.form['email'])
@@ -57,8 +114,12 @@ def webResetRequest():
         message = "Invalid email provided. Please try again."
         return render_template("resetPassword.html", fail = message)
 
-@app.route('/login', methods=['POST'])
-def webLogin():
+
+
+
+
+@app.route('/loginRequest', methods=['POST'])
+def webLoginRequest():
     # Hand username and password to login function
     # Return 1 if valid login is found
     username = str(request.form['username'])
@@ -67,42 +128,34 @@ def webLogin():
     loginData = function.login(username=username, password=password)
 
 
+    log(str(loginData))
+
     if loginData[0]:
         session["userType"] = loginData[1]
         session["username"] = loginData[2]
+        session["auth_token"] = ""
         session["name"] = loginData[3]
         session["loggedIn"] = True
-        return redirect(url_for('index'))
+        return redirect(url_for('webIndex'))
     else:
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
-@loginRequired
-@app.route('/index')
-def webIndex():
-    return render_template("index.html", name = session["name"])
 
-
-
-@loginRequired
-@app.route('/logout')
-def webLogout():
-    session.clear()
-    return render_template("staffLogin.html")
 
 
 
 ### ### ###
 
-@loginRequired
 @app.route('/addUser',methods=['GET','POST'])
+@loginRequired
 def addUser():
     form=addUserForm(request.form)
     return render_template('addUser.html',
                             form=form)
 
-@loginRequired
 @app.route('/userAdded',methods=['GET','POST'])
+@loginRequired
 def userAdded():
     if request.method == 'POST':
         userInfo = request.form
@@ -136,8 +189,8 @@ def userAdded():
 
 
 
-@loginRequired
 @app.route('/bikesAdded',methods=['GET','POST'])
+@loginRequired
 def bikesAdded():
     # bikeForm=addBikesForm(request.form)
     if request.method == 'POST':
@@ -176,8 +229,8 @@ def bikesAdded():
                                 location=l.name)
 
 
-@loginRequired
 @app.route('/addBikes',methods=['GET','POST'])
+@loginRequired
 def addBikes():
     # bikes=models.Bike.query.all()
     form=addBikesForm(request.form)
@@ -230,8 +283,8 @@ def addBikes():
 #         return render_template('employeeAdded.html')
 
 
-@loginRequired
 @app.route('/addLocation',methods=['GET','POST'])
+@loginRequired
 def addLocation():
     form=addLocationForm(request.form)
     return render_template('newLocation.html',
@@ -239,8 +292,8 @@ def addLocation():
 
 
 
-@loginRequired
 @app.route('/locationAdded',methods=['GET','POST'])
+@loginRequired
 def locationAdded():
     if request.method == 'POST':
         locationInfo = request.form
@@ -268,10 +321,33 @@ def locationAdded():
                                 name=name)
 
 
-@loginRequired
 @app.route('/locationStats')
+@loginRequired
 def locationStats():
     locations = models.Location.query.all()
     # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
     return render_template('locationStats.html',
                             locations=locations)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import datetime
+def log(*args):
+    for line in args:
+        with open('log.log', 'a') as the_file:
+            time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+            the_file.write("\n["+str(time)+"] "+line)
+
+

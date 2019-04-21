@@ -24,14 +24,21 @@ def login(*args, **kwargs):
     username = kwargs.get("username", 0)
     password = kwargs.get("password", 0)
 
-    # Check if username & password are true
-    user = models.User.query.filter_by(username=username, password=password).first()
-    
-    if user==None: # User not found
-        return [False, 0, 0, 0]
-    else:
-        return [True, user.user_type, user.username, user.name]  # return user type
 
+    # Commented out for local testing 
+    # # Check if username & password are true
+    # user = models.User.query.filter_by(username=username, password=password).first()
+    
+    # if user==None: # User not found
+    #     return [False, 0, 0, 0]
+    # else:
+    #     return [True, user.user_type, user.username, user.name]  # return user type
+    
+    user_type  = "manager"
+    username   = "prudd"
+    name       = "Paul Rudd"
+
+    return [True, user_type, username, name]  # return user type
 
 
 
