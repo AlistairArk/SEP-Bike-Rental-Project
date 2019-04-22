@@ -31,10 +31,10 @@ public class Login {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public void setLoginStatus(String loginStatus) {
-        this.loginStatus = loginStatus;
-    }
+//
+//    public void setLoginStatus(String loginStatus) {
+//        this.loginStatus = loginStatus;
+//    }
 
     public String getLoginStatus() {
         return loginStatus;

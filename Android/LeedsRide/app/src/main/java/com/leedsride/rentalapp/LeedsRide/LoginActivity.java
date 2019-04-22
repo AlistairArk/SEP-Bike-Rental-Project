@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(startMainMenu);
                     finish();
                 }
-                if(reply.equals("Incorrect Password")){
+                if(reply.equals("Incorrect Login Information")){
                     Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
                 }
             }
