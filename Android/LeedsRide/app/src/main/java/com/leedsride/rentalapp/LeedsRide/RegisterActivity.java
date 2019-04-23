@@ -20,7 +20,7 @@ import com.leedsride.rentalapp.LeedsRide.models.Register;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
-    private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String TAG = RegisterActivity.class.getSimpleName();
 
     Register register = new Register();
 
@@ -72,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String reply = response.body().getRegistrationStatus();
                 Log.d(TAG, reply);
 
-                if(reply.equals("Login Accepted")){
+                if(reply.equals("Login Accepted")){ ////////////Update once server has been changed
                     Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
                     startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(startMainMenu);
