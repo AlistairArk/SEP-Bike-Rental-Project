@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
         ///implement instance of restAPI interface
         restAPI sampleAPI = retrofit.create(restAPI.class);
 
-        //create call which uses getReply method from restAPI interface
-        Call<Login> call = sampleAPI.getReply(request);
+        //create call which uses attemptLogin method from restAPI interface
+        Call<Login> call = sampleAPI.attemptLogin(request);
 
         //add call to queue (in this case nothing in queue)
         call.enqueue(new Callback<Login>() {
