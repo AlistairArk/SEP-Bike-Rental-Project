@@ -23,6 +23,9 @@ public class Book {
     @SerializedName("rentalTime")
     @Expose
     private String rentalTime;
+    @SerializedName("cost")
+    @Expose
+    private int cost;
     @SerializedName("bookingStatus")
     @Expose
     private String bookingStatus;
@@ -45,6 +48,10 @@ public class Book {
 
     public void setRentalTime(String rentalTime) {
         this.rentalTime = rentalTime;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
     public String getBookingStatus() {

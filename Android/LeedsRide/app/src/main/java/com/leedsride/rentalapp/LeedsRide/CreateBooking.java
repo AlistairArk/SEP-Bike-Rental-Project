@@ -2,6 +2,11 @@ package com.leedsride.rentalapp.LeedsRide;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -16,13 +21,17 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.leedsride.rentalapp.LeedsRide.Data.Booking;
+import com.leedsride.rentalapp.LeedsRide.models.Book;
+import com.leedsride.rentalapp.LeedsRide.models.Register;
 import com.xw.repo.BubbleSeekBar;
 
 import org.w3c.dom.Text;
@@ -56,6 +65,12 @@ public class CreateBooking extends AppCompatActivity {
     private ElegantNumberButton bikeNumberWidget;
 
     private Boolean is24HourView = false;
+
+
+    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String TAG = CreateBooking.class.getSimpleName();
+
+    Book book = new Book();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,14 +158,50 @@ public class CreateBooking extends AppCompatActivity {
 
         setReturnDate();
 
+        ///////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+
+
         completeBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 booking.setBikeQuantity(numberOfBikes);
                 booking.setOrderPrice(price);
-                
+
             }
         });
+
+//        completeBooking.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                EditText username = (EditText) findViewById(R.id.usernameRegisterEntry);
+//                EditText password = (EditText) findViewById(R.id.passwordRegisterEntry);
+//                EditText repeatPassword = (EditText) findViewById(R.id.passwordCheckerRegisterEntry);
+//                EditText email = (EditText) findViewById(R.id.emailRegisterEntry);
+//                EditText phone = (EditText) findViewById(R.id.phoneRegisterEntry);
+//
+//                book.setRequestType(username.getText().toString());
+//                book.setBikeNumber(password.getText().toString());
+//                book.setRentalLength(repeatPassword.getText().toString());
+//                book.setRentalDate(email.getText().toString());
+//                book.setRentalTime(phone.getText().toString());
+//                book.setCost();
+//
+//                sendNetworkRequest(book);
+//
+//            }
+//        });
+
+
+
+        ///////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////
 
 
         dateViewContainer.setOnClickListener(new View.OnClickListener() {
@@ -315,4 +366,6 @@ public class CreateBooking extends AppCompatActivity {
         String returnDate = hour + ":" + convertDate(min) + " " + timeOfDay + ", " + dayOfWeek + " " + day + " " + monthOfYear + " " + year;
         rentalReturnDate.setText(returnDate);
     }
+
+
 }
