@@ -367,5 +367,43 @@ public class CreateBooking extends AppCompatActivity {
         rentalReturnDate.setText(returnDate);
     }
 
-
+//    private void sendNetworkRequest(final Book request) {
+//
+//        ////Create retrofit object for network call
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(BASE_URL)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        ///implement instance of restAPI interface
+//        restAPI sampleAPI = retrofit.create(restAPI.class);
+//
+//        //create call which uses attemptRegister method from restAPI interface
+//        Call<Book> call = sampleAPI.makeBooking(request);
+//
+//        //add call to queue (in this case nothing in queue)
+//        call.enqueue(new Callback<Book>() {
+//            @Override
+//            public void onResponse(Call<Book> call, Response<Book> response) {
+//
+//                String reply = response.body().getBookingStatus();
+//                Log.d(TAG, reply);
+//
+//                if(reply.equals("Login Accepted")){ ////////////Update once server has been changed
+//                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
+//                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                    startActivity(startMainMenu);
+//                    finish();
+//                }
+//                if(reply.equals("Incorrect Login Information")){
+//                    Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Book> call, Throwable t) {
+//                Log.e("error", "Could not connect to external API");
+//            }
+//        });
+//    }
 }
