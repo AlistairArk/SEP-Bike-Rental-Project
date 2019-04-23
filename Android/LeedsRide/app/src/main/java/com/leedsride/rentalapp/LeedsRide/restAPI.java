@@ -7,6 +7,7 @@ import retrofit2.http.POST;
 
 import com.leedsride.rentalapp.LeedsRide.models.Login;
 import com.leedsride.rentalapp.LeedsRide.models.Register;
+import com.leedsride.rentalapp.LeedsRide.models.Book;
 
 public interface restAPI {
     @Headers("Content-Type: application/json")
@@ -16,4 +17,8 @@ public interface restAPI {
     @Headers("Content-Type: application/json")
     @POST("Live")
     Call<Register> attemptRegister(@Body Register register);
+
+    @Headers("Content-Type: application/json")
+    @POST("Live")
+    Call<Book> makeBooking(@Body Book book);
 }

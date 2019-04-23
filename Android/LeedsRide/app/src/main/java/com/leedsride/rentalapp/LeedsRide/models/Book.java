@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Book {
     /*********************
-            * Declared fields are only used internally,
+     * Declared fields are only used internally,
      * what needs to match the API key names are the Serialized names
      */
     @SerializedName("requestType")
@@ -13,10 +13,10 @@ public class Book {
     private String requestType;
     @SerializedName("bikeNumber")
     @Expose
-    private String bikeNumber;
+    private int bikeNumber;
     @SerializedName("rentalLength")
     @Expose
-    private String rentalLength;
+    private int rentalLength;
     @SerializedName("rentalDate")
     @Expose
     private String rentalDate;
@@ -26,4 +26,40 @@ public class Book {
     @SerializedName("bookingStatus")
     @Expose
     private String bookingStatus;
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
+    }
+
+    public void setBikeNumber(int bikeNumber) {
+        this.bikeNumber = bikeNumber;
+    }
+
+    public void setRentalLength(int rentalLength) {
+        this.rentalLength = rentalLength;
+    }
+
+    public void setRentalDate(String rentalDate) {
+        this.rentalDate = rentalDate;
+    }
+
+    public void setRentalTime(String rentalTime) {
+        this.rentalTime = rentalTime;
+    }
+
+    public String getBookingStatus() {
+        return bookingStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "requestType='" + requestType + '\'' +
+                ", bikeNumber=" + bikeNumber +
+                ", rentalLength=" + rentalLength +
+                ", rentalDate='" + rentalDate + '\'' +
+                ", rentalTime='" + rentalTime + '\'' +
+                ", bookingStatus='" + bookingStatus + '\'' +
+                '}';
+    }
 }
