@@ -3,15 +3,15 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, s
 from app import app, models, db
 from .forms import *
 import datetime
-from flaskext.mysql import MySQL
+# from flaskext.mysql import MySQL
 
 
 @app.route('/newBooking', methods=['GET','POST'])
 def newBooking():
     form=addBookingForm(request.form)
 
-    # form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
-    # form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
 
     return render_template("newBooking.html", form=form)
 

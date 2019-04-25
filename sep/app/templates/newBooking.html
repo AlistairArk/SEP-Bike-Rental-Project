@@ -53,14 +53,16 @@
             <div class="form-group row" style="width: 100%;">
                 <label for="Start Location" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Start Location</label>
                 <div class="col-sm-8">
-                    <input type="text" id="slocation" class="standard-form-entry" name="slocation" placeholder="Enter Start Location" required autofocus>
+                    {{ form.slocation }}
+                    <!-- <input type="text" id="slocation" class="standard-form-entry" name="slocation" placeholder="Enter Start Location" required autofocus> -->
                 </div>
             </div>
 
             <div class="form-group row" style="width: 100%;">
                 <label for="End Location" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">End Location</label>
                 <div class="col-sm-8">
-                    <input type="text" id="elocation" class="standard-form-entry" name="elocation" placeholder="Enter End Location" required autofocus>
+                    {{ form.elocation }}
+                    <!-- <input type="text" id="elocation" class="standard-form-entry" name="elocation" placeholder="Enter End Location" required autofocus> -->
                 </div>
             </div>
 
