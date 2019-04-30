@@ -24,11 +24,6 @@ class addBookingForm(Form):
     slocation = SelectField('slocation', validators=[DataRequired()])
     elocation = SelectField('elocation', validators=[DataRequired()])
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if not self.date.data:
-            self.date.data = datetime.date.today()
-
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if not user:
