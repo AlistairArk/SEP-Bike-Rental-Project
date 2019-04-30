@@ -3,7 +3,6 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, s
 from app import app, models, db
 from .forms import *
 import datetime
-# from flaskext.mysql import MySQL
 
 
 @app.route('/newBooking', methods=['GET','POST'])
@@ -38,8 +37,7 @@ def newBooking():
 #             elif key=='numbikes':
 #                 numbikes=value
 #
-#         user = models.User.query.filter_by(email=email)
-#         #usercheck = models.User.query.filter_by(phone).first()
+#         user = models.User.query.filter_by(email=email).first()
 #
 #         if user is not None:
 #             sdatetime = datetime.datetime.combine(date, stime)

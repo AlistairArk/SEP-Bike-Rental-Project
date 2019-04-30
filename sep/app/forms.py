@@ -33,3 +33,8 @@ class addBookingForm(Form):
         user = User.query.filter_by(phone=phone.data).first()
         if not phone:
             raise ValidationError('An account does not exists for that phone number.')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.date.data:
+            self.date.data = datetime.date.today()
