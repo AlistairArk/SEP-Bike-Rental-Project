@@ -26,10 +26,10 @@ class addBookingForm(Form):
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
-        if not user:
+        if user:
             raise ValidationError('An account does not exists for that email.')
 
-    def validate_phone(self, phone):
-        user = User.query.filter_by(phone=phone.data).first()
-        if not phone:
-            raise ValidationError('An account does not exists for that phone number.')
+    # def validate_phone(self, phone):
+    #     user = User.query.filter_by(phone=phone.data).first()
+    #     if not phone:
+    #         raise ValidationError('An account does not exists for that phone number.')
