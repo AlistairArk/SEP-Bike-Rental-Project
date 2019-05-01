@@ -52,7 +52,7 @@ def bookingAdded():
                             user_id= user,
                             end_location=elocation,
                             # bikes= ADD THIS,
-                            start_location=startloc.id
+                            start_location=startloc
                             )
         db.session.add(b)
 
