@@ -63,10 +63,12 @@ def webIndex():
 
 
 @app.route('/resetPassword')
+@loginPresent
 def webResetPassword():
     return render_template("resetPassword.html")
 
 @app.route('/resetRequest', methods=['POST'])
+@loginPresent
 def webResetRequest():
     # Send a password reset email to user
     email = str(request.form['email'])
