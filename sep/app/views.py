@@ -37,10 +37,10 @@ def bookingAdded():
             elif key=='numbikes':
                 numbikes=value
 
-        user = models.User.query.filter_by(email=email)
-        bookingTime = datetime.datetime.now
+        user = models.User.query.filter_by(email=email).first()
+        bookingTime = datetime.datetime.now()
         cost = 13.44
-        startloc = models.Location.query.filter_by(name=slocation)
+        startloc = models.Location.query.filter_by(name=slocation).first()
 
 
         b = models.Booking( cost= cost,
