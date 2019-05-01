@@ -49,7 +49,7 @@ def bookingAdded():
                             bike_amount=numbikes,
                             booking_time= bookingTime,
                             paid=False,
-                            user_id= user.id,
+                            user_id= user,
                             end_location=elocation,
                             # bikes= ADD THIS,
                             start_location=startloc.id
