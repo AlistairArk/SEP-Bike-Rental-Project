@@ -54,7 +54,7 @@ def bookingAdded():
                             # bikes= ADD THIS,
                             start_location=startloc
                             )
-        message="Booking: cost: "+cost+" / user id = "+user
+        message="Booking: cost: "+str(cost)+" / user id = "+user
         flash(message)
         #db.session.add(b)
 
@@ -65,7 +65,7 @@ def bookingAdded():
         #db.session.commit()
     else:
         message="request method: "+request.method
-        flash(message) 
+        flash(message)
 
     return render_template('bookingMade.html')
 
