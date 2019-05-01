@@ -54,7 +54,8 @@ def bookingAdded():
                             # bikes= ADD THIS,
                             start_location=startloc
                             )
-        flash("Booking made")
+        message="Booking: cost: "+cost+" / user id = "+user
+        flash(message)
         #db.session.add(b)
 
         #b.bikes.append(1)
