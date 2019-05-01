@@ -295,17 +295,6 @@ def locationStats():
                             locations=locations)
 
 
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -315,7 +304,11 @@ def log(*args):
         with open('log.log', 'a') as the_file:
             time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
             the_file.write("\n["+str(time)+"] "+line)
-=======
+
+
+
+
+
 ######## API 
 
 def api_loginRequired(f):
@@ -404,9 +397,5 @@ def apiReturnBike():
 
     json = request.get_json()
     return jsonify({'error': 'Authentificaton failed'})
-
-
-
->>>>>>> a0b7cb5da3aae2826c3b149247516e0c4482848c
 
 
