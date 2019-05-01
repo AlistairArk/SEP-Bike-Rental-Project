@@ -63,6 +63,10 @@ def bookingAdded():
 
 
         #db.session.commit()
+    else:
+        message="request method: "+request.method
+        flash(message) 
+
     return render_template('bookingMade.html')
 
         # if user is not None:
