@@ -26,4 +26,6 @@ public interface restAPI {
     @POST("Live")
     Call<Book> makeBooking(@Body Book book);
 
+    @GET("Live")
+    Call<Locations> getLocations();
 }

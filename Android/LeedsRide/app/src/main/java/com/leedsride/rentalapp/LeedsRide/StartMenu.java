@@ -51,5 +51,45 @@ public class StartMenu extends AppCompatActivity {
         });
     }
 
+    private void sendNetworkRequest() {
 
+        ////Create retrofit object for network call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ///implement instance of restAPI interface
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        //create call which uses attemptLogin method from restAPI interface
+        Call<Locations> call = sampleAPI.getLocations();
+
+        //add call to queue (in this case nothing in queue)
+        call.enqueue(new Callback<Locations>() {
+            @Override
+            public void onResponse(Call<Locations> call, Response<Locations> response) {
+
+                String reply = response.body().getName();
+                Log.d(TAG, reply);
+                //Log.d(TAG, reply);
+                //Log.d(TAG, reply);
+
+                if(reply.equals("Login Accepted")){
+                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
+                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(startMainMenu);
+                    finish();
+                }
+                if(reply.equals("Incorrect Login Information")){
+                    Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Locations> call, Throwable t) {
+                Log.e("error", "Could not connect to external API");
+            }
+        });
+    }
 }
