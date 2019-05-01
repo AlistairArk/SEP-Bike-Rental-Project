@@ -53,8 +53,8 @@ def bookingAdded():
                             end_location=elocation,
                             # bikes= ADD THIS,
                             start_location=startloc
-        flash("Booking made!")
                             )
+        flash("Booking made")
         #db.session.add(b)
 
         #b.bikes.append(1)
