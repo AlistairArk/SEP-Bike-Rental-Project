@@ -10,9 +10,21 @@
         <form class="standard-form-form">
         {{ form.hidden_tag() }}
             <div class="form-group row" style="width: 100%;">
-                <label for="email" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Email</label>
+                <!-- <label for="email" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Email</label>
                 <div class="col-sm-8">
                     <input type="text" id="email" class="standard-form-entry" name="email" placeholder="Enter Email" required autofocus>
+                </div> -->
+                <div class="form-group">
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control is-invalid", placeholder="Enter Email") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control", placeholder="Email") }}
+                    {% endif %}
                 </div>
             </div>
             <div class="form-group row" style="width: 100%;">
