@@ -62,7 +62,7 @@ def bookingAdded():
 
 
         #db.session.commit()
-        return render_template('newBooking.html')
+        return render_template('bookingMade.html')
 
         # if user is not None:
         #     sdatetime = datetime.datetime.combine(date, stime)

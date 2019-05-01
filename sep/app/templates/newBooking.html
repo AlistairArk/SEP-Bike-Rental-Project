@@ -1,16 +1,4 @@
 {% extends "index.html" %}
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul>
-    {% for message in messages %}
-        <div class="alert alert-warning">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
-        </div>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
 {% block content %}
 <div class="standard-form-container">
     <div class="standard-form-wrapper">
