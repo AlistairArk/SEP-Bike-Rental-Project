@@ -53,6 +53,7 @@ def bookingAdded():
                             end_location=elocation,
                             # bikes= ADD THIS,
                             start_location=startloc
+        flash("Booking made!")
                             )
         #db.session.add(b)
 
@@ -61,7 +62,7 @@ def bookingAdded():
 
 
         #db.session.commit()
-        return render_template('index.html')
+        return render_template('newBooking.html')
 
         # if user is not None:
         #     sdatetime = datetime.datetime.combine(date, stime)
