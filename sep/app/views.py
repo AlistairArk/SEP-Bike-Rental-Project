@@ -56,8 +56,8 @@ def bookingAdded():
                             )
         db.session.add(b)
 
-        b.bikes.append(1)
-        b.bikes.append(2)
+        #b.bikes.append(1)
+        #b.bikes.append(2)
 
 
         db.session.commit()
