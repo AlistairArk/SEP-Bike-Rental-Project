@@ -40,7 +40,7 @@ def bookingAdded():
         user = models.User.query.filter_by(email=email)
         bookingTime = datetime.datetime.now()
         cost = 13.44
-        startloc = models.Location.query.filter_by(name=slocation)
+        #startloc = models.Location.query.filter_by(name=slocation) ################
 
 
         b = models.Booking( cost= cost,
@@ -52,7 +52,8 @@ def bookingAdded():
                             user_id= user,
                             end_location=elocation,
                             # bikes= ADD THIS,
-                            start_location=startloc
+                            #start_location=startloc#############
+                            start_location=slocation
                             )
         db.session.add(b)
 
