@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+
     <include
         layout="@layout/app_bar_nav_drawer"
         android:layout_width="match_parent"
@@ -20,7 +21,18 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MapsActivity" />
+        tools:context=".MapsActivity" >
+
+        <ImageButton
+            android:id="@+id/burgerMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:background="@android:color/transparent"
+            android:layout_margin="15dp"
+            android:src="@drawable/menu" />
+
+    </fragment>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

@@ -186,7 +186,7 @@
             android:layout_height="20dp" />
 
         <TextView
-            android:id="@+id/emailLabel"
+            android:id="@+id/phoneLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Phone number"
@@ -196,7 +196,7 @@
 
 
         <EditText
-            android:id="@+id/emailRegisterEntry"
+            android:id="@+id/phoneRegisterEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
