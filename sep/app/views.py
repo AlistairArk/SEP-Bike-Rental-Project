@@ -51,8 +51,10 @@ def newBooking():
             # edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
 
             b = models.Booking( cost= cost,
-                                start_time=sdatetime,
-                                end_time=edatetime,
+                                # start_time=sdatetime,
+                                # end_time=edatetime,
+                                start_time=stime,
+                                end_time=etime,
                                 bike_amount=numbikes,
                                 booking_time= bookingTime,
                                 paid=False,
