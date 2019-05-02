@@ -56,12 +56,12 @@ def bookingAdded():
                             start_location=startloc
                             )
         # message="Booking: user id = "+user.name
-        message="Booking: cost: "+cost+" | startloc: "+slocation+" | endloc: "+elocation
+        message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
         #try different variable to print
         flash(message)
         m2 = "start time: "+stime+" | end time: "+etime+" | bike amount: "+numbikes
         flash(m2)
-        m3 = "booking time: "+bookingTime
+        m3 = "booking time: "+bookingTime+" | user name: "+user.name
         flash(m3)
         #db.session.add(b)
 
