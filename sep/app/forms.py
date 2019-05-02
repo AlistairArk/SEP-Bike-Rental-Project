@@ -1,8 +1,8 @@
 from flask_wtf import Form
 from .models import User
-from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, DateField
+from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
-from wtforms_components import TimeField
+# from wtforms_components import TimeField
 
 class addBikesForm(Form):
     amount = IntegerField('amount', [validators.NumberRange(max=10,min=-5)])
@@ -19,9 +19,9 @@ class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     phone = IntegerField('phone', validators=[DataRequired()])
     numbikes = IntegerField('numbikes', validators=[DataRequired()])
-    date = DateField('date', validators=[DataRequired()])
-    stime = TimeField('stime', validators=[DataRequired()])
-    etime = TimeField('stime', validators=[DataRequired()])
+    # date = DateField('date', validators=[DataRequired()])
+    stime = DateTimeField('stime', validators=[DataRequired()])
+    etime = DateTimeField('etime', validators=[DataRequired()])
     slocation = SelectField('slocation', validators=[DataRequired()])
     elocation = SelectField('elocation', validators=[DataRequired()])
 
@@ -34,3 +34,7 @@ class addBookingForm(Form):
     #     user = User.query.filter_by(phone=phone.data).first()
     #     if not phone:
     #         raise ValidationError('An account does not exists for that phone number.')
+# class testForm(Form):
+#     stime = DateTimeField('stime', validators=[DataRequired()])
+#     etime = DateTimeField('etime', validators=[DataRequired()])
+    # day =

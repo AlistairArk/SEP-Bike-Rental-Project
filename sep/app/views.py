@@ -3,7 +3,25 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, s
 from app import app, models, db
 from .forms import *
 import datetime
+from datetime import *
 
+@app.route('/test', methods=['GET','POST'])
+def test():
+    form=testForm(request.form)
+    if request.method=='POST':
+        stime=request.form['stime']
+        etime=request.form['etime']
+
+        ssplit = stime.split("T")
+        sdatetime = datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+        esplit = etime.split("T")
+        edatetime = datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
+        m3="sdatetime type: ",type(sdatetime)," | sdatetime: ",sdatetime
+        m4="edatetime type: ",type(edatetime)," | edatetime: ",edatetime
+        flash(m3)
+        flash(m4)
+
+    return render_template("testForm.html", form=form)
 
 @app.route('/newBooking', methods=['GET','POST'])
 def newBooking():
@@ -24,8 +42,8 @@ def bookingAdded():
                 email=value
             elif key=='phone':
                 phone=value
-            elif key=='date':
-                date=value
+            # elif key=='date':
+            #     date=value
             elif key=='stime':
                 stime=value
             elif key=='etime':
@@ -37,36 +55,33 @@ def bookingAdded():
             elif key=='numbikes':
                 numbikes=value
 
-        user = models.User.query.filter_by(email=email).first()
-        bookingTime = datetime.datetime.now()
         cost = 13.44
-        # startloc = models.Location.query.filter_by(name=slocation).first()
+        bookingTime = datetime.datetime.now()
+        user = models.User.query.filter_by(email=email).first()
         startloc = models.Location.query.filter_by(id=slocation).first()
 
+        ssplit = stime.split("T")
+        sdatetime = datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+        esplit = etime.split("T")
+        edatetime = datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
 
         b = models.Booking( cost= cost,
-                            start_time=stime,
-                            end_time=etime,
+                            start_time=sdatetime,
+                            end_time=edatetime,
                             bike_amount=numbikes,
                             booking_time= bookingTime,
                             paid=False,
                             user_id= user.id,
                             end_location=elocation,
-                            # bikes= ADD THIS,
                             start_location=startloc
                             )
 
-        #trying to convert stime and etime to DateTime variable:
-        # sdatetime = datetime.datetime.combine(date, stime)
-        # edatetime = datetime.datetime.combine(date, etime)
-        m4="date type: ",type(date), " | stime type: ",type(stime)," | etime type: ",type(etime)
+        m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
         flash(m4)
-
-
         message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
         #try different variable to print
         flash(message)
-        m2 = "start time: ",stime," | end time: ",etime," | bike amount: ",numbikes
+        m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
         # m2 = "start time: "+sdatetime+" | end time: "+edatetime+" | bike amount: "+numbikes
         flash(m2)
         m3 = "booking time: ",bookingTime," | user name: "+user.name
@@ -145,10 +160,10 @@ def newLocation():
     #Just rendering newLocation as a test
     return render_template("newLocation.html")
 
-@app.route('/test')
-def test():
-    #Just rendering test as a test
-    return render_template("test.html")
+# @app.route('/test')
+# def test():
+#     #Just rendering test as a test
+#     return render_template("test.html")
 
 # @app.route('/newBooking',methods=['GET','POST'])
 # def newBooking():
