@@ -69,7 +69,7 @@ def bookingAdded():
                             paid=False,
                             user_id= user.id,
                             end_location=elocation,
-                            start_location=startloc
+                            start_location=startloc.id
                             )
 
 
