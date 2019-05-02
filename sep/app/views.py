@@ -5,23 +5,23 @@ from .forms import *
 import datetime
 # from datetime import datetime
 
-@app.route('/test', methods=['GET','POST'])
-def test():
-    form=testForm(request.form)
-    if request.method=='POST':
-        stime=request.form['stime']
-        etime=request.form['etime']
-
-        ssplit = stime.split("T")
-        sdatetime = datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
-        esplit = etime.split("T")
-        edatetime = datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
-        m3="sdatetime type: ",type(sdatetime)," | sdatetime: ",sdatetime
-        m4="edatetime type: ",type(edatetime)," | edatetime: ",edatetime
-        flash(m3)
-        flash(m4)
-
-    return render_template("testForm.html", form=form)
+# @app.route('/test', methods=['GET','POST'])
+# def test():
+#     form=testForm(request.form)
+#     if request.method=='POST':
+#         stime=request.form['stime']
+#         etime=request.form['etime']
+#
+#         ssplit = stime.split("T")
+#         sdatetime = datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+#         esplit = etime.split("T")
+#         edatetime = datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
+#         m3="sdatetime type: ",type(sdatetime)," | sdatetime: ",sdatetime
+#         m4="edatetime type: ",type(edatetime)," | edatetime: ",edatetime
+#         flash(m3)
+#         flash(m4)
+#
+#     return render_template("testForm.html", form=form)
 
 @app.route('/newBooking', methods=['GET','POST'])
 def newBooking():
@@ -40,10 +40,6 @@ def bookingAdded():
         for key,value in bookingInfo.items():
             if key=='email':
                 email=value
-            elif key=='phone':
-                phone=value
-            # elif key=='date':
-            #     date=value
             elif key=='stime':
                 stime=value
             elif key=='etime':
@@ -76,25 +72,19 @@ def bookingAdded():
                             start_location=startloc
                             )
 
+
         m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
         flash(m4)
         message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
-        #try different variable to print
         flash(message)
         m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
-        # m2 = "start time: "+sdatetime+" | end time: "+edatetime+" | bike amount: "+numbikes
         flash(m2)
         m3 = "booking time: ",bookingTime," | user name: "+user.name
         flash(m3)
 
+        db.session.add(b)
+        db.session.commit()
 
-        #db.session.add(b)
-
-        #b.bikes.append(1)
-        #b.bikes.append(2)
-
-
-        #db.session.commit()
     else:
         message="request method: "+request.method
         flash(message)

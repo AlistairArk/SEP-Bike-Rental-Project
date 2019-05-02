@@ -17,7 +17,6 @@ class addLocationForm(Form):
 
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
-    phone = IntegerField('phone', validators=[DataRequired()])
     numbikes = IntegerField('numbikes', validators=[DataRequired()])
     # date = DateField('date', validators=[DataRequired()])
     stime = DateTimeField('stime', validators=[DataRequired()])
