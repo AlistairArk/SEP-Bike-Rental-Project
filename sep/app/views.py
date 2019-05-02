@@ -44,11 +44,11 @@ def newBooking():
             flash("user exists")
             cost = 13.44
             bookingTime = datetime.datetime.now()
-            startloc = models.Location.query.filter_by(id=slocation).first()
-            ssplit = stime.split("T")
-            sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
-            esplit = etime.split("T")
-            edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
+            # startloc = models.Location.query.filter_by(id=slocation).first()
+            # ssplit = stime.split("T")
+            # sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+            # esplit = etime.split("T")
+            # edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
 
             b = models.Booking( cost= cost,
                                 start_time=sdatetime,
@@ -61,18 +61,19 @@ def newBooking():
                                 start_location=startloc.id
                                 )
 
-
-            m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
-            flash(m4)
+            m="stime type: ",type(stime)," | etime type: ",type(etime)
+            flash(m)
+            # m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
+            # flash(m4)
             message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
             flash(message)
-            m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
-            flash(m2)
+            # m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
+            # flash(m2)
             m3 = "booking time: ",bookingTime," | user name: "+user.name
             flash(m3)
 
-            db.session.add(b)
-            db.session.commit()
+            # db.session.add(b)
+            # db.session.commit()
         else:
             flash("This email is not associated with a user.")
     else:
