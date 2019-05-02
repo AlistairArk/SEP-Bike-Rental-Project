@@ -44,7 +44,7 @@ def newBooking():
             flash("user exists")
             cost = 13.44
             bookingTime = datetime.datetime.now()
-            # startloc = models.Location.query.filter_by(id=slocation).first()
+            startloc = models.Location.query.filter_by(id=slocation).first()
             # ssplit = stime.split("T")
             # sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
             # esplit = etime.split("T")
