@@ -26,7 +26,7 @@ import datetime
 
 @app.route('/newBooking', methods=['GET','POST'])
 def newBooking():
-    form=addBookingForm(request.form)
+    form=addBookingForm()
 
     form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
     form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
