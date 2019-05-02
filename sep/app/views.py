@@ -59,18 +59,18 @@ def bookingAdded():
         #trying to convert stime and etime to DateTime variable:
         # sdatetime = datetime.datetime.combine(date, stime)
         # edatetime = datetime.datetime.combine(date, etime)
-        m4="date type: "+type(date)+ " | stime type: "+type(stime)+" | etime type: "+type(etime)
+        m4="date type: ",type(date), " | stime type: ",type(stime)," | etime type: ",type(etime)
         flash(m4)
 
 
         message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
         #try different variable to print
         flash(message)
-        m2 = "start time: "+stime+" | end time: "+etime+" | bike amount: "+numbikes
+        m2 = "start time: ",stime," | end time: ",etime," | bike amount: ",numbikes
         # m2 = "start time: "+sdatetime+" | end time: "+edatetime+" | bike amount: "+numbikes
         flash(m2)
-        # m3 = "booking time: "+bookingTime+" | user name: "+user.name
-        # flash(m3)
+        m3 = "booking time: ",bookingTime," | user name: "+user.name
+        flash(m3)
 
 
         #db.session.add(b)
