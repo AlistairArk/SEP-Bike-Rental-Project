@@ -17,7 +17,6 @@
         <div class="standard-form-header">
             <h3>New Booking:</h3>
         </div>
-        <!-- <form action="{{ url_for('bookingAdded') }}" method="POST" class="standard-form-form"> -->
         <form action="{{ url_for('newBooking') }}" method="POST" class="standard-form-form">
             {{ form.hidden_tag() }}
             <div class="form-group row" style="width: 100%;">
