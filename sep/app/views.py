@@ -74,7 +74,7 @@ def newBooking():
             db.session.add(b)
             db.session.commit()
         else:
-            flash("This email is not associated with a user.", error)
+            flash("This email is not associated with a user.")
     else:
         flash("form does not validate on submit")
 
