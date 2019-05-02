@@ -50,12 +50,13 @@ def bookingAdded():
                             bike_amount=numbikes,
                             booking_time= bookingTime,
                             paid=False,
-                            user_id= user.id,  #user.id????????????????????
+                            user_id= user.id,
                             end_location=elocation,
                             # bikes= ADD THIS,
                             start_location=startloc
                             )
-        message="Booking: user id = "+user.name
+        # message="Booking: user id = "+user.name
+        message="Booking: startloc: "+startloc.name
         #try different variable to print
         flash(message)
         #db.session.add(b)
