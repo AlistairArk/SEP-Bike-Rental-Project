@@ -55,14 +55,22 @@ def bookingAdded():
                             # bikes= ADD THIS,
                             start_location=startloc
                             )
-        # message="Booking: user id = "+user.name
+
+        #trying to convert stime and etime to DateTime variable:
+        sdatetime = datetime.datetime.combine(date, stime)
+        edatetime = datetime.datetime.combine(date, etime)
+
+
         message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
         #try different variable to print
         flash(message)
-        m2 = "start time: "+stime+" | end time: "+etime+" | bike amount: "+numbikes
+        # m2 = "start time: "+stime+" | end time: "+etime+" | bike amount: "+numbikes
+        m2 = "start time: "+sdatetime+" | end time: "+edatetime+" | bike amount: "+numbikes
         flash(m2)
-        m3 = "booking time: "+bookingTime+" | user name: "+user.name
-        flash(m3)
+        # m3 = "booking time: "+bookingTime+" | user name: "+user.name
+        # flash(m3)
+
+
         #db.session.add(b)
 
         #b.bikes.append(1)
