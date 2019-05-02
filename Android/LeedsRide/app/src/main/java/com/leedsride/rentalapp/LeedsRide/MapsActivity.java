@@ -42,6 +42,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.leedsride.rentalapp.LeedsRide.Data.Booking;
+import com.leedsride.rentalapp.LeedsRide.models.Locations;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -54,6 +63,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout drawer;
 
     private Booking booking;
+
+    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String TAG = MapsActivity.class.getSimpleName();
 
 
     @Override
@@ -98,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         } else if (id == R.id.nav_payment) {
 
                         } else if (id == R.id.nav_help) {
-
+                            //sendNetworkRequest();
                         } else if (id == R.id.nav_changePassword) {
 
                         } else if (id == R.id.nav_logOut) {
@@ -162,38 +174,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        LatLng lubs = new LatLng(53.808832, -1.561353);
-        mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School").snippet("Available: 15\nParking Spaces: 1"));
-
-        LatLng theLight = new LatLng(53.800661, -1.545673);
-        mMap.addMarker(new MarkerOptions().position(theLight).title("The Light").snippet("Available: 10\nParking Spaces: 4"));
-
-        LatLng artsUniversity = new LatLng(53.809512, -1.551420);
-        mMap.addMarker(new MarkerOptions().position(artsUniversity).title("Leeds Arts University").snippet("Available: 5\nParking Spaces: 13"));
-
         LatLng initial = new LatLng(53.803690, -1.551385);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initial, 14));
+
+        ////Create retrofit object for network call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ///implement instance of restAPI interface
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        //create call which uses attemptLogin method from restAPI interface
+        Call<List<Locations>> call = sampleAPI.getLocations();
+
+        //add call to queue (in this case nothing in queue)
+        call.enqueue(new Callback<List<Locations>>() {
+            @Override
+            public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
+
+                List<Locations> locations = response.body();
+
+                for(Locations location : locations){
+//                    String content = "";
+//                    content += "Name: " + location.getName() + " ";
+//                    content += "Latitude: " + location.getLatitude();
+//                    content += "Longitude: " + location.getLongitude();
+//                    content += "Available: " + location.getBikesAvailable();
+//
+//                    Log.d(TAG, content + "!!!!!!!");
+
+                    LatLng marker = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(marker).title(location.getName()).snippet("Available: " + location.getBikesAvailable()));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Locations>> call, Throwable t) {
+                Log.e("error", "Could not connect to external API");
+            }
+        });
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-
-//                mMap.clear();
-//
-//                /////Do these need to be here because of the clear?
-//                LatLng lubs = new LatLng(53.808832, -1.561353);
-//                mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School"));
-//
-//                LatLng theLight = new LatLng(53.800661, -1.545673);
-//                mMap.addMarker(new MarkerOptions().position(theLight).title("The Light"));
-//
-//                LatLng artsUniversity = new LatLng(53.809512, -1.551420);
-//                mMap.addMarker(new MarkerOptions().position(artsUniversity).title("Leeds Arts University"));
-//
-//                LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
-//                mMap.addMarker(new MarkerOptions().position(user).title("Your location").snippet("Available: 10").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-//                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(user, 14));
 
             }
 

@@ -72,13 +72,13 @@ public class RegisterActivity extends AppCompatActivity {
                 String reply = response.body().getRegistrationStatus();
                 Log.d(TAG, reply);
 
-                if(reply.equals("Login Accepted")){ ////////////Update once server has been changed
+                if(reply.equals("User Registered")){ ////////////Update once server has been changed
                     Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
                     startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(startMainMenu);
                     finish();
                 }
-                if(reply.equals("Incorrect Login Information")){
+                if(reply.equals("Registration could not be completed")){
                     Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
                 }
             }
