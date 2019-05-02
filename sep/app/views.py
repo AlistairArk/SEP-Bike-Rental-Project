@@ -50,12 +50,12 @@ def bookingAdded():
                 elocation=value
             elif key=='numbikes':
                 numbikes=value
+
+        user = models.User.query.filter_by(email=email).first()
         if user is not None:
             cost = 13.44
             bookingTime = datetime.datetime.now()
-            user = models.User.query.filter_by(email=email).first()
             startloc = models.Location.query.filter_by(id=slocation).first()
-
             ssplit = stime.split("T")
             sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
             esplit = etime.split("T")
