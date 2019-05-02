@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="container table-responsive">
+  <br><br><h2 class="text-center">Bike Amount per Location</h2><br><br>
+  <table class="table table-striped ">
+    <thead>
+      <tr class="text-center">
+        <th>Location id</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Number of Bikes in Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for l in locations %}
+        <tr class="text-center">
+          <td>{{ l.id }}</td>
+          <td>{{ l.name }}</td>
+          <td>{{ l.addr }}</td>
+          <td>{{ l.bike_amount }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}
