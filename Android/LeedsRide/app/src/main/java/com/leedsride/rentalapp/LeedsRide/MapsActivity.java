@@ -270,18 +270,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d(TAG, reply);
                 Log.d(TAG, location);
                 Log.d(TAG, bikesAvailable);
-
-                if(reply.equals("Login Accepted")){
-                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
-                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(startMainMenu);
-                    finish();
-                }
-                if(reply.equals("Incorrect Login Information")){
-                    Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
-                }
             }
-
+            
             @Override
             public void onFailure(Call<Locations> call, Throwable t) {
                 Log.e("error", "Could not connect to external API");
