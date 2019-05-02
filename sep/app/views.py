@@ -57,8 +57,8 @@ def bookingAdded():
                             )
 
         #trying to convert stime and etime to DateTime variable:
-        sdatetime = datetime.datetime.combine(date, stime)
-        edatetime = datetime.datetime.combine(date, etime)
+        # sdatetime = datetime.datetime.combine(date, stime)
+        # edatetime = datetime.datetime.combine(date, etime)
         m4="date type: "+type(date)+ " | stime type: "+type(stime)+" | etime type: "+type(etime)
         flash(m4)
 
