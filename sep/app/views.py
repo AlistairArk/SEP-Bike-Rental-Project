@@ -86,7 +86,10 @@ def bookingAdded():
             db.session.commit()
         else:
             flash("This email is not associated with a user.")
-            return render_template('{{ url_for(\'newBooking\')}}')
+            bookingForm=addBookingForm(bookingInfo)
+            # return render_template('{{ url_for(\'newBooking\')}}')
+            return render_template("newBooking.html", form=bookingForm)
+            # newBooking()
 
     else:
         message="request method: "+request.method
