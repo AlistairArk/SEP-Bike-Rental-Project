@@ -77,7 +77,6 @@ def newBooking():
             flash("This email is not associated with a user.", error)
     else:
         flash("form does not validate on submit")
-        return render_template("index.html")
 
     return render_template("newBooking.html", form=form)
 
