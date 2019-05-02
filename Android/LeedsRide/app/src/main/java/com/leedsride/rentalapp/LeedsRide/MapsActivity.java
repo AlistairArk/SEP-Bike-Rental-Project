@@ -42,6 +42,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.leedsride.rentalapp.LeedsRide.Data.Booking;
+import com.leedsride.rentalapp.LeedsRide.models.Locations;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -54,6 +61,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout drawer;
 
     private Booking booking;
+
+    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String TAG = MapsActivity.class.getSimpleName();
 
 
     @Override
@@ -233,6 +243,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             }
         }
+    }
+    private void sendNetworkRequest() {
+
+        ////Create retrofit object for network call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ///implement instance of restAPI interface
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        //create call which uses attemptLogin method from restAPI interface
+        Call<Locations> call = sampleAPI.getLocations();
+
+        //add call to queue (in this case nothing in queue)
+        call.enqueue(new Callback<Locations>() {
+            @Override
+            public void onResponse(Call<Locations> call, Response<Locations> response) {
+
+                String reply = response.body().getName();
+                String location = response.body().getLocation();
+                String bikesAvailable = response.body().getBikesAvailable();
+
+                Log.d(TAG, reply);
+                Log.d(TAG, location);
+                Log.d(TAG, bikesAvailable);
+
+                if(reply.equals("Login Accepted")){
+                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
+                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(startMainMenu);
+                    finish();
+                }
+                if(reply.equals("Incorrect Login Information")){
+                    Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Locations> call, Throwable t) {
+                Log.e("error", "Could not connect to external API");
+            }
+        });
     }
 }
 
