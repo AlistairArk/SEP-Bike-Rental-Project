@@ -18,7 +18,6 @@ class addLocationForm(Form):
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     numbikes = IntegerField('numbikes', validators=[DataRequired()])
-    # date = DateField('date', validators=[DataRequired()])
     stime = DateTimeField('stime', validators=[DataRequired()])
     etime = DateTimeField('etime', validators=[DataRequired()])
     slocation = SelectField('slocation', validators=[DataRequired()])
@@ -29,10 +28,8 @@ class addBookingForm(Form):
         if not user:
             raise ValidationError('An account does not exists for that email.')
 
-    # def validate_phone(self, phone):
-    #     user = User.query.filter_by(phone=phone.data).first()
-    #     if not phone:
-    #         raise ValidationError('An account does not exists for that phone number.')
+
+
 # class testForm(Form):
 #     stime = DateTimeField('stime', validators=[DataRequired()])
 #     etime = DateTimeField('etime', validators=[DataRequired()])
