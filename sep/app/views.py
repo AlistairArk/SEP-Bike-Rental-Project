@@ -53,7 +53,7 @@ def bookingAdded():
                             user_id= user.id,
                             end_location=elocation,
                             # bikes= ADD THIS,
-                            start_location=startloc
+                            # start_location=startloc
                             )
         # message="Booking: user id = "+user.name
         message="Booking: startloc: "+slocation
