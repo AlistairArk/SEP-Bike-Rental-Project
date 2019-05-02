@@ -29,7 +29,7 @@ def newBooking():
 
     form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
     form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
-
+    flash("before form")
     if form.validate_on_submit():
         email = form.email.data
         stime = form.stime.data
@@ -37,9 +37,8 @@ def newBooking():
         slocation = form.slocation.data
         elocation = form.elocation.data
         numbikes = form.numbikes.data
-        flash("hello")
+        flash("form validates on submit")
         user = models.User.query.filter_by(email=email).first()
-        flash("hello 2")
         if user is not None:
             flash("user exists")
             cost = 13.44
@@ -75,6 +74,8 @@ def newBooking():
             db.session.commit()
         else:
             flash("This email is not associated with a user.", error)
+    else:
+        flash("form does not validate on submit")
 
     return render_template("newBooking.html", form=form)
 
