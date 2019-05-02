@@ -71,9 +71,12 @@ public class StartMenu extends AppCompatActivity {
             public void onResponse(Call<Locations> call, Response<Locations> response) {
 
                 String reply = response.body().getName();
+                String location = response.body().getLocation();
+                String bikesAvailable = response.body().getBikesAvailable();
+
                 Log.d(TAG, reply);
-                //Log.d(TAG, reply);
-                //Log.d(TAG, reply);
+                Log.d(TAG, location);
+                Log.d(TAG, bikesAvailable);
 
                 if(reply.equals("Login Accepted")){
                     Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
