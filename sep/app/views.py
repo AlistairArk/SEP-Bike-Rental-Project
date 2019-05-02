@@ -61,9 +61,9 @@ def bookingAdded():
         startloc = models.Location.query.filter_by(id=slocation).first()
 
         ssplit = stime.split("T")
-        sdatetime = datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+        sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
         esplit = etime.split("T")
-        edatetime = datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
+        edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
 
         b = models.Booking( cost= cost,
                             start_time=sdatetime,
