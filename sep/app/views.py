@@ -30,26 +30,13 @@ def newBooking():
     form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
     form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
 
-    return render_template("newBooking.html", form=form)
-
-
-@app.route('/bookingAdded',methods=['GET','POST'])
-def bookingAdded():
-    if request.method == 'POST':
-        bookingInfo = request.form
-        for key,value in bookingInfo.items():
-            if key=='email':
-                email=value
-            elif key=='stime':
-                stime=value
-            elif key=='etime':
-                etime=value
-            elif key=='slocation':
-                slocation=value
-            elif key=='elocation':
-                elocation=value
-            elif key=='numbikes':
-                numbikes=value
+    if form.validate_on_submit():
+        email = form.email.data
+        stime = form.stime.data
+        etime = form.etime.data
+        slocation = form.slocation.data
+        elocation = form.elocation.data
+        numbikes = form.numbikes.data
 
         user = models.User.query.filter_by(email=email).first()
         if user is not None:
@@ -85,17 +72,74 @@ def bookingAdded():
             db.session.add(b)
             db.session.commit()
         else:
-            flash("This email is not associated with a user.")
-            bookingForm=addBookingForm(bookingInfo)
-            # return render_template('{{ url_for(\'newBooking\')}}')
-            return render_template("newBooking.html", form=bookingForm)
-            # newBooking()
+            flash("This email is not associated with a user.", error)
 
-    else:
-        message="request method: "+request.method
-        flash(message)
+    return render_template("newBooking.html", form=form)
 
-    return render_template('bookingMade.html')
+
+# @app.route('/bookingAdded',methods=['GET','POST'])
+# def bookingAdded():
+#     if request.method == 'POST':
+#         bookingInfo = request.form
+#         for key,value in bookingInfo.items():
+#             if key=='email':
+#                 email=value
+#             elif key=='stime':
+#                 stime=value
+#             elif key=='etime':
+#                 etime=value
+#             elif key=='slocation':
+#                 slocation=value
+#             elif key=='elocation':
+#                 elocation=value
+#             elif key=='numbikes':
+#                 numbikes=value
+#
+#         user = models.User.query.filter_by(email=email).first()
+#         if user is not None:
+#             cost = 13.44
+#             bookingTime = datetime.datetime.now()
+#             startloc = models.Location.query.filter_by(id=slocation).first()
+#             ssplit = stime.split("T")
+#             sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+#             esplit = etime.split("T")
+#             edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
+#
+#             b = models.Booking( cost= cost,
+#                                 start_time=sdatetime,
+#                                 end_time=edatetime,
+#                                 bike_amount=numbikes,
+#                                 booking_time= bookingTime,
+#                                 paid=False,
+#                                 user_id= user.id,
+#                                 end_location=elocation,
+#                                 start_location=startloc.id
+#                                 )
+#
+#
+#             m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
+#             flash(m4)
+#             message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
+#             flash(message)
+#             m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
+#             flash(m2)
+#             m3 = "booking time: ",bookingTime," | user name: "+user.name
+#             flash(m3)
+#
+#             db.session.add(b)
+#             db.session.commit()
+#         else:
+#             flash("This email is not associated with a user.")
+#             bookingForm=addBookingForm(bookingInfo)
+#             # return render_template('{{ url_for(\'newBooking\')}}')
+#             return render_template("newBooking.html", form=bookingForm)
+#             # newBooking()
+#
+#     else:
+#         message="request method: "+request.method
+#         flash(message)
+#
+#     return render_template('bookingMade.html')
 
         # if user is not None:
         #     sdatetime = datetime.datetime.combine(date, stime)
