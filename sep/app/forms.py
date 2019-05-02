@@ -23,14 +23,13 @@ class addBookingForm(Form):
     slocation = SelectField('slocation', validators=[DataRequired()])
     elocation = SelectField('elocation', validators=[DataRequired()])
 
-    # def validate_email(self, email):
-    #     user = User.query.filter_by(email=email.data).first()
-    #     if not user:
-    #         raise ValidationError('An account does not exists for that email.')
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if not user:
+            raise ValidationError('An account does not exists for that email.')
 
 
-
+#
 # class testForm(Form):
 #     stime = DateTimeField('stime', validators=[DataRequired()])
 #     etime = DateTimeField('etime', validators=[DataRequired()])
-    # day =

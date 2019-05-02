@@ -9,13 +9,14 @@ import datetime
 # def test():
 #     form=testForm(request.form)
 #     if request.method=='POST':
+#     # if form.validate_on_submit():
 #         stime=request.form['stime']
 #         etime=request.form['etime']
 #
 #         ssplit = stime.split("T")
-#         sdatetime = datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+#         sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
 #         esplit = etime.split("T")
-#         edatetime = datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
+#         edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
 #         m3="sdatetime type: ",type(sdatetime)," | sdatetime: ",sdatetime
 #         m4="edatetime type: ",type(edatetime)," | edatetime: ",edatetime
 #         flash(m3)
@@ -25,13 +26,12 @@ import datetime
 
 @app.route('/newBooking', methods=['GET','POST'])
 def newBooking():
-    flash("first line of newBooking")
     form=addBookingForm(request.form)
 
     form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
     form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
-    flash("before form")
-    if form.validate_on_submit():
+    flash("before getting form data")
+    if request.method=="POST":
         email = form.email.data
         stime = form.stime.data
         etime = form.etime.data
