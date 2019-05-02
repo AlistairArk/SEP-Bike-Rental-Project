@@ -1,41 +1,74 @@
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
+from functools import wraps
 from .forms import *
 import json
 
-'''
-#Check if user is needed to be logged in for a page:
+
+
+
+
+# #Check if user is needed to be logged in for a page:
 def loginRequired(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'logged_in' in session:
+    def decorated(*args, **kwargs):
+        if 'loggedIn' in session:
             return f(*args, **kwargs)
-        return redirect(url_for('login'))
-    return decorated_function
 
-#Check is already logged through sessions:
+        else:
+            return redirect(url_for('webLogin'))
+
+    return decorated
+
+# #Check is already logged through sessions:
 def loginPresent(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'logged_in' in session:
-            return redirect(url_for('dashboard'))
-        return f(*args, **kwargs)
-    return decorated_function
-'''
+    def decorated(*args, **kwargs):
+        if 'loggedIn' in session:
+            return redirect(url_for('webIndex'))
+        else:
+            return f(*args, **kwargs)
+
+    return decorated
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('webLogin'))
+
+
+
 
 @app.route('/')
-def index():
-    # Just rendering login as a test
+@loginPresent
+def webLogin():
     return render_template("staffLogin.html")
 
-'''
+@app.route('/index')
+@loginRequired
+def webIndex():
+    return render_template("index.html", name = session["name"])
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/resetPassword')
+@loginPresent
 def webResetPassword():
     return render_template("resetPassword.html")
 
-
 @app.route('/resetRequest', methods=['POST'])
+@loginPresent
 def webResetRequest():
     # Send a password reset email to user
     email = str(request.form['email'])
@@ -48,17 +81,28 @@ def webResetRequest():
         return render_template("resetPassword.html", fail = message)
 
 
-@app.route('/login', methods=['POST'])
-def webLogin():
+
+
+
+@app.route('/loginRequest', methods=['POST'])
+def webLoginRequest():
     # Hand username and password to login function
     # Return 1 if valid login is found
     username = str(request.form['username'])
     password = str(request.form['password'])
-    if function.login(username=username, password=password):
+
+    loginData = function.login(username=username, password=password)
+
+
+    log(str(loginData))
+
+    if loginData[0]:
+        session["userType"] = loginData[1]
+        session["username"] = loginData[2]
+        session["name"] = loginData[3]
         session["loggedIn"] = True
-        return render_template("index.html")
+        return redirect(url_for('webIndex'))
     else:
-        session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
@@ -66,32 +110,7 @@ def webLogin():
 
 
 
-def appLogin(*args):
-    pass
-
-def appResetPassword(*args):
-    pass
-
-
-
-
-
-
-
-
-# Logging function used for testing
-import datetime
-logging = 0
-def log(*args):
-    if logging:
-        for line in args:
-            if isinstance(line, str):
-                with open('log.log', 'a') as the_file:
-                    time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
-                    the_file.write("\n["+str(time)+"] "+line)
-            elif debug:
-                raise line
-'''
+### ### ###
 
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
@@ -100,6 +119,7 @@ def addUser():
                             form=form)
 
 @app.route('/userAdded',methods=['GET','POST'])
+@loginRequired
 def userAdded():
     if request.method == 'POST':
         userInfo = request.form
@@ -133,8 +153,8 @@ def userAdded():
 
 
 
-
 @app.route('/bikesAdded',methods=['GET','POST'])
+@loginRequired
 def bikesAdded():
     # bikeForm=addBikesForm(request.form)
     if request.method == 'POST':
@@ -174,6 +194,7 @@ def bikesAdded():
 
 
 @app.route('/addBikes',methods=['GET','POST'])
+@loginRequired
 def addBikes():
     # bikes=models.Bike.query.all()
     form=addBikesForm(request.form)
@@ -191,17 +212,52 @@ def addBikes():
     return render_template('addBikes.html',
                             form=form)
 
-@app.route('/addEmployee',methods=['GET','POST'])
-def addEmployee():
-    return render_template('addEmployee.html')
+#
+# @app.route('/addEmployee',methods=['GET','POST'])
+# def addEmployee():
+#     form = addEmployeeForm(request.form)
+#     return render_template('addEmployee.html', form = from)
+#
+#
+# @app.route('/employeeAdded',methods=['GET','POST'])
+# def employeeAdded():
+#     # return render_template('employeeAdded.html')
+#     if request.method == 'POST':
+#         userInfo = request.form
+#         usertype = "employee"
+#         for key,value in userInfo.items():
+#             if key=='name':
+#                 name=value
+#             elif key=='email':
+#                 email=value
+#             elif key=='phone':
+#                 phone=value
+#             elif key=='username':
+#                 username=value
+#             elif key=='password':
+#                 password=value
+#         u = models.User(name=name,
+#                             email=email,
+#                             phone=phone,
+#                             username=username,
+#                             password=password,
+#                             user_type=usertype)
+#         db.session.add(u)
+#         db.session.commit()
+#         return render_template('employeeAdded.html')
+
 
 @app.route('/addLocation',methods=['GET','POST'])
+@loginRequired
 def addLocation():
     form=addLocationForm(request.form)
     return render_template('newLocation.html',
                             form=form)
 
+
+
 @app.route('/locationAdded',methods=['GET','POST'])
+@loginRequired
 def locationAdded():
     if request.method == 'POST':
         locationInfo = request.form
@@ -228,12 +284,28 @@ def locationAdded():
         return render_template('locationAdded.html',
                                 name=name)
 
+
 @app.route('/locationStats')
+@loginRequired
 def locationStats():
     locations = models.Location.query.all()
     # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
     return render_template('locationStats.html',
                             locations=locations)
+
+
+
+
+
+import datetime
+def log(*args):
+    for line in args:
+        with open('log.log', 'a') as the_file:
+            time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+            the_file.write("\n["+str(time)+"] "+line)
+
+
+
 
 
 ######## API 
@@ -324,8 +396,5 @@ def apiReturnBike():
 
     json = request.get_json()
     return jsonify({'error': 'Authentificaton failed'})
-
-
-
 
 

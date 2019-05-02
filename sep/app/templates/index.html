@@ -34,13 +34,18 @@
                               <a href="{{ url_for('addUser') }}"><button type="button" class="sidebar-button">Add User</button></a>
                             </li>
                             <li class="sidebar-button-container">
-                              <button type="button" class="sidebar-button">Add Employee</button>
+                              <a ><button type="button" class="sidebar-button">Add Employee</button></a>
                             </li>
                             <li class="sidebar-button-container">
                               <a href="{{ url_for('addLocation') }}"><button type="button" class="sidebar-button">New Location</button></a>
                             </li>
                             <li class="sidebar-button-container">
                               <a href="{{ url_for('locationStats') }}"><button type="button" class="sidebar-button">Location Storage</button></a>
+                            </li>
+                            <li class="sidebar-button-container">
+                                <a href="/logout">
+                                  <button  type="button" class="sidebar-button">Logout</button>
+                                </a>
                             </li>
                         </ul>
                     </nav>
@@ -66,7 +71,7 @@
                 <!-- This is going to be changed to the current users username and their image -->
                 <div class="clearfix header-name">
                     <div class="float-right">
-                        <a href="#">Ola Nordmann</a>
+                        <a href="#">{{name}}</a>
                     </div>
                 </div>
 
