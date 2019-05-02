@@ -37,9 +37,11 @@ def newBooking():
         slocation = form.slocation.data
         elocation = form.elocation.data
         numbikes = form.numbikes.data
-
+        flash("hello")
         user = models.User.query.filter_by(email=email).first()
+        flash("hello 2")
         if user is not None:
+            flash("user exists")
             cost = 13.44
             bookingTime = datetime.datetime.now()
             startloc = models.Location.query.filter_by(id=slocation).first()
