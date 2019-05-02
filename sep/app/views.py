@@ -41,7 +41,7 @@ def bookingAdded():
         bookingTime = datetime.datetime.now()
         cost = 13.44
         # startloc = models.Location.query.filter_by(name=slocation).first()
-        # startloc = models.Location.query.filter_by(start_location=slocation).first()
+        startloc = models.Location.query.filter_by(id=slocation).first()
 
 
         b = models.Booking( cost= cost,
@@ -53,12 +53,16 @@ def bookingAdded():
                             user_id= user.id,
                             end_location=elocation,
                             # bikes= ADD THIS,
-                            # start_location=startloc
+                            start_location=startloc
                             )
         # message="Booking: user id = "+user.name
-        message="Booking: startloc: "+slocation
+        message="Booking: cost: "+cost+" | startloc: "+slocation+" | endloc: "+elocation
         #try different variable to print
         flash(message)
+        m2 = "start time: "+stime+" | end time: "+etime+" | bike amount: "+numbikes
+        flash(m2)
+        m3 = "booking time: "+bookingTime
+        flash(m3)
         #db.session.add(b)
 
         #b.bikes.append(1)
