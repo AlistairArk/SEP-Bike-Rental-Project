@@ -50,40 +50,42 @@ def bookingAdded():
                 elocation=value
             elif key=='numbikes':
                 numbikes=value
+        if user is not None:
+            cost = 13.44
+            bookingTime = datetime.datetime.now()
+            user = models.User.query.filter_by(email=email).first()
+            startloc = models.Location.query.filter_by(id=slocation).first()
 
-        cost = 13.44
-        bookingTime = datetime.datetime.now()
-        user = models.User.query.filter_by(email=email).first()
-        startloc = models.Location.query.filter_by(id=slocation).first()
+            ssplit = stime.split("T")
+            sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+            esplit = etime.split("T")
+            edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
 
-        ssplit = stime.split("T")
-        sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
-        esplit = etime.split("T")
-        edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
-
-        b = models.Booking( cost= cost,
-                            start_time=sdatetime,
-                            end_time=edatetime,
-                            bike_amount=numbikes,
-                            booking_time= bookingTime,
-                            paid=False,
-                            user_id= user.id,
-                            end_location=elocation,
-                            start_location=startloc.id
-                            )
+            b = models.Booking( cost= cost,
+                                start_time=sdatetime,
+                                end_time=edatetime,
+                                bike_amount=numbikes,
+                                booking_time= bookingTime,
+                                paid=False,
+                                user_id= user.id,
+                                end_location=elocation,
+                                start_location=startloc.id
+                                )
 
 
-        m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
-        flash(m4)
-        message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
-        flash(message)
-        m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
-        flash(m2)
-        m3 = "booking time: ",bookingTime," | user name: "+user.name
-        flash(m3)
+            m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
+            flash(m4)
+            message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
+            flash(message)
+            m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
+            flash(m2)
+            m3 = "booking time: ",bookingTime," | user name: "+user.name
+            flash(m3)
 
-        db.session.add(b)
-        db.session.commit()
+            db.session.add(b)
+            db.session.commit()
+        else:
+            flash("This email is not associated with a user.")
 
     else:
         message="request method: "+request.method
