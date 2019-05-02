@@ -271,7 +271,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d(TAG, location);
                 Log.d(TAG, bikesAvailable);
             }
-            
+
             @Override
             public void onFailure(Call<Locations> call, Throwable t) {
                 Log.e("error", "Could not connect to external API");
