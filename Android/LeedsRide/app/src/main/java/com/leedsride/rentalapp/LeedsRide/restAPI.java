@@ -27,5 +27,5 @@ public interface restAPI {
     Call<Book> makeBooking(@Body Book book);
 
     @GET("Live")
-    Call<Locations> getLocations();
+    Call<List<Locations>> getLocations();
 }

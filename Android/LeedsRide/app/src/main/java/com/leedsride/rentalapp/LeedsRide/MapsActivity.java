@@ -44,6 +44,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.leedsride.rentalapp.LeedsRide.Data.Booking;
 import com.leedsride.rentalapp.LeedsRide.models.Locations;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -108,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         } else if (id == R.id.nav_payment) {
 
                         } else if (id == R.id.nav_help) {
-
+                            //sendNetworkRequest();
                         } else if (id == R.id.nav_changePassword) {
 
                         } else if (id == R.id.nav_logOut) {
@@ -172,17 +174,59 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        LatLng lubs = new LatLng(53.808832, -1.561353);
-        mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School").snippet("Available: 15\nParking Spaces: 1"));
-
-        LatLng theLight = new LatLng(53.800661, -1.545673);
-        mMap.addMarker(new MarkerOptions().position(theLight).title("The Light").snippet("Available: 10\nParking Spaces: 4"));
-
-        LatLng artsUniversity = new LatLng(53.809512, -1.551420);
-        mMap.addMarker(new MarkerOptions().position(artsUniversity).title("Leeds Arts University").snippet("Available: 5\nParking Spaces: 13"));
-
         LatLng initial = new LatLng(53.803690, -1.551385);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initial, 14));
+
+        ////Create retrofit object for network call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ///implement instance of restAPI interface
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        //create call which uses attemptLogin method from restAPI interface
+        Call<List<Locations>> call = sampleAPI.getLocations();
+
+        //add call to queue (in this case nothing in queue)
+        call.enqueue(new Callback<List<Locations>>() {
+            @Override
+            public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
+
+                List<Locations> locations = response.body();
+
+                for(Locations location : locations){
+                    String content = "";
+                    content += "Name: " + location.getName() + " ";
+                    content += "Location: " + location.getLocation();
+                    content += "Available: " + location.getBikesAvailable();
+
+                    Log.d(TAG, content + "!!!!!!!");
+
+                    LatLng marker = new LatLng(53.808832, -1.561353);
+                    mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School").snippet("Available: 15\nParking Spaces: 1"));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Locations>> call, Throwable t) {
+                Log.e("error", "Could not connect to external API");
+            }
+        });
+
+//        LatLng lubs = new LatLng(53.808832, -1.561353);
+//        mMap.addMarker(new MarkerOptions().position(lubs).title("Leeds University Business School").snippet("Available: 15\nParking Spaces: 1"));
+//
+//        LatLng theLight = new LatLng(53.800661, -1.545673);
+//        mMap.addMarker(new MarkerOptions().position(theLight).title("The Light").snippet("Available: 10\nParking Spaces: 4"));
+//
+//        LatLng artsUniversity = new LatLng(53.809512, -1.551420);
+//        mMap.addMarker(new MarkerOptions().position(artsUniversity).title("Leeds Arts University").snippet("Available: 5\nParking Spaces: 13"));
+
+//        LatLng initial = new LatLng(53.803690, -1.551385);
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initial, 14));
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -256,24 +300,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         restAPI sampleAPI = retrofit.create(restAPI.class);
 
         //create call which uses attemptLogin method from restAPI interface
-        Call<Locations> call = sampleAPI.getLocations();
+        Call<List<Locations>> call = sampleAPI.getLocations();
 
         //add call to queue (in this case nothing in queue)
-        call.enqueue(new Callback<Locations>() {
+        call.enqueue(new Callback<List<Locations>>() {
             @Override
-            public void onResponse(Call<Locations> call, Response<Locations> response) {
+            public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
 
-                String reply = response.body().getName();
-                String location = response.body().getLocation();
-                String bikesAvailable = response.body().getBikesAvailable();
+                List<Locations> locations = response.body();
 
-                Log.d(TAG, reply);
-                Log.d(TAG, location);
-                Log.d(TAG, bikesAvailable);
+                for(Locations location : locations){
+                    String content = "";
+                    content += "Name: " + location.getName() + " ";
+                    content += "Location: " + location.getLocation();
+                    content += "Available: " + location.getBikesAvailable();
+
+                    Log.d(TAG, content + "!!!!!!!");
+                }
+
             }
 
             @Override
-            public void onFailure(Call<Locations> call, Throwable t) {
+            public void onFailure(Call<List<Locations>> call, Throwable t) {
                 Log.e("error", "Could not connect to external API");
             }
         });

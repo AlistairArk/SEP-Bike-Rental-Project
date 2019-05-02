@@ -9,17 +9,22 @@ public class Locations {
     @Expose
     final String name;
 
-    @SerializedName("location")
+    @SerializedName("latitude")
     @Expose
-    final String location;
+    final float latitude;
+
+    @SerializedName("longitude")
+    @Expose
+    final float longitude;
 
     @SerializedName("bikesAvailable")
     @Expose
-    final String bikesAvailable;
+    final int bikesAvailable;
 
-    public Locations(String name,String location,String bikesAvailable) {
+    public Locations(String name,float latitude, float longitude,int bikesAvailable) {
         this.name = name;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.bikesAvailable = bikesAvailable;
     }
 
@@ -27,11 +32,15 @@ public class Locations {
         return name;
     }
 
-    public String getLocation() {
-        return location;
+    public float getLatitude() {
+        return latitude;
     }
 
-    public String getBikesAvailable() {
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public int getBikesAvailable() {
         return bikesAvailable;
     }
 
@@ -39,8 +48,9 @@ public class Locations {
     public String toString() {
         return "Locations{" +
                 "name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                ", bikesAvailable='" + bikesAvailable + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", bikesAvailable=" + bikesAvailable +
                 '}';
     }
 }
