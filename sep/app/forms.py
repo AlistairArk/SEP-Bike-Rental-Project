@@ -27,15 +27,15 @@ class addBookingForm(Form):
         user = User.query.filter_by(email=email.data).first()
         if not user:
             raise ValidationError('This email is not associated with an account.')
-            
+
     def validate_numbikes(self,numbikes):
-        if type(numbikes)!='<class \'int\'>':
-            raise ValidationError('Integer not entered.')
-        elif numbikes<1:
+        if numbikes<1:
             raise ValidationError('Must add at least one bike to booking.')
+        elif numbikes>4:
+            raise ValidationError('Maximum 4 bikes per booking.')
 
 
-#
+
 class testForm(Form):
     stime = DateTimeField('stime', validators=[DataRequired()])
     etime = DateTimeField('etime', validators=[DataRequired()])
