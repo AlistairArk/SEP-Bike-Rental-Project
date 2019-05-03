@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from .models import User
-from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, DateField, DateTimeField
+from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, DateField, DateTimeField, DateTimeLocalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 # from wtforms_components import TimeField
 
@@ -18,8 +18,8 @@ class addLocationForm(Form):
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     numbikes = IntegerField('numbikes', validators=[DataRequired()])
-    stime = DateTimeField('stime', validators=[DataRequired()])
-    etime = DateTimeField('etime', validators=[DataRequired()])
+    stime = DateTimeLocalField('stime', validators=[DataRequired()])
+    etime = DateTimeLocalField('etime', validators=[DataRequired()])
     slocation = SelectField('slocation', validators=[DataRequired()])
     elocation = SelectField('elocation', validators=[DataRequired()])
 
@@ -30,6 +30,6 @@ class addBookingForm(Form):
 
 
 #
-# class testForm(Form):
-#     stime = DateTimeField('stime', validators=[DataRequired()])
-#     etime = DateTimeField('etime', validators=[DataRequired()])
+class testForm(Form):
+    stime = DateTimeField('stime', validators=[DataRequired()])
+    etime = DateTimeField('etime', validators=[DataRequired()])

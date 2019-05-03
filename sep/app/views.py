@@ -5,24 +5,26 @@ from .forms import *
 import datetime
 # from datetime import datetime
 
-# @app.route('/test', methods=['GET','POST'])
-# def test():
-#     form=testForm(request.form)
-#     if request.method=='POST':
-#     # if form.validate_on_submit():
-#         stime=request.form['stime']
-#         etime=request.form['etime']
-#
-#         ssplit = stime.split("T")
-#         sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
-#         esplit = etime.split("T")
-#         edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
-#         m3="sdatetime type: ",type(sdatetime)," | sdatetime: ",sdatetime
-#         m4="edatetime type: ",type(edatetime)," | edatetime: ",edatetime
-#         flash(m3)
-#         flash(m4)
-#
-#     return render_template("testForm.html", form=form)
+@app.route('/test', methods=['GET','POST'])
+def test():
+    form=testForm(request.form)
+    if request.method=='POST':
+    # if form.validate_on_submit():
+        stime=request.form['stime']
+        etime=request.form['etime']
+
+        ssplit = stime.split("T")
+        sdatetime = datetime.datetime.strptime(ssplit[0]+" "+ssplit[1],"%Y-%m-%d %H:%M")
+        esplit = etime.split("T")
+        edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
+        m3="sdatetime type: ",type(sdatetime)," | sdatetime: ",sdatetime
+        m4="edatetime type: ",type(edatetime)," | edatetime: ",edatetime
+        flash(m3)
+        flash(m4)
+        m5="stime type: ",type(stime)," stime: ",stime," | etime type: ",type(etime)," etime: ",etime
+        flash(m5)
+
+    return render_template("testForm.html", form=form)
 
 @app.route('/newBooking', methods=['GET','POST'])
 def newBooking():
@@ -50,6 +52,9 @@ def newBooking():
             # esplit = etime.split("T")
             # edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
 
+            #sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+            #edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
+
             b = models.Booking( cost= cost,
                                 # start_time=sdatetime,
                                 # end_time=edatetime,
@@ -71,7 +76,7 @@ def newBooking():
             flash(message)
             # m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
             # flash(m2)
-            m3 = "booking time: ",bookingTime," | user name: "+user.name
+            m3 = "booking time: ",bookingTime," | user name: "+user.name," | bike amount: ",numbikes
             flash(m3)
 
             # db.session.add(b)
