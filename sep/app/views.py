@@ -42,6 +42,8 @@ def newBooking():
         numbikes = form.numbikes.data
         flash("form validates on submit")
         user = models.User.query.filter_by(email=email).first()
+        m="stime type: ",type(stime)," stime: ",stime,"| etime type: ",type(etime)," etime: ",etime
+        flash(m)
         if user is not None:
             flash("user exists")
             cost = 13.44
@@ -68,8 +70,8 @@ def newBooking():
                                 start_location=startloc.id
                                 )
 
-            m="stime type: ",type(stime)," stime: ",stime,"| etime type: ",type(etime)," etime: ",etime
-            flash(m)
+            # m="stime type: ",type(stime)," stime: ",stime,"| etime type: ",type(etime)," etime: ",etime
+            # flash(m)
             # m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
             # flash(m4)
             message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
