@@ -29,9 +29,9 @@ class addBookingForm(Form):
             raise ValidationError('This email is not associated with an account.')
 
     def validate_numbikes(self,numbikes):
-        if numbikes<1:
+        if numbikes.data<1:
             raise ValidationError('Must add at least one bike to booking.')
-        elif numbikes>4:
+        elif numbikes.data>4:
             raise ValidationError('Maximum 4 bikes per booking.')
 
 
