@@ -19,6 +19,7 @@
         </div>
         <form action="{{ url_for('newBooking') }}" method="POST" class="standard-form-form">
             {{ form.hidden_tag() }}
+            {{ form.csrf_token }}
             <div class="form-group row" style="width: 100%;">
                 <label for="email" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Email</label>
                 <div class="col-sm-8">
