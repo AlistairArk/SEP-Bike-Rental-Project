@@ -33,12 +33,13 @@ def newBooking():
         slocation = form.slocation.data
         elocation = form.elocation.data
         numbikes = form.numbikes.data
-        user = models.User.query.filter_by(email=email).first()
-        if user is not None:
-            createBooking(email,stime,etime,slocation,elocation,numbikes,user)
+        # if user is not None:
+        message = createBooking(email,stime,etime,slocation,elocation,numbikes)
+        flash(message)
     return render_template("newBooking.html", form=form)
 
-def createBooking(email,stime,etime,slocation,elocation,numbikes,user):
+def createBooking(email,stime,etime,slocation,elocation,numbikes):
+    user = models.User.query.filter_by(email=email).first()
     cost = 13.44
     bookingTime = datetime.datetime.now()
     startloc = models.Location.query.filter_by(id=slocation).first()
@@ -56,19 +57,12 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes,user):
                         start_location=startloc.id
                         )
 
-    # m="stime type: ",type(stime)," stime: ",stime,"| etime type: ",type(etime)," etime: ",etime
-    # flash(m)
-    # m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
-    # flash(m4)
-    # message="Booking: cost: ",cost," | startloc: ",slocation," | endloc: ",elocation
-    # flash(message)
-    # m2 = "start time: ",sdatetime," | end time: ",edatetime
-    # flash(m2)
-    # m3 = "booking time: ",bookingTime," | user name: "+user.name," | bike amount: ",numbikes
-    # flash(m3)
-
     db.session.add(b)
     db.session.commit()
+
+    message="Booking successfully created! Booking confirmation has been emailed to "+email
+
+    return message
 
 @app.route('/')
 def index():
