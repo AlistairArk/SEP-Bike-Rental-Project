@@ -35,8 +35,10 @@ def newBooking():
     flash("before getting form data")
     if request.method=="POST":
         email = form.email.data
-        stime = form.stime.data
-        etime = form.etime.data
+        # stime = form.stime.data
+        # etime = form.etime.data
+        stime=request.form['stime']
+        etime=request.form['etime']
         slocation = form.slocation.data
         elocation = form.elocation.data
         numbikes = form.numbikes.data
