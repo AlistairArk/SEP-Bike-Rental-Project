@@ -41,6 +41,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
 
+import com.braintreepayments.api.dropin.DropInRequest;
+
 public class CreateBooking extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener dateDataSetListener;
@@ -65,6 +67,8 @@ public class CreateBooking extends AppCompatActivity {
     private ElegantNumberButton bikeNumberWidget;
 
     private Boolean is24HourView = false;
+
+    private static final int REQUEST_CODE = 4949;
 
 
     private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
@@ -167,9 +171,9 @@ public class CreateBooking extends AppCompatActivity {
         completeBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                booking.setBikeQuantity(numberOfBikes);
-                booking.setOrderPrice(price);
+                  onBraintreeSubmit(null);
+//                booking.setBikeQuantity(numberOfBikes);
+//                booking.setOrderPrice(price);
 
             }
         });
@@ -406,4 +410,24 @@ public class CreateBooking extends AppCompatActivity {
 //            }
 //        });
 //    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+//                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                // use the result to update your UI and send the payment method nonce to your server
+            } else if (resultCode == RESULT_CANCELED) {
+                // the user canceled
+            } else {
+                // handle errors here, an exception may be available in
+//                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+            }
+        }
+    }
+
+    public void onBraintreeSubmit(View v) {
+        DropInRequest dropInRequest = new DropInRequest()
+                .clientToken("eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiJiYjljNTYyZGZmMGY2MDE0ZDRmMTliYTE3OTVlNTIwZWVjMjA0OGMzMzVkMGQ1OGE0NzRiNjE3ZmM1MWZhNWFkfGNyZWF0ZWRfYXQ9MjAxOS0wNS0wMlQyMzoyNTo0My44MzIyMDYwMTcrMDAwMFx1MDAyNm1lcmNoYW50X2lkPTM0OHBrOWNnZjNiZ3l3MmJcdTAwMjZwdWJsaWNfa2V5PTJuMjQ3ZHY4OWJxOXZtcHIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJncmFwaFFMIjp7InVybCI6Imh0dHBzOi8vcGF5bWVudHMuc2FuZGJveC5icmFpbnRyZWUtYXBpLmNvbS9ncmFwaHFsIiwiZGF0ZSI6IjIwMTgtMDUtMDgifSwiY2hhbGxlbmdlcyI6W10sImVudmlyb25tZW50Ijoic2FuZGJveCIsImNsaWVudEFwaVVybCI6Imh0dHBzOi8vYXBpLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb206NDQzL21lcmNoYW50cy8zNDhwazljZ2YzYmd5dzJiL2NsaWVudF9hcGkiLCJhc3NldHNVcmwiOiJodHRwczovL2Fzc2V0cy5icmFpbnRyZWVnYXRld2F5LmNvbSIsImF1dGhVcmwiOiJodHRwczovL2F1dGgudmVubW8uc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbSIsImFuYWx5dGljcyI6eyJ1cmwiOiJodHRwczovL29yaWdpbi1hbmFseXRpY3Mtc2FuZC5zYW5kYm94LmJyYWludHJlZS1hcGkuY29tLzM0OHBrOWNnZjNiZ3l3MmIifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6dHJ1ZSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiQWNtZSBXaWRnZXRzLCBMdGQuIChTYW5kYm94KSIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6ImFjbWV3aWRnZXRzbHRkc2FuZGJveCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJtZXJjaGFudElkIjoiMzQ4cGs5Y2dmM2JneXcyYiIsInZlbm1vIjoib2ZmIn0=");
+        startActivityForResult(dropInRequest.getIntent(this), REQUEST_CODE);
+    }
 }
