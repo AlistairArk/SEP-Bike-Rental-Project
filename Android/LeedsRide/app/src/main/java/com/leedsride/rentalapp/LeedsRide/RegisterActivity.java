@@ -24,6 +24,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     Register register = new Register();
 
+    String storedUsername;
+    String storedPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +42,9 @@ public class RegisterActivity extends AppCompatActivity {
                 EditText repeatPassword = (EditText) findViewById(R.id.passwordCheckerRegisterEntry);
                 EditText email = (EditText) findViewById(R.id.emailRegisterEntry);
                 EditText phone = (EditText) findViewById(R.id.phoneRegisterEntry);
+
+                storedUsername = username.getText().toString();
+                storedPassword = password.getText().toString();
 
                 register.setUsername(username.getText().toString());
                 register.setPassword(password.getText().toString());
@@ -73,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d(TAG, reply);
 
                 if(reply.equals("User Registered")){ ////////////Update once server has been changed
+                    SaveSharedPreference.setLoginDetails(getApplicationContext(), storedUsername, storedPassword);
                     Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
                     startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(startMainMenu);

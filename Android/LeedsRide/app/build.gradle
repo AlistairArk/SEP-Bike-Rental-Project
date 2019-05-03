@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.leedsride.rentalapp.LeedsRide"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -42,4 +42,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
     implementation 'xyz.belvi.mobilevision:barcodescanner:2.0.3'
     implementation 'com.xw.repo:bubbleseekbar:3.20-lite'
+    implementation 'com.braintreepayments.api:braintree:3.0.0'
+    implementation 'com.braintreepayments.api:drop-in:4.1.1'
 }
