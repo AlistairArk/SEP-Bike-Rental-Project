@@ -7,20 +7,25 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int SPLASH_DISPLAY_LENGTH = 3000;
+    private final int SPLASH_DISPLAY_LENGTH = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                Intent StartMenuIntent = new Intent(getApplicationContext(), StartMenu.class);
-                startActivity(StartMenuIntent);
-                finish();
-            }
-        }, SPLASH_DISPLAY_LENGTH);
+        if(SaveSharedPreference.getPrefUsername(MainActivity.this).length() != 0)
+        {
+            Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
+            startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(startMainMenu);
+            finish();
+        }
+        else {
+            Intent StartMenuIntent = new Intent(getApplicationContext(), StartMenu.class);
+            startActivity(StartMenuIntent);
+            finish();
+        }
 
     }
 }

@@ -55,14 +55,4 @@
 
     </FrameLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/darkBlue"
-        android:progress="73"
-        android:progressTint="@color/Orange"
-        app:layout_constraintBottom_toBottomOf="@+id/frameLayout2" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

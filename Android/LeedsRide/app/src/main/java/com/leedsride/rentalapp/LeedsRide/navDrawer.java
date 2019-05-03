@@ -30,6 +30,7 @@ public class navDrawer extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -105,6 +106,7 @@ public class navDrawer extends AppCompatActivity
         } else if (id == R.id.nav_changePassword) {
 
         } else if (id == R.id.nav_logOut) {
+
 
         }
 

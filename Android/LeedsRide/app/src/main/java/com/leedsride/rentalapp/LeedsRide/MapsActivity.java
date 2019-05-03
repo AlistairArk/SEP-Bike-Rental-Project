@@ -85,6 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -102,6 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         int id = menuItem.getItemId();
                         Log.v("TAG", " clicked");
 
+
                         if (id == R.id.nav_home) {
                             // Handle the home action
                         } else if (id == R.id.nav_orders) {
@@ -114,7 +116,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         } else if (id == R.id.nav_changePassword) {
 
                         } else if (id == R.id.nav_logOut) {
-
+                            SaveSharedPreference.clearLoginDetails(getApplicationContext());
+                            Intent loginOutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                            loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            loginOutIntent.putExtra("EXIT", true);
+                            startActivity(loginOutIntent);
+                            finish();
                         }
 
                         drawer.closeDrawer(GravityCompat.START);

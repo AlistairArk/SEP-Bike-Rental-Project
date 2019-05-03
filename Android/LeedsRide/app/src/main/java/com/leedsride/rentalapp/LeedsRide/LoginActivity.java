@@ -24,6 +24,9 @@ public class LoginActivity extends AppCompatActivity {
 
     Login login = new Login();
 
+    String storedUsername;
+    String storedPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText username = (EditText) findViewById(R.id.usernameLoginEntry);
                 EditText password = (EditText) findViewById(R.id.passwordLoginEntry);
+
+                storedUsername = username.getText().toString();
+                storedPassword = password.getText().toString();
 
                 login.setUsername(username.getText().toString());
                 login.setPassword(password.getText().toString());
@@ -78,8 +84,12 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, reply);
 
                 if(reply.equals("Login Accepted")){
+                    SaveSharedPreference.setLoginDetails(getApplicationContext(), storedUsername, storedPassword);
                     Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
                     startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startMainMenu.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startMainMenu.putExtra("EXIT", true);
                     startActivity(startMainMenu);
                     finish();
                 }
