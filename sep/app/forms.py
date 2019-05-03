@@ -20,8 +20,8 @@ class addBookingForm(Form):
     numbikes = IntegerField('numbikes', validators=[DataRequired()])
     stime = DateTimeField('stime', validators=[DataRequired()])
     etime = DateTimeField('etime', validators=[DataRequired()])
-    slocation = SelectField('slocation', validators=[DataRequired()])
-    elocation = SelectField('elocation', validators=[DataRequired()])
+    slocation = SelectField('slocation', coerce=int, validators=[DataRequired()])
+    elocation = SelectField('elocation', coerce=int, validators=[DataRequired()])
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
