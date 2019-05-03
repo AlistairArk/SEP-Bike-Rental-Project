@@ -18,8 +18,8 @@ class addLocationForm(Form):
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     numbikes = IntegerField('numbikes', validators=[DataRequired()])
-    stime = DateTimeField('stime', coerce=string, validators=[DataRequired()])
-    etime = DateTimeField('etime', coerce=string, validators=[DataRequired()])
+    stime = DateTimeField('stime', coerce=unicode, validators=[DataRequired()])
+    etime = DateTimeField('etime', coerce=unicode, validators=[DataRequired()])
     slocation = SelectField('slocation', coerce=int, validators=[DataRequired()])
     elocation = SelectField('elocation', coerce=int, validators=[DataRequired()])
 
