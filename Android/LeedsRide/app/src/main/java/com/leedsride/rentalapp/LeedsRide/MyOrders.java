@@ -43,6 +43,8 @@ public class MyOrders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
 
+        /*
+
         ////Create retrofit object for network call
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -82,6 +84,8 @@ public class MyOrders extends AppCompatActivity {
                 Log.e("error", "Could not connect to external API");
             }
         });
+
+        */
 
         final ArrayList<MyOrdersRecycler> ordersList = new ArrayList<>();
         ordersList.add(new MyOrdersRecycler("Active Bookings","", "active", true));
