@@ -32,7 +32,7 @@ def newBooking():
     form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
     form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
     flash("before getting form data")
-    if request.method=="POST":
+    if request.method=="POST" and form.validate_on_submit():
         email = form.email.data
         stime=request.form['stime']
         etime=request.form['etime']
