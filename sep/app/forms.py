@@ -26,7 +26,13 @@ class addBookingForm(Form):
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if not user:
-            raise ValidationError('An account does not exists for that email.')
+            raise ValidationError('This email is not associated with an account.')
+            
+    def validate_numbikes(self,numbikes):
+        if type(numbikes)!='<class \'int\'>':
+            raise ValidationError('Integer not entered.')
+        elif numbikes<1:
+            raise ValidationError('Must add at least one bike to booking.')
 
 
 #
