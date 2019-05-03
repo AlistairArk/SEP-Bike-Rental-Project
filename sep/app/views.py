@@ -71,7 +71,7 @@ def newBooking():
             flash(m)
             m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
             flash(m4)
-            message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
+            message="Booking: cost: ",cost," | startloc: ",slocation," | endloc: ",elocation
             flash(message)
             m2 = "start time: ",sdatetime," | end time: ",edatetime
             flash(m2)
