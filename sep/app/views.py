@@ -9,7 +9,6 @@ import datetime
 def test():
     form=testForm(request.form)
     if request.method=='POST':
-    # if form.validate_on_submit():
         stime=request.form['stime']
         etime=request.form['etime']
 
@@ -35,8 +34,6 @@ def newBooking():
     flash("before getting form data")
     if request.method=="POST":
         email = form.email.data
-        # stime = form.stime.data
-        # etime = form.etime.data
         stime=request.form['stime']
         etime=request.form['etime']
         slocation = form.slocation.data
@@ -44,8 +41,6 @@ def newBooking():
         numbikes = form.numbikes.data
         flash("form validates on submit")
         user = models.User.query.filter_by(email=email).first()
-        m="stime type: ",type(stime)," stime: ",stime,"| etime type: ",type(etime)," etime: ",etime
-        flash(m)
         if user is not None:
             flash("user exists")
             cost = 13.44
@@ -56,14 +51,14 @@ def newBooking():
             # esplit = etime.split("T")
             # edatetime = datetime.datetime.strptime(esplit[0]+" "+esplit[1],"%Y-%m-%d %H:%M")
 
-            #sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
-            #edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
+            sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+            edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
             b = models.Booking( cost= cost,
-                                # start_time=sdatetime,
-                                # end_time=edatetime,
-                                start_time=stime,
-                                end_time=etime,
+                                start_time=sdatetime,
+                                end_time=edatetime,
+                                # start_time=stime,
+                                # end_time=etime,
                                 bike_amount=numbikes,
                                 booking_time= bookingTime,
                                 paid=False,
@@ -72,14 +67,14 @@ def newBooking():
                                 start_location=startloc.id
                                 )
 
-            # m="stime type: ",type(stime)," stime: ",stime,"| etime type: ",type(etime)," etime: ",etime
-            # flash(m)
-            # m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
-            # flash(m4)
+            m="stime type: ",type(stime)," stime: ",stime,"| etime type: ",type(etime)," etime: ",etime
+            flash(m)
+            m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
+            flash(m4)
             message="Booking: cost: "+str(cost)+" | startloc: "+slocation+" | endloc: "+elocation
             flash(message)
-            # m2 = "start time: ",sdatetime," | end time: ",edatetime," | bike amount: ",numbikes
-            # flash(m2)
+            m2 = "start time: ",sdatetime," | end time: ",edatetime
+            flash(m2)
             m3 = "booking time: ",bookingTime," | user name: "+user.name," | bike amount: ",numbikes
             flash(m3)
 
