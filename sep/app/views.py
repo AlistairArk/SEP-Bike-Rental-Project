@@ -63,7 +63,7 @@ def newBooking():
                                 start_location=startloc.id
                                 )
 
-            m="stime type: ",type(stime)," | etime type: ",type(etime)
+            m="stime type: ",type(stime)," stime: ",stime,"| etime type: ",type(etime)," etime: ",etime
             flash(m)
             # m4="sdatetime type: ",type(sdatetime)," | edatetime type: ",type(edatetime)
             # flash(m4)
