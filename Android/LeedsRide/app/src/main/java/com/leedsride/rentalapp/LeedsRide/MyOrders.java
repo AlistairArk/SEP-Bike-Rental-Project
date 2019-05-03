@@ -16,11 +16,23 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.leedsride.rentalapp.LeedsRide.Adapter.NewOrderAdapter;
+import com.leedsride.rentalapp.LeedsRide.models.Locations;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MyOrders extends AppCompatActivity {
+    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/";
+    
     private RecyclerView ordersRecyclerView;
     private NewOrderAdapter ordersAdapter;
     private RecyclerView.LayoutManager ordersLayoutManager;
@@ -30,6 +42,46 @@ public class MyOrders extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
+
+        ////Create retrofit object for network call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ///implement instance of restAPI interface
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        //create call which uses attemptLogin method from restAPI interface
+        Call<List<Locations>> call = sampleAPI.getLocations();
+
+        //add call to queue (in this case nothing in queue)
+        call.enqueue(new Callback<List<Locations>>() {
+            @Override
+            public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
+
+                List<Locations> locations = response.body();
+
+                for(Locations location : locations){
+//                    String content = "";
+//                    content += "Name: " + location.getName() + " ";
+//                    content += "Latitude: " + location.getLatitude();
+//                    content += "Longitude: " + location.getLongitude();
+//                    content += "Available: " + location.getBikesAvailable();
+//
+//                    Log.d(TAG, content + "!!!!!!!");
+
+                    LatLng marker = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(marker).title(location.getName()).snippet("Available: " + location.getBikesAvailable()));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Locations>> call, Throwable t) {
+                Log.e("error", "Could not connect to external API");
+            }
+        });
 
         final ArrayList<MyOrdersRecycler> ordersList = new ArrayList<>();
         ordersList.add(new MyOrdersRecycler("Active Bookings","", "active", true));
@@ -47,7 +99,7 @@ public class MyOrders extends AppCompatActivity {
         ordersList.add(new MyOrdersRecycler("Thursday 3 February, 2018","13:25 PM - University Union Bikes", "complete", false));
         ordersList.add(new MyOrdersRecycler("Monday 17 March, 2018","13:25 PM - University Union Bikes", "complete", false));
 
-        Log.d("tag", "HEREEEEE: "+ordersList.get(0).getItemHeader());
+
 
         ordersRecyclerView = findViewById(R.id.ordersRecyclerView);
         ordersRecyclerView.setHasFixedSize(true);
