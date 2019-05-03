@@ -87,6 +87,9 @@ public class LoginActivity extends AppCompatActivity {
                     SaveSharedPreference.setLoginDetails(getApplicationContext(), storedUsername, storedPassword);
                     Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
                     startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startMainMenu.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startMainMenu.putExtra("EXIT", true);
                     startActivity(startMainMenu);
                     finish();
                 }

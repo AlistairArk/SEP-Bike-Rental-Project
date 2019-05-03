@@ -102,7 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         int id = menuItem.getItemId();
                         Log.v("TAG", " clicked");
-                        SaveSharedPreference.clearLoginDetails(getApplicationContext());
+
 
                         if (id == R.id.nav_home) {
                             // Handle the home action
@@ -116,7 +116,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         } else if (id == R.id.nav_changePassword) {
 
                         } else if (id == R.id.nav_logOut) {
-
+                            SaveSharedPreference.clearLoginDetails(getApplicationContext());
+                            Intent loginOutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                            loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            loginOutIntent.putExtra("EXIT", true);
+                            startActivity(loginOutIntent);
+                            finish();
                         }
 
                         drawer.closeDrawer(GravityCompat.START);
