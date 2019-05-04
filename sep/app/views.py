@@ -296,11 +296,11 @@ def locationStats():
 
 
 import datetime
-def log(*args):
-    for line in args:
-        with open('log.log', 'a') as the_file:
-            time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
-            the_file.write("\n["+str(time)+"] "+line)
+#def log(*args):
+#    for line in args:
+#       with open('log.log', 'a') as the_file:
+#           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+#           the_file.write("\n["+str(time)+"] "+line)
 
 
 
