@@ -60,10 +60,27 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     db.session.add(b)
     db.session.commit()
 
-    message="Booking successfully created! Booking confirmation has been emailed to "+email
+    message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
 
     return message
 
 @app.route('/')
 def index():
     return render_template("index.html")
+
+def takeBike(bike_id,booking_id):
+    bike = models.Bike.query.get(bike_id)
+    bike.in_use=True
+    booking = models.Booking.query.get(booking_id)
+    booking.bikes.append(bike)
+    db.session.add(bike)
+    db.session.add(booking)
+    db.session.commit()
+    #still need to mark booked_bike taken   ?
+
+def returnBike(bike_id,booking_id):
+    bike = models.Bike.query.get(bike_id)
+    bike.in_use=False
+    db.session.add(bike)
+    db.session.commit()
+    #still need to mark booked_bike returned & add return time   ?
