@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from .models import User
-from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, DateField, DateTimeField
+from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, PasswordField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 # from wtforms_components import TimeField
 
@@ -14,6 +14,14 @@ class addLocationForm(Form):
     max_capacity = IntegerField('max_capacity', [validators.NumberRange(max=200,min=5)])
     longt = FloatField('longt', validators=[DataRequired()])
     latt = FloatField('latt', validators=[DataRequired()])
+
+class addUserForm(Form):
+    name = StringField('name', validators=[DataRequired(), Length(min=1,max=50)])
+    username = StringField('username', validators=[DataRequired(), Length(min=1,max=50)])
+    email = StringField('email', validators=[DataRequired(), Email()])
+    phone = StringField('phone', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=30)])
+
 
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
@@ -33,9 +41,3 @@ class addBookingForm(Form):
             raise ValidationError('Must add at least one bike to booking.')
         elif numbikes.data>4:
             raise ValidationError('Maximum 4 bikes per booking.')
-
-
-
-class testForm(Form):
-    stime = DateTimeField('stime', validators=[DataRequired()])
-    etime = DateTimeField('etime', validators=[DataRequired()])
