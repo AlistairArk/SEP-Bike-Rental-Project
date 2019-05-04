@@ -354,7 +354,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
 
     #checking bike amount in slocation currently (exclude bikes that are in use)
     bike_amount = 0
-    flash("Starting bike amount: "+bike_amount)
+    flash("Starting bike amount: "+str(bike_amount))
     for bike in models.Bike.query.all():
         if bike.location_id==slocation and bike.in_use==False:
             bike_amount+=1
@@ -367,27 +367,27 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
         #and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
             bike_amount-=b.bike_amount
-            flash("PINK bike_amount: "+bike_amount)
+            flash("PINK bike_amount: "+str(bike_amount))
         # (PURPLE) checking bookings which take bikes out during our booking
         elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
             bike_amount-=b.bike_amount
-            flash("PURPLE bike_amount: "+bike_amount)
+            flash("PURPLE bike_amount: "+str(bike_amount))
         # (ORANGE) checking bookings which take bikes from slocation and return to a different location
         elif b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.start_location!=b.end_location:
             bike_amount-=b.bike_amount
-            flash("ORANGE bike_amount: "+bike_amount)
+            flash("ORANGE bike_amount: "+str(bike_amount))
         # (GREEN) checking bookings where end location is our location and they're returned before sdatetime
         elif b.end_location==elocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
             bike_amount+=b.bike_amount
-            flash("GREEN bike_amount: "+bike_amount)
+            flash("GREEN bike_amount: "+str(bike_amount))
 
     #if after all checks there is enough bikes in our location then booking is successful
     if bike_amount>=numbikes:
         return True
-        flash("Bike amount "+bike_amount+" > numbikes "+numbikes)
+        flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
     else:
         return False
-        flash("Bike amount "+bike_amount+" < numbikes "+numbikes)
+        flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
 
 
 @app.route('/')
