@@ -393,6 +393,9 @@ def takeBike(bike_id,booking_id):
     bike.in_use=True
     booking = models.Booking.query.get(booking_id)
     booking.bikes.append(bike)
+    loc = models.Location.query.get(booking.start_location)
+    loc.bike_amount-=1
+    db.session.add(loc)
     db.session.add(bike)
     db.session.add(booking)
     db.session.commit()
@@ -401,6 +404,9 @@ def takeBike(bike_id,booking_id):
 def returnBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
     bike.in_use=False
+    loc = models.Location.query.get(booking.start_location)
+    loc.bike_amount+=1
+    db.session.add(loc)
     db.session.add(bike)
     db.session.commit()
     #still need to mark booked_bike returned & add return time   ?
