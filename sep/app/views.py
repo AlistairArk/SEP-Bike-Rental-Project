@@ -296,17 +296,17 @@ def locationStats():
 
 
 import datetime
-def log(*args):
-    for line in args:
-        with open('log.log', 'a') as the_file:
-            time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
-            the_file.write("\n["+str(time)+"] "+line)
+# def log(*args):
+#     for line in args:
+#         with open('log.log', 'a') as the_file:
+#             time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+#             the_file.write("\n["+str(time)+"] "+line)
 
 
 
 
 
-######## API 
+######## API
 
 def api_loginRequired(f):
     @wraps(f)
@@ -380,7 +380,7 @@ def apiGetOrders():
 @app.route('/api/collectbikes', methods=['POST'])
 def apiCollectBikes():
     """
-    Marks a bike as unavailable 
+    Marks a bike as unavailable
     """
 
     json = request.get_json()
@@ -394,5 +394,3 @@ def apiReturnBike():
 
     json = request.get_json()
     return jsonify({'error': 'Authentificaton failed'})
-
-
