@@ -4,13 +4,11 @@ from app import app, models, db
 from functools import wraps
 from .forms import *
 import json
-<<<<<<< HEAD
 
 
 
 =======
 import datetime
->>>>>>> c816fcf0abeb6e4423e8db00312f9f288d75f75b
 
 ###############   LOG IN ROUTES   ##############################################
 
@@ -462,8 +460,3 @@ def apiReturnBike():
 
     json = request.get_json()
     return jsonify({'error': 'Authentificaton failed'})
-<<<<<<< HEAD
-
-
-=======
->>>>>>> c816fcf0abeb6e4423e8db00312f9f288d75f75b
