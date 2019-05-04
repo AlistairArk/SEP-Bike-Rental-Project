@@ -1,6 +1,13 @@
 from flask_wtf import Form
+<<<<<<< HEAD
 from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, PasswordField
 from wtforms.validators import DataRequired, Length, Email
+=======
+from .models import User
+from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, PasswordField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
+# from wtforms_components import TimeField
+>>>>>>> b-booking
 
 class addBikesForm(Form):
     amount = IntegerField('amount', [validators.NumberRange(max=10,min=-5)])
@@ -20,9 +27,31 @@ class addUserForm(Form):
     phone = StringField('phone', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=30)])
 
+<<<<<<< HEAD
 # class addEmployeeForm(Form):
 #     name = StringField('name', validators=[DataRequired(), Length(min=1,max=50)])
 #     username = StringField('username', validators=[DataRequired(), Length(min=1,max=50)])
 #     email = StringField('email', validators=[DataRequired(), Email()])
 #     phone = StringField('phone', validators=[DataRequired()])
 #     password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=30)])
+=======
+
+class addBookingForm(Form):
+    email = StringField('email', validators=[DataRequired(), Email()])
+    numbikes = IntegerField('numbikes', validators=[DataRequired()])
+    stime = StringField('stime', validators=[DataRequired()])
+    etime = StringField('etime', validators=[DataRequired()])
+    slocation = SelectField('slocation', coerce=int, validators=[DataRequired()])
+    elocation = SelectField('elocation', coerce=int, validators=[DataRequired()])
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if not user:
+            raise ValidationError('This email is not associated with an account.')
+
+    def validate_numbikes(self,numbikes):
+        if numbikes.data<1:
+            raise ValidationError('Must add at least one bike to booking.')
+        elif numbikes.data>4:
+            raise ValidationError('Maximum 4 bikes per booking.')
+>>>>>>> b-booking

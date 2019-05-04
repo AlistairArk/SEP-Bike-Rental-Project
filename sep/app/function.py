@@ -7,7 +7,11 @@ import hashlib
 
 
 '''
+<<<<<<< HEAD
 Test data in user table: 
+=======
+Test data in user table:
+>>>>>>> b-booking
 
 +----+--------------------+----------+-----------------------+--------------+--------------+--------------+-----------+
 | id | name               | username | email                 | password     | image        | phone        | user_type |
@@ -28,13 +32,22 @@ def login(*args, **kwargs):
 
     # Check if username & password are true
     user = models.User.query.filter_by(username=username, password=password).first()
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> b-booking
     if user==None: # User not found
         return [False, 0, 0, 0]
     else:
         return [True, user.user_type, user.username, user.name]  # return user type
+<<<<<<< HEAD
     
     ## Comment out for local testing 
+=======
+
+    ## Comment out for local testing
+>>>>>>> b-booking
     # user_type  = "manager"
     # username   = "prudd"
     # name       = "Paul Rudd"
@@ -63,7 +76,11 @@ def emailExists(email):
 
 #     user = models.User.query.filter_by(username=username).first()
 #     if user==None: # User not found
+<<<<<<< HEAD
 #         # add new employee as normal 
+=======
+#         # add new employee as normal
+>>>>>>> b-booking
 
 #         '''
 #         Checks before adding user
@@ -83,14 +100,18 @@ def emailExists(email):
 
 
 #         return 1    # if employee was added successfully return 1
+<<<<<<< HEAD
 #     else: 
+=======
+#     else:
+>>>>>>> b-booking
 #         return 0    # if employee already exists return 0
 
 
 def resetRequest(*args, **kwargs):
     email = kwargs.get("email", 0)
 
-    
+
     if emailExists(email):
 
         # Generate and send email

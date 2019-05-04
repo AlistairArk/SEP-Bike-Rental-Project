@@ -26,3 +26,5 @@ SQLAlchemy==1.2.14
 Werkzeug==0.14.1
 Whoosh==2.7.4
 WTForms==2.2.1
+WTForms-Components==0.10.3
+DateTime==4.3 

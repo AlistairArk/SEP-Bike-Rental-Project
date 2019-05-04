@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>LeedsRide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css" integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css" integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA" crossorigin="anonymous">
     <link rel="stylesheet" href="static/css/default-css.css">
     <link rel="stylesheet" href="static/css/styles.css">
 </head>
@@ -25,7 +25,7 @@
                     <nav>
                         <ul>
                             <li class="sidebar-button-container">
-                              <button type="button" class="sidebar-button">Create Booking</button>
+                              <a href="{{ url_for('newBooking') }}"><button type="button" class="sidebar-button">Create Booking</button></a>
                             </li>
                             <li class="sidebar-button-container">
                               <a href="{{ url_for('addBikes') }}"><button type="button" class="sidebar-button">Add Bikes</button></a>
@@ -38,6 +38,17 @@
                             </li>
                             <li class="sidebar-button-container">
                               <a href="{{ url_for('addLocation') }}"><button type="button" class="sidebar-button">New Location</button></a>
+<<<<<<< HEAD
+                            </li>
+                            <li class="sidebar-button-container">
+                              <a href="{{ url_for('locationStats') }}"><button type="button" class="sidebar-button">Location Storage</button></a>
+                            </li>
+                            <li class="sidebar-button-container">
+                                <a href="/logout">
+                                  <button  type="button" class="sidebar-button">Logout</button>
+                                </a>
+=======
+>>>>>>> b-booking
                             </li>
                             <li class="sidebar-button-container">
                               <a href="{{ url_for('locationStats') }}"><button type="button" class="sidebar-button">Location Storage</button></a>
@@ -47,6 +58,7 @@
                                   <button  type="button" class="sidebar-button">Logout</button>
                                 </a>
                             </li>
+
                         </ul>
                     </nav>
                 </div>
