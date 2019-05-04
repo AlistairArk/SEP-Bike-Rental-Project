@@ -212,39 +212,37 @@ def addBikes():
     return render_template('addBikes.html',
                             form=form)
 
-#
-# @app.route('/addEmployee',methods=['GET','POST'])
-# def addEmployee():
-#     form = addEmployeeForm(request.form)
-#     return render_template('addEmployee.html', form = from)
-#
-#
-# @app.route('/employeeAdded',methods=['GET','POST'])
-# def employeeAdded():
-#     # return render_template('employeeAdded.html')
-#     if request.method == 'POST':
-#         userInfo = request.form
-#         usertype = "employee"
-#         for key,value in userInfo.items():
-#             if key=='name':
-#                 name=value
-#             elif key=='email':
-#                 email=value
-#             elif key=='phone':
-#                 phone=value
-#             elif key=='username':
-#                 username=value
-#             elif key=='password':
-#                 password=value
-#         u = models.User(name=name,
-#                             email=email,
-#                             phone=phone,
-#                             username=username,
-#                             password=password,
-#                             user_type=usertype)
-#         db.session.add(u)
-#         db.session.commit()
-#         return render_template('employeeAdded.html')
+@app.route('/addEmployee',methods=['GET','POST'])
+def addEmployee():
+    form=addUserForm(request.form)
+    return render_template('addEmployee.html',
+                            form=form)
+
+@app.route('/employeeAdded',methods=['GET','POST'])
+def employeeAdded():
+    if request.method == 'POST':
+        employeeInfo = request.form
+        usertype = "employee"
+        for key,value in employeeInfo.items():
+            if key=='name':
+                name=value
+            elif key=='email':
+                email=value
+            elif key=='phone':
+                phone=value
+            elif key=='username':
+                username=value
+            elif key=='password':
+                password=value
+        e = models.User(name=name,
+                        email=email,
+                        phone=phone,
+                        username=username,
+                        password=password,
+                        user_type=usertype)
+        db.session.add(e)
+        db.session.commit()
+        return render_template('employeeAdded.html')
 
 
 @app.route('/addLocation',methods=['GET','POST'])
