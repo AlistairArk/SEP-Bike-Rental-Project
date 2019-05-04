@@ -381,7 +381,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
             bike_amount-=b.bike_amount
             flash("ORANGE bike_amount: "+str(bike_amount))
         # (GREEN) checking bookings where end location is our location and they're returned before sdatetime
-        elif b.end_location==elocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
+    elif b.end_location==slocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
             bike_amount+=b.bike_amount
             flash("GREEN bike_amount: "+str(bike_amount))
 
