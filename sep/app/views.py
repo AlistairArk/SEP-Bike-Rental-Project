@@ -354,15 +354,19 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
 
     #checking bike amount in slocation currently (exclude bikes that are in use)
     bike_amount = 0
-    flash("Starting bike amount: "+str(bike_amount))
     for bike in models.Bike.query.all():
         if bike.location_id==slocation and bike.in_use==False:
             bike_amount+=1
 
+    flash("Starting bike amount: "+str(bike_amount))
     #getting current time
     now=datetime.datetime.utcnow()
+    m="now: ",now
+    flash(m)
 
     for b in models.Booking.query.all():
+        m1="booking no. ",b.id
+        flash(m1)
         # (PINK) checking bookings where bikes are taken out between now and sdatetime
         #and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
@@ -381,6 +385,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
             bike_amount+=b.bike_amount
             flash("GREEN bike_amount: "+str(bike_amount))
 
+    flash("Before final comparison")
     #if after all checks there is enough bikes in our location then booking is successful
     if bike_amount>=numbikes:
         return True
@@ -388,7 +393,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     else:
         return False
         flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
-
+    flash("After final comparison")
 
 @app.route('/')
 @loginRequired
