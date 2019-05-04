@@ -3,113 +3,14 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, s
 from app import app, models, db
 from functools import wraps
 from .forms import *
-<<<<<<< HEAD
-from functools import wraps
 import json
+<<<<<<< HEAD
 
 
-import datetime
-# def log(*args):
-#     for line in args:
-#         with open('log.log', 'a') as the_file:
-#             time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
-#             the_file.write("\n["+str(time)+"] "+line)
-
-# from datetime import datetime
-
-###############   TEST ROUTES   ################################################
-
-@app.route('/test', methods=['GET','POST'])
-def test():
-    form=testForm(request.form)
-    if request.method=='POST':
-        stime=request.form['stime']
-        etime=request.form['etime']
-        sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
-        edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
-        m3="sdatetime type: ",type(sdatetime)," | sdatetime: ",sdatetime
-        m4="edatetime type: ",type(edatetime)," | edatetime: ",edatetime
-        flash(m3)
-        flash(m4)
-
-    return render_template("testForm.html", form=form)
-
-###############   END OF TEST ROUTES   ######################################
-
-
-
-###############   BOOKING ROUTES   #############################################
-
-@app.route('/newBooking', methods=['GET','POST'])
-def newBooking():
-    form=addBookingForm()
-
-    form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
-    form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
-    if request.method=="POST" and form.validate_on_submit():
-        email = form.email.data
-        stime=request.form['stime']
-        etime=request.form['etime']
-        slocation = form.slocation.data
-        elocation = form.elocation.data
-        numbikes = form.numbikes.data
-        # if user is not None:
-        message = createBooking(email,stime,etime,slocation,elocation,numbikes)
-        flash(message)
-    return render_template("newBooking.html", form=form)
-
-def createBooking(email,stime,etime,slocation,elocation,numbikes):
-    user = models.User.query.filter_by(email=email).first()
-    cost = 13.44
-    bookingTime = datetime.datetime.now()
-    startloc = models.Location.query.filter_by(id=slocation).first()
-    sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
-    edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
-
-    b = models.Booking( cost= cost,
-                        start_time=sdatetime,
-                        end_time=edatetime,
-                        bike_amount=numbikes,
-                        booking_time= bookingTime,
-                        paid=False,
-                        user_id= user.id,
-                        end_location=elocation,
-                        start_location=startloc.id
-                        )
-
-    db.session.add(b)
-    db.session.commit()
-
-    message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
-
-    return message
-
-
-def takeBike(bike_id,booking_id):
-    bike = models.Bike.query.get(bike_id)
-    bike.in_use=True
-    booking = models.Booking.query.get(booking_id)
-    booking.bikes.append(bike)
-    db.session.add(bike)
-    db.session.add(booking)
-    db.session.commit()
-    #still need to mark booked_bike taken   ?
-
-def returnBike(bike_id,booking_id):
-    bike = models.Bike.query.get(bike_id)
-    bike.in_use=False
-    db.session.add(bike)
-    db.session.commit()
-    #still need to mark booked_bike returned & add return time   ?
-
-###############   END OF BOOKING ROUTES   ######################################
 
 =======
-import json
-
-
->>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
-
+import datetime
+>>>>>>> c816fcf0abeb6e4423e8db00312f9f288d75f75b
 
 ###############   LOG IN ROUTES   ##############################################
 
@@ -133,18 +34,6 @@ def loginPresent(f):
             return redirect(url_for('webIndex'))
         else:
             return f(*args, **kwargs)
-<<<<<<< HEAD
-=======
-
-    return decorated
-
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('webLogin'))
-
->>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
     return decorated
 
@@ -165,19 +54,6 @@ def webLogin():
 def webIndex():
     return render_template("index.html", name = session["name"])
 
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
-
-
-
->>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
 @app.route('/resetPassword')
 @loginPresent
@@ -198,12 +74,6 @@ def webResetRequest():
         return render_template("resetPassword.html", fail = message)
 
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 @app.route('/loginRequest', methods=['POST'])
 def webLoginRequest():
     # Hand username and password to login function
@@ -214,7 +84,7 @@ def webLoginRequest():
     loginData = function.login(username=username, password=password)
 
 
-    log(str(loginData))
+    # log(str(loginData))
 
     if loginData[0]:
         session["userType"] = loginData[1]
@@ -230,12 +100,7 @@ def webLoginRequest():
 
 
 
-<<<<<<< HEAD
 ###############   ADD USER ROUTES   ############################################
-=======
-
-### ### ###
->>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
@@ -274,14 +139,7 @@ def userAdded():
 
 
 
-<<<<<<< HEAD
 ###############   ADD BIKES ROUTES   ###########################################
-=======
-
-
-
-
->>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
 @app.route('/bikesAdded',methods=['GET','POST'])
 @loginRequired
@@ -383,12 +241,9 @@ def employeeAdded():
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
 
 
-<<<<<<< HEAD
 
 ###############   ADD LOCATION ROUTES   ########################################
 
-=======
->>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 @app.route('/addLocation',methods=['GET','POST'])
 @loginRequired
 def addLocation():
@@ -440,12 +295,79 @@ def locationStats():
     return render_template('locationStats.html',
                             locations=locations)
 
-<<<<<<< HEAD
-###############   END OF LOCATION STATS ROUTES   ###############################
-=======
+################# END OF LOCATION STATS ROUTES ##################
 
 
+################## CREATE BOOKING ROUTES #########
 
+
+@app.route('/newBooking', methods=['GET','POST'])
+def newBooking():
+    form=addBookingForm()
+
+    form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    if request.method=="POST" and form.validate_on_submit():
+        email = form.email.data
+        stime=request.form['stime']
+        etime=request.form['etime']
+        slocation = form.slocation.data
+        elocation = form.elocation.data
+        numbikes = form.numbikes.data
+        # if user is not None:
+        message = createBooking(email,stime,etime,slocation,elocation,numbikes)
+        flash(message)
+    return render_template("newBooking.html", form=form)
+
+def createBooking(email,stime,etime,slocation,elocation,numbikes):
+    user = models.User.query.filter_by(email=email).first()
+    cost = 13.44
+    bookingTime = datetime.datetime.now()
+    startloc = models.Location.query.filter_by(id=slocation).first()
+    sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+    edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
+
+    b = models.Booking( cost= cost,
+                        start_time=sdatetime,
+                        end_time=edatetime,
+                        bike_amount=numbikes,
+                        booking_time= bookingTime,
+                        paid=False,
+                        user_id= user.id,
+                        end_location=elocation,
+                        start_location=startloc.id
+                        )
+
+    db.session.add(b)
+    db.session.commit()
+
+    message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+
+    return message
+
+@app.route('/')
+def index():
+    return render_template("index.html")
+
+def takeBike(bike_id,booking_id):
+    bike = models.Bike.query.get(bike_id)
+    bike.in_use=True
+    booking = models.Booking.query.get(booking_id)
+    booking.bikes.append(bike)
+    db.session.add(bike)
+    db.session.add(booking)
+    db.session.commit()
+    #still need to mark booked_bike taken   ?
+
+def returnBike(bike_id,booking_id):
+    bike = models.Bike.query.get(bike_id)
+    bike.in_use=False
+    db.session.add(bike)
+    db.session.commit()
+    #still need to mark booked_bike returned & add return time   ?
+
+
+######## API
 
 import datetime
 #def log(*args):
@@ -453,12 +375,6 @@ import datetime
 #       with open('log.log', 'a') as the_file:
 #           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
 #           the_file.write("\n["+str(time)+"] "+line)
-
-
-
-
-
-######## API 
 
 def api_loginRequired(f):
     @wraps(f)
@@ -532,7 +448,7 @@ def apiGetOrders():
 @app.route('/api/collectbikes', methods=['POST'])
 def apiCollectBikes():
     """
-    Marks a bike as unavailable 
+    Marks a bike as unavailable
     """
 
     json = request.get_json()
@@ -546,6 +462,8 @@ def apiReturnBike():
 
     json = request.get_json()
     return jsonify({'error': 'Authentificaton failed'})
+<<<<<<< HEAD
 
 
->>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
+=======
+>>>>>>> c816fcf0abeb6e4423e8db00312f9f288d75f75b
