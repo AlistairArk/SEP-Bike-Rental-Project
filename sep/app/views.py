@@ -345,7 +345,8 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
         message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
     else:
         message="Unfortunately there is no availability during the requested time. :("
-
+    m = "sdatetime: ",sdatetime," | edatetime: ",edatetime," | slocation: ",slocation," | elocation: ",elocation," | numbikes",numbikes
+    flash(m)
     return message
 
 def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
