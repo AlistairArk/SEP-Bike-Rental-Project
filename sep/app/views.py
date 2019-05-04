@@ -92,7 +92,7 @@ def webLoginRequest():
     loginData = function.login(username=username, password=password)
 
 
-    log(str(loginData))
+    # log(str(loginData))
 
     if loginData[0]:
         session["userType"] = loginData[1]
