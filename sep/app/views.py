@@ -100,6 +100,7 @@ def webLoginRequest():
 ###############   ADD USER ROUTES   ############################################
 
 @app.route('/addUser',methods=['GET','POST'])
+@loginRequired
 def addUser():
     form=addUserForm(request.form)
     return render_template('addUser.html',
@@ -204,12 +205,14 @@ def addBikes():
 ###############   ADD EMPLOYEE ROUTES   ########################################
 
 @app.route('/addEmployee',methods=['GET','POST'])
+@loginRequired
 def addEmployee():
     form=addUserForm(request.form)
     return render_template('addEmployee.html',
                             form=form)
 
 @app.route('/employeeAdded',methods=['GET','POST'])
+@loginRequired
 def employeeAdded():
     if request.method == 'POST':
         employeeInfo = request.form
@@ -299,6 +302,7 @@ def locationStats():
 
 
 @app.route('/newBooking', methods=['GET','POST'])
+@loginRequired
 def newBooking():
     form=addBookingForm()
 
@@ -343,6 +347,7 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     return message
 
 @app.route('/')
+@loginRequired
 def index():
     return render_template("index.html")
 
