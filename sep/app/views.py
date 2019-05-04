@@ -364,20 +364,20 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     for b in models.Booking.query.all():
         #checking bookings where bikes are taken out between now and sdatetime
         #and are returned after sdatetime
-        if b.start_location==slocation and b.start_time>now and b.start_time<sdatetime and b.end_time>sdatetime:
+        if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
             bike_amount-=b.bike_amount
         #checking bookings which take bikes out during our booking
-        elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<edatetime:
+        elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
             bike_amount-=b.bike_amount
         #checking bookings which take bikes from slocation and return to a different location
-        elif b.start_location==slocation and b.start_time>now and b.start_time<sdatetime and b.start_location!=b.end_location:
+        elif b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.start_location!=b.end_location:
             bike_amount-=b.bike_amount
         #checking bookings where end location is our location and they're returned before sdatetime
-        elif b.end_location==elocation and b.end_time>now and b.end_time<sdatetime:
+        elif b.end_location==elocation and b.end_time>=now and b.end_time<=sdatetime:
             bike_amount+=b.bike_amount
 
     #if after all checks there is enough bikes in our location then booking is successful
-    if bike_amount>numbikes:
+    if bike_amount>=numbikes:
         return True
     else:
         return False
