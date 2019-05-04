@@ -3,6 +3,7 @@ from flask_mail import Mail, Message
 
 import MySQLdb
 from . import db, models
+import hashlib
 
 
 '''
@@ -24,6 +25,7 @@ def login(*args, **kwargs):
     username = kwargs.get("username", 0)
     password = kwargs.get("password", 0)
 
+
     # Check if username & password are true
     user = models.User.query.filter_by(username=username, password=password).first()
     
@@ -31,7 +33,13 @@ def login(*args, **kwargs):
         return [False, 0, 0, 0]
     else:
         return [True, user.user_type, user.username, user.name]  # return user type
+    
+    ## Comment out for local testing 
+    # user_type  = "manager"
+    # username   = "prudd"
+    # name       = "Paul Rudd"
 
+    # return [True, user_type, username, name]  # return user type
 
 
 
@@ -44,39 +52,39 @@ def emailExists(email):
     return 1 # Assume email exists as a test
 
 
-def addUser(*args, **kwargs):
-    name      = kwargs.get("name",      "")
-    username  = kwargs.get("username",  "")
-    email     = kwargs.get("email",     "")
-    password  = kwargs.get("password",  "")
-    image     = kwargs.get("image",     "")
-    phone     = kwargs.get("phone",     "")
-    userType  = kwargs.get("userType",  "")
+# def addUser(*args, **kwargs):
+#     name      = kwargs.get("name",      "")
+#     username  = kwargs.get("username",  "")
+#     email     = kwargs.get("email",     "")
+#     password  = kwargs.get("password",  "")
+#     image     = kwargs.get("image",     "")
+#     phone     = kwargs.get("phone",     "")
+#     userType  = kwargs.get("userType",  "")
 
-    user = models.User.query.filter_by(username=username).first()
-    if user==None: # User not found
-        # add new employee as normal 
+#     user = models.User.query.filter_by(username=username).first()
+#     if user==None: # User not found
+#         # add new employee as normal 
 
-        '''
-        Checks before adding user
-            - Password security
-            - Valid number
+#         '''
+#         Checks before adding user
+#             - Password security
+#             - Valid number
 
-        '''
-        l = models.Location(name      = name,
-                            username  = username,
-                            email     = email,
-                            password  = password,
-                            phone     = phone,
-                            user_type = userType)
+#         '''
+#         l = models.Location(name      = name,
+#                             username  = username,
+#                             email     = email,
+#                             password  = password,
+#                             phone     = phone,
+#                             user_type = userType)
 
-        db.session.add(l)
-        db.session.commit()
+#         db.session.add(l)
+#         db.session.commit()
 
 
-        return 1    # if employee was added successfully return 1
-    else: 
-        return 0    # if employee already exists return 0
+#         return 1    # if employee was added successfully return 1
+#     else: 
+#         return 0    # if employee already exists return 0
 
 
 def resetRequest(*args, **kwargs):

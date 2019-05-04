@@ -1,7 +1,9 @@
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
+from functools import wraps
 from .forms import *
+<<<<<<< HEAD
 from functools import wraps
 import json
 
@@ -102,6 +104,11 @@ def returnBike(bike_id,booking_id):
 
 ###############   END OF BOOKING ROUTES   ######################################
 
+=======
+import json
+
+
+>>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
 
 ###############   LOG IN ROUTES   ##############################################
@@ -126,6 +133,18 @@ def loginPresent(f):
             return redirect(url_for('webIndex'))
         else:
             return f(*args, **kwargs)
+<<<<<<< HEAD
+=======
+
+    return decorated
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('webLogin'))
+
+>>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
     return decorated
 
@@ -146,6 +165,19 @@ def webLogin():
 def webIndex():
     return render_template("index.html", name = session["name"])
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+
+
+
+
+>>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
 @app.route('/resetPassword')
 @loginPresent
@@ -166,6 +198,12 @@ def webResetRequest():
         return render_template("resetPassword.html", fail = message)
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 @app.route('/loginRequest', methods=['POST'])
 def webLoginRequest():
     # Hand username and password to login function
@@ -192,7 +230,12 @@ def webLoginRequest():
 
 
 
+<<<<<<< HEAD
 ###############   ADD USER ROUTES   ############################################
+=======
+
+### ### ###
+>>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
@@ -231,7 +274,14 @@ def userAdded():
 
 
 
+<<<<<<< HEAD
 ###############   ADD BIKES ROUTES   ###########################################
+=======
+
+
+
+
+>>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 
 @app.route('/bikesAdded',methods=['GET','POST'])
 @loginRequired
@@ -333,9 +383,12 @@ def employeeAdded():
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
 
 
+<<<<<<< HEAD
 
 ###############   ADD LOCATION ROUTES   ########################################
 
+=======
+>>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
 @app.route('/addLocation',methods=['GET','POST'])
 @loginRequired
 def addLocation():
@@ -387,4 +440,112 @@ def locationStats():
     return render_template('locationStats.html',
                             locations=locations)
 
+<<<<<<< HEAD
 ###############   END OF LOCATION STATS ROUTES   ###############################
+=======
+
+
+
+
+import datetime
+#def log(*args):
+#    for line in args:
+#       with open('log.log', 'a') as the_file:
+#           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+#           the_file.write("\n["+str(time)+"] "+line)
+
+
+
+
+
+######## API 
+
+def api_loginRequired(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'api_logged_in' in session:
+            return f(*args, **kwargs)
+        return jsonify({'error': 'Authentificaton failed'})
+    return decorated_function
+
+@app.route('/api/login', methods=['POST'])
+def apiLogin():
+    """
+    Handles json request for login, provides authentification.
+    updates cookies if details are correct.
+    return json responce
+    """
+
+    json = request.get_json()
+
+    if json['username'] == 'admin' and json['password'] == 'password':
+        return jsonify({'message': 'Success'})
+
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/register', methods=['POST'])
+def apiRegister():
+    """
+    Attempt to create a new account for the request
+    return the message to the device depending on the outcome
+    """
+
+    json = request.get_json()
+
+    if json['username'] == 'admin' and json['password'] == 'password':
+        return jsonify({'message': 'Success'})
+
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/getlocations', methods=['POST'])
+def apiGetLocations():
+    """
+    Returns all the locations bikes can be taken out from
+    Also returns number of bikes available
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/booking', methods=['POST'])
+def apiBooking():
+    """
+    Creates a booking by invoking the create booking function
+    Handle card details
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/getOrders', methods=['POST'])
+def apiGetOrders():
+    """
+    Returns all orders tied to a specific account
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/collectbikes', methods=['POST'])
+def apiCollectBikes():
+    """
+    Marks a bike as unavailable 
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/returnBike', methods=['POST'])
+def apiReturnBike():
+    """
+    Marks a bike as available
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+>>>>>>> c0ba2b56fc44bfabb4c4b0effbcd83797f572920
