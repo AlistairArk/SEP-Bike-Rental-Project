@@ -1,41 +1,74 @@
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
+from functools import wraps
 from .forms import *
+import json
+
+
+
 
 
 # #Check if user is needed to be logged in for a page:
-# def loginRequired(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'logged_in' in session:
-#             return f(*args, **kwargs)
-#         return redirect(url_for(''))
-#     return decorated_function
-#
+def loginRequired(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'loggedIn' in session:
+            return f(*args, **kwargs)
+
+        else:
+            return redirect(url_for('webLogin'))
+
+    return decorated
+
 # #Check is already logged through sessions:
-# def loginPresent(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'logged_in' in session:
-#             return redirect(url_for('index'))
-#         return f(*args, **kwargs)
-#     return decorated_function
+def loginPresent(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'loggedIn' in session:
+            return redirect(url_for('webIndex'))
+        else:
+            return f(*args, **kwargs)
+
+    return decorated
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('webLogin'))
+
 
 
 
 @app.route('/')
-def index():
-    # Just rendering login as a test
+@loginPresent
+def webLogin():
     return render_template("staffLogin.html")
+
+@app.route('/index')
+@loginRequired
+def webIndex():
+    return render_template("index.html", name = session["name"])
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route('/resetPassword')
+@loginPresent
 def webResetPassword():
     return render_template("resetPassword.html")
 
-
 @app.route('/resetRequest', methods=['POST'])
+@loginPresent
 def webResetRequest():
     # Send a password reset email to user
     email = str(request.form['email'])
@@ -48,8 +81,11 @@ def webResetRequest():
         return render_template("resetPassword.html", fail = message)
 
 
-@app.route('/login', methods=['POST'])
-def webLogin():
+
+
+
+@app.route('/loginRequest', methods=['POST'])
+def webLoginRequest():
     # Hand username and password to login function
     # Return 1 if valid login is found
     username = str(request.form['username'])
@@ -58,14 +94,15 @@ def webLogin():
     loginData = function.login(username=username, password=password)
 
 
+    log(str(loginData))
+
     if loginData[0]:
         session["userType"] = loginData[1]
         session["username"] = loginData[2]
         session["name"] = loginData[3]
         session["loggedIn"] = True
-        return render_template("index.html", name = session["name"])
+        return redirect(url_for('webIndex'))
     else:
-        session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
@@ -73,18 +110,7 @@ def webLogin():
 
 
 
-@app.route('/logout')
-def webLogout():
-    session["loggedIn"] = False
-    session["userType"] = None
-    session["username"] = None
-    session["name"] = None
-    return render_template("staffLogin.html")
-
-
-
 ### ### ###
-
 
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
@@ -92,8 +118,8 @@ def addUser():
     return render_template('addUser.html',
                             form=form)
 
-
 @app.route('/userAdded',methods=['GET','POST'])
+@loginRequired
 def userAdded():
     if request.method == 'POST':
         userInfo = request.form
@@ -127,8 +153,8 @@ def userAdded():
 
 
 
-
 @app.route('/bikesAdded',methods=['GET','POST'])
+@loginRequired
 def bikesAdded():
     # bikeForm=addBikesForm(request.form)
     if request.method == 'POST':
@@ -167,8 +193,8 @@ def bikesAdded():
                                 location=l.name)
 
 
-
 @app.route('/addBikes',methods=['GET','POST'])
+@loginRequired
 def addBikes():
     # bikes=models.Bike.query.all()
     form=addBikesForm(request.form)
@@ -219,15 +245,17 @@ def employeeAdded():
         return render_template('employeeAdded.html')
 
 
-
 @app.route('/addLocation',methods=['GET','POST'])
+@loginRequired
 def addLocation():
     form=addLocationForm(request.form)
     return render_template('newLocation.html',
                             form=form)
 
 
+
 @app.route('/locationAdded',methods=['GET','POST'])
+@loginRequired
 def locationAdded():
     if request.method == 'POST':
         locationInfo = request.form
@@ -256,8 +284,115 @@ def locationAdded():
 
 
 @app.route('/locationStats')
+@loginRequired
 def locationStats():
     locations = models.Location.query.all()
     # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
     return render_template('locationStats.html',
                             locations=locations)
+
+
+
+
+
+import datetime
+def log(*args):
+    for line in args:
+        with open('log.log', 'a') as the_file:
+            time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+            the_file.write("\n["+str(time)+"] "+line)
+
+
+
+
+
+######## API 
+
+def api_loginRequired(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'api_logged_in' in session:
+            return f(*args, **kwargs)
+        return jsonify({'error': 'Authentificaton failed'})
+    return decorated_function
+
+@app.route('/api/login', methods=['POST'])
+def apiLogin():
+    """
+    Handles json request for login, provides authentification.
+    updates cookies if details are correct.
+    return json responce
+    """
+
+    json = request.get_json()
+
+    if json['username'] == 'admin' and json['password'] == 'password':
+        return jsonify({'message': 'Success'})
+
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/register', methods=['POST'])
+def apiRegister():
+    """
+    Attempt to create a new account for the request
+    return the message to the device depending on the outcome
+    """
+
+    json = request.get_json()
+
+    if json['username'] == 'admin' and json['password'] == 'password':
+        return jsonify({'message': 'Success'})
+
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/getlocations', methods=['POST'])
+def apiGetLocations():
+    """
+    Returns all the locations bikes can be taken out from
+    Also returns number of bikes available
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/booking', methods=['POST'])
+def apiBooking():
+    """
+    Creates a booking by invoking the create booking function
+    Handle card details
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/getOrders', methods=['POST'])
+def apiGetOrders():
+    """
+    Returns all orders tied to a specific account
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/collectbikes', methods=['POST'])
+def apiCollectBikes():
+    """
+    Marks a bike as unavailable 
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/returnBike', methods=['POST'])
+def apiReturnBike():
+    """
+    Marks a bike as available
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/mainActivity">
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.leedsride.rentalapp.LeedsRide.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+    <activity
+        android:id="@+id/createBooking"
+        android:name="com.leedsride.rentalapp.LeedsRide.CreateBooking"
+        android:label="activity_create_booking"
+        tools:layout="@layout/activity_create_booking" />
+    <activity
+        android:id="@+id/forgotPasswordActivity"
+        android:name="com.leedsride.rentalapp.LeedsRide.ForgotPasswordActivity"
+        android:label="activity_forgot_password"
+        tools:layout="@layout/activity_forgot_password" />
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.leedsride.rentalapp.LeedsRide.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+    <activity
+        android:id="@+id/startMenu"
+        android:name="com.leedsride.rentalapp.LeedsRide.StartMenu"
+        android:label="activity_start_menu"
+        tools:layout="@layout/activity_start_menu" />
+    <activity
+        android:id="@+id/registerActivity"
+        android:name="com.leedsride.rentalapp.LeedsRide.RegisterActivity"
+        android:label="activity_register"
+        tools:layout="@layout/activity_register" />
+    <activity
+        android:id="@+id/onBookingActivity"
+        android:name="com.leedsride.rentalapp.LeedsRide.OnBookingActivity"
+        android:label="activity_on_booking"
+        tools:layout="@layout/activity_on_booking" />
+</navigation>
