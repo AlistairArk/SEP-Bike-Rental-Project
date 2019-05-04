@@ -319,28 +319,64 @@ def newBooking():
 def createBooking(email,stime,etime,slocation,elocation,numbikes):
     user = models.User.query.filter_by(email=email).first()
     cost = 13.44
-    bookingTime = datetime.datetime.now()
-    startloc = models.Location.query.filter_by(id=slocation).first()
+    bookingTime = datetime.datetime.utcnow()
     sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
     edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
-    b = models.Booking( cost= cost,
-                        start_time=sdatetime,
-                        end_time=edatetime,
-                        bike_amount=numbikes,
-                        booking_time= bookingTime,
-                        paid=False,
-                        user_id= user.id,
-                        end_location=elocation,
-                        start_location=startloc.id
-                        )
+    if checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)==True:
+        b = models.Booking( cost= cost,
+                            start_time=sdatetime,
+                            end_time=edatetime,
+                            bike_amount=numbikes,
+                            booking_time= bookingTime,
+                            paid=False,
+                            user_id= user.id,
+                            end_location=elocation,
+                            start_location=slocation
+                            )
 
-    db.session.add(b)
-    db.session.commit()
+        db.session.add(b)
+        db.session.commit()
 
-    message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+        message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+    else:
+        message="Unfortunately there is no availability during the requested time. :("
 
     return message
+
+def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
+    #simulating bike_amount at slocation between now and stime
+
+    #checking bike amount in slocation currently (exclude bikes that are in use)
+    bike_amount = 0
+    for bike in models.Bike.query.all():
+        if bike.location_id==slocation and bike.in_use==False:
+            bike_amount+=1
+
+    #getting current time
+    now=datetime.datetime.utcnow()
+
+    for b in models.Booking.query.all():
+        #checking bookings where bikes are taken out between now and sdatetime
+        #and are returned after sdatetime
+        if b.start_location==slocation and b.start_time>now and b.start_time<sdatetime and b.end_time>sdatetime:
+            bike_amount-=b.bike_amount
+        #checking bookings which take bikes out during our booking
+        elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<edatetime:
+            bike_amount-=b.bike_amount
+        #checking bookings which take bikes from slocation and return to a different location
+        elif b.start_location==slocation and b.start_time>now and b.start_time<sdatetime and b.start_location!=b.end_location:
+            bike_amount-=b.bike_amount
+        #checking bookings where end location is our location and they're returned before sdatetime
+        elif b.end_location=elocation and b.end_time>now and b.end_time<sdatetime:
+            bike_amount+=b.bike_amount
+
+    #if after all checks there is enough bikes in our location then booking is successful
+    if bike_amount>numbikes:
+        return True
+    else:
+        return False
+
 
 @app.route('/')
 def index():
