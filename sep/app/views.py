@@ -4,17 +4,9 @@ from app import app, models, db
 from functools import wraps
 from .forms import *
 import json
-<<<<<<< HEAD
-
-
-
-
-
-=======
 import datetime
 
 
->>>>>>> b-booking
 # #Check if user is needed to be logged in for a page:
 def loginRequired(f):
     @wraps(f)
@@ -451,11 +443,7 @@ def apiGetOrders():
 @app.route('/api/collectbikes', methods=['POST'])
 def apiCollectBikes():
     """
-<<<<<<< HEAD
     Marks a bike as unavailable
-=======
-    Marks a bike as unavailable
->>>>>>> b-booking
     """
 
     json = request.get_json()
@@ -466,14 +454,6 @@ def apiReturnBike():
     """
     Marks a bike as available
     """
-<<<<<<< HEAD
 
     json = request.get_json()
     return jsonify({'error': 'Authentificaton failed'})
-
-
-=======
-
-    json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
->>>>>>> b-booking
