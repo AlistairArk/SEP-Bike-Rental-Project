@@ -2,40 +2,158 @@ from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session
 from app import app, models, db
 from .forms import *
+from functools import wraps
+import json
 
+
+import datetime
+# def log(*args):
+#     for line in args:
+#         with open('log.log', 'a') as the_file:
+#             time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+#             the_file.write("\n["+str(time)+"] "+line)
+
+# from datetime import datetime
+
+###############   TEST ROUTES   ################################################
+
+@app.route('/test', methods=['GET','POST'])
+def test():
+    form=testForm(request.form)
+    if request.method=='POST':
+        stime=request.form['stime']
+        etime=request.form['etime']
+        sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+        edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
+        m3="sdatetime type: ",type(sdatetime)," | sdatetime: ",sdatetime
+        m4="edatetime type: ",type(edatetime)," | edatetime: ",edatetime
+        flash(m3)
+        flash(m4)
+
+    return render_template("testForm.html", form=form)
+
+###############   END OF TEST ROUTES   ######################################
+
+
+
+###############   BOOKING ROUTES   #############################################
+
+@app.route('/newBooking', methods=['GET','POST'])
+def newBooking():
+    form=addBookingForm()
+
+    form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    if request.method=="POST" and form.validate_on_submit():
+        email = form.email.data
+        stime=request.form['stime']
+        etime=request.form['etime']
+        slocation = form.slocation.data
+        elocation = form.elocation.data
+        numbikes = form.numbikes.data
+        # if user is not None:
+        message = createBooking(email,stime,etime,slocation,elocation,numbikes)
+        flash(message)
+    return render_template("newBooking.html", form=form)
+
+def createBooking(email,stime,etime,slocation,elocation,numbikes):
+    user = models.User.query.filter_by(email=email).first()
+    cost = 13.44
+    bookingTime = datetime.datetime.now()
+    startloc = models.Location.query.filter_by(id=slocation).first()
+    sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+    edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
+
+    b = models.Booking( cost= cost,
+                        start_time=sdatetime,
+                        end_time=edatetime,
+                        bike_amount=numbikes,
+                        booking_time= bookingTime,
+                        paid=False,
+                        user_id= user.id,
+                        end_location=elocation,
+                        start_location=startloc.id
+                        )
+
+    db.session.add(b)
+    db.session.commit()
+
+    message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+
+    return message
+
+
+def takeBike(bike_id,booking_id):
+    bike = models.Bike.query.get(bike_id)
+    bike.in_use=True
+    booking = models.Booking.query.get(booking_id)
+    booking.bikes.append(bike)
+    db.session.add(bike)
+    db.session.add(booking)
+    db.session.commit()
+    #still need to mark booked_bike taken   ?
+
+def returnBike(bike_id,booking_id):
+    bike = models.Bike.query.get(bike_id)
+    bike.in_use=False
+    db.session.add(bike)
+    db.session.commit()
+    #still need to mark booked_bike returned & add return time   ?
+
+###############   END OF BOOKING ROUTES   ######################################
+
+
+
+###############   LOG IN ROUTES   ##############################################
 
 # #Check if user is needed to be logged in for a page:
-# def loginRequired(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'logged_in' in session:
-#             return f(*args, **kwargs)
-#         return redirect(url_for(''))
-#     return decorated_function
-#
-# #Check is already logged through sessions:
-# def loginPresent(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'logged_in' in session:
-#             return redirect(url_for('index'))
-#         return f(*args, **kwargs)
-#     return decorated_function
+def loginRequired(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'loggedIn' in session:
+            return f(*args, **kwargs)
 
+        else:
+            return redirect(url_for('webLogin'))
+
+    return decorated
+
+# #Check is already logged through sessions:
+def loginPresent(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'loggedIn' in session:
+            return redirect(url_for('webIndex'))
+        else:
+            return f(*args, **kwargs)
+
+    return decorated
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('webLogin'))
 
 
 @app.route('/')
-def index():
-    # Just rendering login as a test
+@loginPresent
+def webLogin():
     return render_template("staffLogin.html")
+
+@app.route('/index')
+@loginRequired
+def webIndex():
+    return render_template("index.html", name = session["name"])
 
 
 @app.route('/resetPassword')
+@loginPresent
 def webResetPassword():
     return render_template("resetPassword.html")
 
-
 @app.route('/resetRequest', methods=['POST'])
+@loginPresent
 def webResetRequest():
     # Send a password reset email to user
     email = str(request.form['email'])
@@ -48,8 +166,8 @@ def webResetRequest():
         return render_template("resetPassword.html", fail = message)
 
 
-@app.route('/login', methods=['POST'])
-def webLogin():
+@app.route('/loginRequest', methods=['POST'])
+def webLoginRequest():
     # Hand username and password to login function
     # Return 1 if valid login is found
     username = str(request.form['username'])
@@ -58,33 +176,23 @@ def webLogin():
     loginData = function.login(username=username, password=password)
 
 
+    log(str(loginData))
+
     if loginData[0]:
         session["userType"] = loginData[1]
         session["username"] = loginData[2]
         session["name"] = loginData[3]
         session["loggedIn"] = True
-        return render_template("index.html", name = session["name"])
+        return redirect(url_for('webIndex'))
     else:
-        session["loggedIn"] = False
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
+###############   END OG LOG IN ROUTES   #######################################
 
 
 
-
-@app.route('/logout')
-def webLogout():
-    session["loggedIn"] = False
-    session["userType"] = None
-    session["username"] = None
-    session["name"] = None
-    return render_template("staffLogin.html")
-
-
-
-### ### ###
-
+###############   ADD USER ROUTES   ############################################
 
 @app.route('/addUser',methods=['GET','POST'])
 def addUser():
@@ -92,8 +200,8 @@ def addUser():
     return render_template('addUser.html',
                             form=form)
 
-
 @app.route('/userAdded',methods=['GET','POST'])
+@loginRequired
 def userAdded():
     if request.method == 'POST':
         userInfo = request.form
@@ -119,16 +227,14 @@ def userAdded():
         db.session.commit()
         return render_template('userAdded.html')
 
+###############   END OF ADD USER ROUTES   #####################################
 
 
 
-
-
-
-
-
+###############   ADD BIKES ROUTES   ###########################################
 
 @app.route('/bikesAdded',methods=['GET','POST'])
+@loginRequired
 def bikesAdded():
     # bikeForm=addBikesForm(request.form)
     if request.method == 'POST':
@@ -167,8 +273,8 @@ def bikesAdded():
                                 location=l.name)
 
 
-
 @app.route('/addBikes',methods=['GET','POST'])
+@loginRequired
 def addBikes():
     # bikes=models.Bike.query.all()
     form=addBikesForm(request.form)
@@ -185,6 +291,12 @@ def addBikes():
         #                         location=location)
     return render_template('addBikes.html',
                             form=form)
+
+###############   END OF ADD BIKES ROUTES   ####################################
+
+
+
+###############   ADD EMPLOYEE ROUTES   ########################################
 
 @app.route('/addEmployee',methods=['GET','POST'])
 def addEmployee():
@@ -218,16 +330,23 @@ def employeeAdded():
         db.session.commit()
         return render_template('employeeAdded.html')
 
+###############   END OF ADD EMPLOYEE ROUTES   #################################
 
+
+
+###############   ADD LOCATION ROUTES   ########################################
 
 @app.route('/addLocation',methods=['GET','POST'])
+@loginRequired
 def addLocation():
     form=addLocationForm(request.form)
     return render_template('newLocation.html',
                             form=form)
 
 
+
 @app.route('/locationAdded',methods=['GET','POST'])
+@loginRequired
 def locationAdded():
     if request.method == 'POST':
         locationInfo = request.form
@@ -254,10 +373,18 @@ def locationAdded():
         return render_template('locationAdded.html',
                                 name=name)
 
+###############   END OF ADD LOCATION ROUTES   #################################
+
+
+
+###############   LOCATION STATS ROUTES   ######################################
 
 @app.route('/locationStats')
+@loginRequired
 def locationStats():
     locations = models.Location.query.all()
     # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
     return render_template('locationStats.html',
                             locations=locations)
+
+###############   END OF LOCATION STATS ROUTES   ###############################
