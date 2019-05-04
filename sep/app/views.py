@@ -354,10 +354,11 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
 
     #checking bike amount in slocation currently (exclude bikes that are in use)
     bike_amount = 0
+    flash(bike_amount)
+    flash("Starting bike amount: ",bike_amount)
     for bike in models.Bike.query.all():
         if bike.location_id==slocation and bike.in_use==False:
             bike_amount+=1
-    flash("Starting bike amount: ",bike_amount)
 
     #getting current time
     now=datetime.datetime.utcnow()
