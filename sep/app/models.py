@@ -57,6 +57,7 @@ class Location(db.Model):
     bookings = db.relationship('Booking', backref='location', lazy=True)
 
 
+
 #stores information about a single bike each time it is involved in a booking
 #implements many to many relationship between booking and bike with an association table
 booked_bike = db.Table('booked_bike',
