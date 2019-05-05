@@ -139,7 +139,7 @@ def addBikes():
         amount = form.amount.data
         location = form.location.data
 
-        l = models.Location.query.get(locationid)
+        l = models.Location.query.get(location)
         max = l.max_capacity
         bike_amount = l.bike_amount
         amount_added=0
