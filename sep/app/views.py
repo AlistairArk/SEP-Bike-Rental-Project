@@ -315,7 +315,7 @@ def receipt(sdatetime, booking):
     userid = bookingob.user_id
     user = models.User.query.filter_by(id=userid).first()
     useremail= user.email
-    datebooked = bookingob.bookingTime
+    datebooked = bookingob.booking_time
     name = user.name
     endtime = bookingob.end_time
 
