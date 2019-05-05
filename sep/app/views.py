@@ -460,8 +460,8 @@ def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
     bike_amount=bike_amount
     for b in models.Booking.query.all():
         m1="booking no. "+str(b.id)
-        (PINK) checking bookings where bikes are taken out between now and sdatetime
-        and are returned after sdatetime
+        # (PINK) checking bookings where bikes are taken out between now and sdatetime
+        # and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
             bike_amount-=b.bike_amount
             flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
