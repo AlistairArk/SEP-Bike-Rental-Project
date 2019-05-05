@@ -361,8 +361,6 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     flash("Starting bike amount: "+str(bike_amount))
     #getting current time
     now=datetime.datetime.utcnow()
-    m="now: ",now
-    flash(m)
 
     bike_amount=queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now)
 
@@ -373,10 +371,10 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,b.bike_amount,bike_amount,edatetime)
             if (futureba-numbikes)<=b.bike_amount:
                 futureBookingsFeasible=False
+                m="Booking affects future booking ",b.id
+                flash(m)
                 break
 
-
-    flash("Before final comparison")
     #if after all checks there is enough bikes in our location and it doesn't affect future bookings
     #then booking is successful
     if bike_amount>=numbikes and futureBookingsFeasible==True:
@@ -385,30 +383,32 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     else:
         return False
         flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
-    flash("After final comparison")
+        if futureBookingsFeasible==False:
+            flash("Booking unavailable as bikes are reserved for another booking.")
 
 def queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now):
     bike_amount=bike_amount
     for b in models.Booking.query.all():
         m1="booking no. ",b.id
-        flash(m1)
         # (PINK) checking bookings where bikes are taken out between now and sdatetime
         #and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
             bike_amount-=b.bike_amount
-            flash("PINK bike_amount: "+str(bike_amount))
+            flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
         # (PURPLE) checking bookings which take bikes out during our booking
         elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
             bike_amount-=b.bike_amount
-            flash("PURPLE bike_amount: "+str(bike_amount))
+            flash(m1+" ---> PURPLE bike_amount: "+str(bike_amount))
         # (ORANGE) checking bookings which take bikes from slocation and return to a different location
         elif b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.start_location!=b.end_location:
             bike_amount-=b.bike_amount
-            flash("ORANGE bike_amount: "+str(bike_amount))
+            flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
         # (GREEN) checking bookings where end location is our location and they're returned before sdatetime
         elif b.end_location==slocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
             bike_amount+=b.bike_amount
-            flash("GREEN bike_amount: "+str(bike_amount))
+            flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
+        else:
+            flash(m1+"Did not hit any colour criteria.")
     return bike_amount
 
 @app.route('/')
