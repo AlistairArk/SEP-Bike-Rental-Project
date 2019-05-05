@@ -8,6 +8,7 @@ import retrofit2.http.GET;
 
 import com.leedsride.rentalapp.LeedsRide.models.Locations;
 import com.leedsride.rentalapp.LeedsRide.models.Login;
+import com.leedsride.rentalapp.LeedsRide.models.Orders;
 import com.leedsride.rentalapp.LeedsRide.models.Register;
 import com.leedsride.rentalapp.LeedsRide.models.Book;
 
@@ -28,4 +29,7 @@ public interface restAPI {
 
     @GET("Live")
     Call<List<Locations>> getLocations();
+
+    @GET("Live")
+    Call<List<Orders>> getOrders();
 }

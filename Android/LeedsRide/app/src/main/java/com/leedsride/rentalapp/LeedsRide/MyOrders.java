@@ -15,14 +15,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.leedsride.rentalapp.LeedsRide.Adapter.NewOrderAdapter;
 import com.leedsride.rentalapp.LeedsRide.models.Locations;
+import com.leedsride.rentalapp.LeedsRide.models.Login;
+import com.leedsride.rentalapp.LeedsRide.models.Orders;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+
+import java.text.SimpleDateFormat;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,57 +46,27 @@ public class MyOrders extends AppCompatActivity {
     private NewOrderAdapter ordersAdapter;
     private RecyclerView.LayoutManager ordersLayoutManager;
     private Dialog collectBikesDialog;
+    private LinearLayout noOrders;
+    private final static int ALLOWANCE_TIME = 15;
+
+    private ArrayList<MyOrdersRecycler> ordersList;
+
+    private int activeCount = 0;
+    private int availableCount = 0;
+    private int upComingCount = 0;
+    private int  completeCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
 
+        ordersList = new ArrayList<>();
+
+        noOrders = (LinearLayout)findViewById(R.id.noOrdersCont);
+        getOrders();
+
         /*
-
-        ////Create retrofit object for network call
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ///implement instance of restAPI interface
-        restAPI sampleAPI = retrofit.create(restAPI.class);
-
-        //create call which uses attemptLogin method from restAPI interface
-        Call<List<Locations>> call = sampleAPI.getLocations();
-
-        //add call to queue (in this case nothing in queue)
-        call.enqueue(new Callback<List<Locations>>() {
-            @Override
-            public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
-
-                List<Locations> locations = response.body();
-
-                for(Locations location : locations){
-//                    String content = "";
-//                    content += "Name: " + location.getName() + " ";
-//                    content += "Latitude: " + location.getLatitude();
-//                    content += "Longitude: " + location.getLongitude();
-//                    content += "Available: " + location.getBikesAvailable();
-//
-//                    Log.d(TAG, content + "!!!!!!!");
-
-                    LatLng marker = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(marker).title(location.getName()).snippet("Available: " + location.getBikesAvailable()));
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Locations>> call, Throwable t) {
-                Log.e("error", "Could not connect to external API");
-            }
-        });
-
-        */
-
-        final ArrayList<MyOrdersRecycler> ordersList = new ArrayList<>();
         ordersList.add(new MyOrdersRecycler("Active Bookings","", "active", true));
         ordersList.add(new MyOrdersRecycler("Friday 25 June, 2019","10:00 AM - University Union Bikes", "active", false));
 
@@ -102,6 +81,8 @@ public class MyOrders extends AppCompatActivity {
         ordersList.add(new MyOrdersRecycler("Wednesday 3 February, 2019","13:25 PM - University Union Bikes", "complete", false));
         ordersList.add(new MyOrdersRecycler("Thursday 3 February, 2018","13:25 PM - University Union Bikes", "complete", false));
         ordersList.add(new MyOrdersRecycler("Monday 17 March, 2018","13:25 PM - University Union Bikes", "complete", false));
+        */
+
 
 
 
@@ -165,6 +146,81 @@ public class MyOrders extends AppCompatActivity {
 
         collectBikesDialog.show();
 
+    }
+
+    private void getOrders() {
+
+        ////Create retrofit object for network call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ///implement instance of restAPI interface
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        //create call which uses attemptLogin method from restAPI interface
+        Call<List<Orders>> call = sampleAPI.getOrders();
+
+        //add call to queue (in this case nothing in queue)
+        call.enqueue(new Callback<List<Orders>>() {
+            @Override
+            public void onResponse(Call<List<Orders>> call, Response<List<Orders>> response) {
+
+                List<Orders> orders = response.body();
+
+                if (orders.size() < 1) {
+                    noOrders.setVisibility(View.VISIBLE);
+                }
+                else {
+
+                    Calendar calendar = Calendar.getInstance();
+                    Locale locale = Locale.getDefault();
+
+                    for (Orders order : orders) {
+                        Calendar startDateTime = Calendar.getInstance();
+                        Calendar endDateTime = Calendar.getInstance();
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy", locale);
+
+                        try {
+                            startDateTime.setTime(sdf.parse(order.getStartDate()));
+                            endDateTime.setTime(sdf.parse(order.getEndDate()));
+                        }
+                        catch (ParseException e) {
+                            Log.e("Parse", "Error");
+                            return;
+                        }
+
+                        Calendar allowance = startDateTime;
+                        allowance.add(Calendar.MINUTE, -ALLOWANCE_TIME);
+
+
+                        int startCompare = calendar.compareTo(startDateTime);
+                        int allowanceCompare = calendar.compareTo(allowance);
+                        int endCompare = calendar.compareTo(endDateTime);
+
+                        if (endCompare == 1){ //ADD OR: BIKES HAVE BEEN RETURNED.
+                            //Add to completed
+                        }
+                        if (allowanceCompare >= 0) {
+                            //check if bikes have been taken out yet. If so //active
+                            //else available
+
+                        }
+                        else {
+                            //Add to future
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Orders>> call, Throwable t) {
+                noOrders.setVisibility(View.VISIBLE);
+                Toast.makeText(getApplicationContext(), "Network Error: Could not fetch orders", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
