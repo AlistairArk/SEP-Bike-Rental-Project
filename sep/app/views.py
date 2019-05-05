@@ -319,7 +319,7 @@ def receipt(sdatetime, booking):
     name = user.name
     endtime = bookingob.end_time
 
-    strdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+    strdatetime = datetime.datetime.strptime(sdatetime,"%Y-%m-%dT%H:%M")
     duration=endtime-strsdatetime
     duration_hours=duration.total_seconds()/3600.0
 
