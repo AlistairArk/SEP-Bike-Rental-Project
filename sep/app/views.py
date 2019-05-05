@@ -249,6 +249,7 @@ def employeeAdded():
 def addLocation():
     form=addLocationForm(request.form)
     if request.method=="POST" and form.validate_on_submit():
+        flash("Location added!")
         name=form.name.data
         addr=form.addr.data
         max_capacity=form.max_capacity.data
@@ -262,7 +263,6 @@ def addLocation():
                             latt=latt)
         db.session.add(l)
         db.session.commit()
-        flash("Location added!")
 
     return render_template('newLocation.html',
                             form=form)
