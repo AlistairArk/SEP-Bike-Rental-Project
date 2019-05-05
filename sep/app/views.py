@@ -322,13 +322,15 @@ def newBooking():
 
 def createBooking(email,stime,etime,slocation,elocation,numbikes):
     user = models.User.query.filter_by(email=email).first()
-    cost = 13.44
     bookingTime = datetime.datetime.utcnow()
     sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
     edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
     message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
     if message=="Booking successfully created! Booking confirmation has been emailed to "+email+".":
+        duration=edatetime-sdatetime
+        duration_hours=duration.total_seconds()/3600.0
+        cost=(numbikes*3.5)+(duration_hours/2*numbikes*0.1)
         b = models.Booking( cost= cost,
                             start_time=sdatetime,
                             end_time=edatetime,
@@ -342,6 +344,7 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
 
         db.session.add(b)
         db.session.commit()
+        message=message+" Booking cost: "+str(cost)
 
     # m = "sdatetime: ",sdatetime," | edatetime: ",edatetime," | slocation: ",slocation," | elocation: ",elocation," | numbikes",numbikes
     # flash(m)
