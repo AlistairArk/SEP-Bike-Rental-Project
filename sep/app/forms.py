@@ -2,6 +2,7 @@ from flask_wtf import Form
 from .models import User
 from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, PasswordField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
+
 # from wtforms_components import TimeField
 
 class addBikesForm(Form):
@@ -36,9 +37,14 @@ class addUserForm(Form):
             raise ValidationError("Invalid characters entered.")
 
     def validate_username(self,username):
-        for u in models.User.query.all():
+        for u in User.query.all():
             if username.data==u.username:
                 raise ValidationError("This username is already taken.")
+
+    def validate_email(self,email):
+        for u in User.query.all():
+            if email.data==u.email:
+                raise ValidationError("This email is already taken.")
 
 
 class addBookingForm(Form):
