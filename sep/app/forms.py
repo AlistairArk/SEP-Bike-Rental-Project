@@ -49,7 +49,7 @@ class addBookingForm(Form):
             raise ValidationError('Booking are only available in the future.')
 
     def validate_endtime(self,etime):
-        sdatetime = datetime.datetime.strptime(stimedata,"%Y-%m-%dT%H:%M")
+        sdatetime = datetime.datetime.strptime(stime.data,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
         if edatetime <= sdatetime:
             raise ValidationError('End time must be after starttime.')
