@@ -364,7 +364,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     m="now: ",now
     flash(m)
 
-    bike_amount=queries()
+    bike_amount=queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount)
 
     flash("Before final comparison")
     #if after all checks there is enough bikes in our location then booking is successful
