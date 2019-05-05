@@ -135,7 +135,9 @@ def addUser():
 def addBikes():
     form=addBikesForm(request.form)
     form.location.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    flash("Hello")
     if request.method=="POST" and form.validate_on_submit():
+        flash("Form validates")
         amount = form.amount.data
         location = form.location.data
 
