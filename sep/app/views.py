@@ -49,7 +49,7 @@ def webLogin():
 @app.route('/index')
 @loginRequired
 def webIndex():
-    return render_template("index.html", name = session["name"])
+    return render_template("index.html", topname = session["name"])
 
 
 @app.route('/resetPassword')
@@ -104,7 +104,7 @@ def webLoginRequest():
 def addUser():
     form=addUserForm(request.form)
     return render_template('addUser.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 @app.route('/userAdded',methods=['GET','POST'])
 @loginRequired
@@ -131,7 +131,7 @@ def userAdded():
                             user_type=usertype)
         db.session.add(u)
         db.session.commit()
-        return render_template('userAdded.html')
+        return render_template('userAdded.html', topname = session["name"])
 
 ###############   END OF ADD USER ROUTES   #####################################
 
@@ -176,7 +176,7 @@ def bikesAdded():
                                 amount=amount,
                                 amount_added=amount_added,
                                 all_added=all_added,
-                                location=l.name)
+                                location=l.name, topname = session["name"])
 
 
 @app.route('/addBikes',methods=['GET','POST'])
@@ -196,7 +196,7 @@ def addBikes():
         #                         amount=amount,
         #                         location=location)
     return render_template('addBikes.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 ###############   END OF ADD BIKES ROUTES   ####################################
 
@@ -209,7 +209,7 @@ def addBikes():
 def addEmployee():
     form=addUserForm(request.form)
     return render_template('addEmployee.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 @app.route('/employeeAdded',methods=['GET','POST'])
 @loginRequired
@@ -236,7 +236,7 @@ def employeeAdded():
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
-        return render_template('employeeAdded.html')
+        return render_template('employeeAdded.html', topname = session["name"])
 
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
 
@@ -249,7 +249,7 @@ def employeeAdded():
 def addLocation():
     form=addLocationForm(request.form)
     return render_template('newLocation.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 
 
@@ -279,7 +279,7 @@ def locationAdded():
         db.session.commit()
         flash("Location added!")
         return render_template('locationAdded.html',
-                                name=name)
+                                name=name, topname = session["name"])
 
 ###############   END OF ADD LOCATION ROUTES   #################################
 
@@ -293,7 +293,7 @@ def locationStats():
     locations = models.Location.query.all()
     # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
     return render_template('locationStats.html',
-                            locations=locations)
+                            locations=locations, topname = session["name"])
 
 ################# END OF LOCATION STATS ROUTES ##################
 
@@ -318,7 +318,7 @@ def newBooking():
         # if user is not None:
         message = createBooking(email,stime,etime,slocation,elocation,numbikes)
         flash(message)
-    return render_template("newBooking.html", form=form)
+    return render_template("newBooking.html", form=form, topname = session["name"])
 
 def createBooking(email,stime,etime,slocation,elocation,numbikes):
     user = models.User.query.filter_by(email=email).first()
@@ -424,7 +424,7 @@ def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
 @app.route('/')
 @loginRequired
 def index():
-    return render_template("index.html")
+    return render_template("index.html", topname = session["name"])
 
 def takeBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
