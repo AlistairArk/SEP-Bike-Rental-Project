@@ -330,9 +330,11 @@ def apiLogin():
     username = json['username']
     password = json['password']
 
+    print(username, password)
+
     loginData = function.login(username=username, password=password)
     
-    log(str(loginData))
+    print(loginData)
 
     if loginData[0]:
         session["api_logged_in"] = True
@@ -343,9 +345,23 @@ def apiLogin():
         user = models.User.query.filter_by(username=username).first()
         session["userId"] = user.id
 
-        return jsonify({'responce': 'Login Accepted'})
+       data =  {
+            "username":"",
+            "password":"",
+            "login status":"Login Accepted"
+        }
+
     else:
-        return jsonify({'error': 'Incorrect Login Information'})
+        data =  {
+            "username":"",
+            "password":"",
+            "login status":"Incorrect Login Information"
+        }
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+        
 
 @app.route('/api/register', methods=['POST'])
 def apiRegister():
@@ -441,7 +457,7 @@ def apiReturnBike():
 
 @app.route('/api/logout', methods=['POST'])
 @api_loginRequired
-def apiGetOrders():
+def apiLogout():
 
     session.clear()
     return jsonify({'message': 'Complete'})

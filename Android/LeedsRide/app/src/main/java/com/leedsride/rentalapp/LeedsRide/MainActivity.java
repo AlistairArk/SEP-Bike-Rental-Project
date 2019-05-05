@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private final int SPLASH_DISPLAY_LENGTH = 2000;
-    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String BASE_URL = "http://demo7156093.mockable.io/"; ////base url does not include exact path ///should make this available to all activities
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     Login login = new Login();
@@ -72,13 +72,15 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                     if(reply.equals("Incorrect Login Information")){
+                        SaveSharedPreference.clearLoginDetails(getApplicationContext());
                         Toast.makeText(getApplicationContext(), "Login authentication failed", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Login> call, Throwable t) {
-                    Log.e("error", "Could not connect to external API");
+                    Log.e("error", t.getMessage());
+                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
 

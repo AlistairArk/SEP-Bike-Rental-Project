@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface restAPI {
     @Headers("Content-Type: application/json")
-    @POST("Live") ////////////Remainder of url from shortened base url in main activity
+    @POST("login") ////////////Remainder of url from shortened base url in main activity
     Call<Login> attemptLogin(@Body Login login); //When POST request is made, the body should be an instance of Login class called login
 
     @Headers("Content-Type: application/json")
