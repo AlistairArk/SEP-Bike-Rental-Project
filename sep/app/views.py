@@ -327,7 +327,8 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
     edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
-    if checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)==True:
+    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)
+    if message=="Booking successfully created! Booking confirmation has been emailed to "+email+".":
         b = models.Booking( cost= cost,
                             start_time=sdatetime,
                             end_time=edatetime,
@@ -342,11 +343,8 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
         db.session.add(b)
         db.session.commit()
 
-        message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
-    else:
-        message="Unfortunately there is no availability during the requested time. :("
-    m = "sdatetime: ",sdatetime," | edatetime: ",edatetime," | slocation: ",slocation," | elocation: ",elocation," | numbikes",numbikes
-    flash(m)
+    # m = "sdatetime: ",sdatetime," | edatetime: ",edatetime," | slocation: ",slocation," | elocation: ",elocation," | numbikes",numbikes
+    # flash(m)
     return message
 
 def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
@@ -358,7 +356,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
         if bike.location_id==slocation and bike.in_use==False:
             bike_amount+=1
 
-    flash("Starting bike amount: "+str(bike_amount))
+    # flash("Starting bike amount: "+str(bike_amount))
     #getting current time
     now=datetime.datetime.utcnow()
 
@@ -371,8 +369,8 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
             if (futureba-numbikes)<=b.bike_amount:
                 futureBookingsFeasible=False
-                m="Booking affects future booking ",b.id
-                flash(m)
+                # m="Booking affects future booking ",b.id
+                # flash(m)
                 break
 
     #checking that there will be space in the end location on their return time
@@ -385,15 +383,18 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     #if after all checks there is enough bikes in our location and it doesn't affect future bookings
     #then booking is successful
     if bike_amount>=numbikes and futureBookingsFeasible==True and endLocationSpace==True:
-        flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
-        return True
+        # flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
+        message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+        return message
     else:
-        flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
+        # flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
         if futureBookingsFeasible==False:
-            flash("Booking unavailable as bikes in this location are reserved for another booking.")
+            message="Booking unavailable as bikes in this location are reserved for another booking."
         if endLocationSpace==False:
-            flash("Booking unavailable as the end location will be full at the end of this booking.")
-        return False
+            message="Booking unavailable as the end location will be full at the end of this booking."
+        if bike_amount<=numbikes:
+            message="Booking unavailable as the start location will not have enough bikes at the start time."
+        return message
 
 def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
     bike_amount=bike_amount
