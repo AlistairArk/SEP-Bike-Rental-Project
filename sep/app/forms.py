@@ -35,6 +35,11 @@ class addUserForm(Form):
         except:
             raise ValidationError("Invalid characters entered.")
 
+    def validate_username(self,username):
+        for u in models.User.query.all():
+            if username.data==u.username:
+                raise ValidationError("This username is already taken.")
+
 
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
