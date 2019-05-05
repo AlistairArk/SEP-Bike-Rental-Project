@@ -208,26 +208,13 @@ def addBikes():
 @loginRequired
 def addEmployee():
     form=addUserForm(request.form)
-    return render_template('addEmployee.html',
-                            form=form)
-
-@app.route('/employeeAdded',methods=['GET','POST'])
-@loginRequired
-def employeeAdded():
-    if request.method == 'POST':
-        employeeInfo = request.form
-        usertype = "employee"
-        for key,value in employeeInfo.items():
-            if key=='name':
-                name=value
-            elif key=='email':
-                email=value
-            elif key=='phone':
-                phone=value
-            elif key=='username':
-                username=value
-            elif key=='password':
-                password=value
+    if request.method=='POST' and form.validate_on_submit():
+        usertype="employee"
+        name=form.name.data
+        email=form.email.data
+        phone=form.phone.data
+        username=form.username.data
+        password=form.password.data
         e = models.User(name=name,
                         email=email,
                         phone=phone,
@@ -236,7 +223,10 @@ def employeeAdded():
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
-        return render_template('employeeAdded.html')
+        flash("Employee added!")
+    return render_template('addEmployee.html',
+                            form=form)
+
 
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
 
