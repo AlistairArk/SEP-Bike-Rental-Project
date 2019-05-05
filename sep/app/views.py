@@ -407,7 +407,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
-        if b.start_location == slocation and b.start_time>=sdatetime:
+        if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time and elocation!=slocation):
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
             if (futureba-numbikes)<=b.bike_amount:
                 futureBookingsFeasible=False
@@ -503,7 +503,7 @@ def returnBike(bike_id,booking_id):
 
 ######## API
 
-# 
+#
 # def log(*args):
 #    for line in args:
 #       with open('log.log', 'a') as the_file:
