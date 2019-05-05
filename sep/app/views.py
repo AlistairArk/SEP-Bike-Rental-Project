@@ -1,6 +1,6 @@
 from app import app, function
 from flask import render_template, redirect, url_for, flash, request, jsonify, session, make_response
-import pdfkit
+# import pdfkit
 from flask_mail import Mail, Message
 from app import app, models, db
 from functools import wraps
@@ -308,31 +308,31 @@ def locationStats():
 
 ###############   BOOKING CONFIMATION ROUTES   ##########################
 
-@app.route('/<sdatetime>/<booking>')
-def receipt(sdatetime, booking):
-
-    bookingob = models.Booking.query.filter_by(id=booking).first()
-    useremail= bookingob.email
-    user = models.User.query.filter_by(email=useremail).first()
-    datebooked = bookingob.bookingTime
-    name = user.name
-    endtime = bookingob.end_time
-
-    duration=endtime-sdatetime
-    duration_hours=duration.total_seconds()/3600.0
-
-    time = duration_hours
-    numbikes = bookingob.bike_amount
-    total = bookingob.cost
-
-    rendered = render_template('receipt.html', datebooked = datebooked, booking=booking, name=name, useremail=useremail, starttime=sdatetime, endtime=endtime, time=time, numbikes=numbikes, latefee=0, total=total)
-    pdf = pdfkit.from_string(rendered, False)
-
-    response = make_response(pdf)
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'attachment; filename=output.pdf'
-
-    return response
+# @app.route('/<sdatetime>/<booking>')
+# def receipt(sdatetime, booking):
+#
+#     bookingob = models.Booking.query.filter_by(id=booking).first()
+#     useremail= bookingob.email
+#     user = models.User.query.filter_by(email=useremail).first()
+#     datebooked = bookingob.bookingTime
+#     name = user.name
+#     endtime = bookingob.end_time
+#
+#     duration=endtime-sdatetime
+#     duration_hours=duration.total_seconds()/3600.0
+#
+#     time = duration_hours
+#     numbikes = bookingob.bike_amount
+#     total = bookingob.cost
+#
+#     rendered = render_template('receipt.html', datebooked = datebooked, booking=booking, name=name, useremail=useremail, starttime=sdatetime, endtime=endtime, time=time, numbikes=numbikes, latefee=0, total=total)
+#     pdf = pdfkit.from_string(rendered, False)
+#
+#     response = make_response(pdf)
+#     response.headers['Content-Type'] = 'application/pdf'
+#     response.headers['Content-Disposition'] = 'attachment; filename=output.pdf'
+#
+#     return response
 
 ###############   END OF BOOKING CONFIMATION ROUTES   ##########################
 
@@ -467,9 +467,11 @@ def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
 def send_confirmation(recemail, bookingid, sdatetime):
    msg = Message('LEEDS RIDE BOOKING CONFIRMATION', sender = 'bikesride24@gmail.com', recipients = [recemail])
 
-   link = url_for('receipt', sdatetime=sdatetime, booking=bookingid, _external = True)
+   # link = url_for('receipt', sdatetime=sdatetime, booking=bookingid, _external = True)
 
-   msg.body = "This is a link to your booking confirmation: {}".format(link)
+   # msg.body = "This is a link to your booking confirmation: {}".format(link)
+
+   msg.body="This is your confirmation email."
 
    mail.send(msg)
 
