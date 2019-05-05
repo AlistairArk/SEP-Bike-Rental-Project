@@ -334,15 +334,12 @@ def apiLogin():
     return json responce
     """
 
-    json = request.get_json()
-    username = json['username']
-    password = json['password']
+    content = request.get_json(force=True)
 
-    print(username, password)
+    username = content['username']
+    password = content['password']
 
     loginData = function.login(username=username, password=password)
-    
-    print(loginData)
 
     if loginData[0]:
         session["api_logged_in"] = True
@@ -353,17 +350,17 @@ def apiLogin():
         user = models.User.query.filter_by(username=username).first()
         session["userId"] = user.id
 
-       data =  {
-            "username":"",
-            "password":"",
-            "login status":"Login Accepted"
-        }
+        data =  {
+                "username":"",
+                "password":"",
+                "status":"Login Accepted"
+            }
 
     else:
         data =  {
             "username":"",
             "password":"",
-            "login status":"Incorrect Login Information"
+            "status":"Incorrect Login Information"
         }
 
 
@@ -389,10 +386,22 @@ def apiGetLocations():
     Also returns number of bikes available
     """
 
+    data = []
+
     locations = models.Location.query.all()
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    for location in locations:
+        locData =  {
+                "name":str(location.name),
+                "latitude":str(location.latt),
+                "longitude":str(location.longt),
+                "bikesAvailable":str(bike_amount)
+            }
+
+        data.append(locData)
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
 
 @app.route('/api/booking', methods=['POST'])
 @api_loginRequired

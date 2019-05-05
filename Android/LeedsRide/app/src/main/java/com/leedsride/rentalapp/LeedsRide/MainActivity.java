@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private final int SPLASH_DISPLAY_LENGTH = 2000;
-    private static final String BASE_URL = "http://demo7156093.mockable.io/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String BASE_URL = "https://sc17gs.pythonanywhere.com/api/"; ////base url does not include exact path ///should make this available to all activities
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     Login login = new Login();
@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, reply);
 
                     if(reply.equals("Login Accepted")){
-                        SaveSharedPreference.setLoginDetails(getApplicationContext(), storedUsername, storedPassword);
                         Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
                         startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
