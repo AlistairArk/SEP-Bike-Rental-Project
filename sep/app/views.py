@@ -319,14 +319,15 @@ def receipt(sdatetime, booking):
     name = user.name
     endtime = bookingob.end_time
 
-    duration=endtime-sdatetime
+    strdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+    duration=endtime-strsdatetime
     duration_hours=duration.total_seconds()/3600.0
 
     time = duration_hours
     numbikes = bookingob.bike_amount
     total = bookingob.cost
 
-    html = render_template('receipt.html', datebooked = datebooked, booking=booking, name=name, useremail=useremail, starttime=sdatetime, endtime=endtime, time=time, numbikes=numbikes, latefee=0, total=total)
+    html = render_template('receipt.html', datebooked = datebooked, booking=booking, name=name, useremail=useremail, starttime=strsdatetime, endtime=endtime, time=time, numbikes=numbikes, latefee=0, total=total)
 
 
     return render_pdf(HTML(string=html))
