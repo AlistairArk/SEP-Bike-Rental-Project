@@ -367,8 +367,8 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
-        if b.start_location == slocation and b.start_time>=edatetime:
-            futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,b.bike_amount,bike_amount,edatetime)
+        if b.start_location == slocation and b.start_time>=sdatetime:
+            futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,b.bike_amount,bike_amount,sdatetime)
             if (futureba-numbikes)<=b.bike_amount:
                 futureBookingsFeasible=False
                 m="Booking affects future booking ",b.id
@@ -378,13 +378,13 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     #if after all checks there is enough bikes in our location and it doesn't affect future bookings
     #then booking is successful
     if bike_amount>=numbikes and futureBookingsFeasible==True:
-        return True
         flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
+        return True
     else:
-        return False
         flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
         if futureBookingsFeasible==False:
             flash("Booking unavailable as bikes are reserved for another booking.")
+        return False
 
 def queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now):
     bike_amount=bike_amount
@@ -396,9 +396,9 @@ def queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now):
             bike_amount-=b.bike_amount
             flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
         # (PURPLE) checking bookings which take bikes out during our booking
-        elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
-            bike_amount-=b.bike_amount
-            flash(m1+" ---> PURPLE bike_amount: "+str(bike_amount))
+        # elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
+        #     bike_amount-=b.bike_amount
+        #     flash(m1+" ---> PURPLE bike_amount: "+str(bike_amount))
         # (ORANGE) checking bookings which take bikes from slocation and return to a different location
         elif b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.start_location!=b.end_location:
             bike_amount-=b.bike_amount
