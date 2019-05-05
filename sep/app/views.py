@@ -365,11 +365,11 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     flash(m)
 
     bike_amount=queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now)
-    
+
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
-        if b.start_location = slocation and b.start_time>edatetime:
+        if b.start_location == slocation and b.start_time>=edatetime:
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,b.bike_amount,bike_amount,edatetime)
             if (futureba-numbikes)<=b.bike_amount:
                 futureBookingsFeasible=False
