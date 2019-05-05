@@ -399,12 +399,12 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
 def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
     bike_amount=bike_amount
     for b in models.Booking.query.all():
-        m1="booking no. "+str(b.id)
+        # m1="booking no. "+str(b.id)
         # (PINK) checking bookings where bikes are taken out between now and sdatetime
         #and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
             bike_amount-=b.bike_amount
-            flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
+            # flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
         # (PURPLE) checking bookings which take bikes out during our booking
         # elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
         #     bike_amount-=b.bike_amount
@@ -412,13 +412,13 @@ def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
         # (ORANGE) checking bookings which take bikes from slocation and return to a different location
         elif b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.start_location!=b.end_location:
             bike_amount-=b.bike_amount
-            flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
+            # flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
         # (GREEN) checking bookings where end location is our location and they're returned before sdatetime
         elif b.end_location==slocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
             bike_amount+=b.bike_amount
-            flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
+            # flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
         else:
-            flash(m1+" Did not hit any colour criteria.")
+            # flash(m1+" Did not hit any colour criteria.")
     return bike_amount
 
 @app.route('/')
