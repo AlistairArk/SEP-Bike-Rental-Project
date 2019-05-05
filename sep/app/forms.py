@@ -22,6 +22,20 @@ class addUserForm(Form):
     phone = StringField('phone', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=30)])
 
+    def validate_phone(self,phone):
+        noSpaces=""
+        for i in phone:
+            if i!=" ":
+                noSpaces+=i
+        valid=True
+        try:
+            isInteger=int(noSpaces)
+            if len(noSpaces)<9 or len(noSpaces)>11:
+                raise ValidationError("Not a valid length for a UK phone.")
+        except:
+            raise ValidationError("Invalid characters entered.")
+
+
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     numbikes = IntegerField('numbikes', validators=[DataRequired()])
