@@ -146,12 +146,12 @@ def addBikes():
 
         for i in range(amount):
             if bike_amount<max:
-                bike=models.Bike(location_id=locationid,in_use=0,status="new")
+                bike=models.Bike(location_id=location,in_use=0,status="new")
                 db.session.add(bike)
                 db.session.commit()
                 amount_added+=1
                 bike_amount+=1
-        l = models.Location.query.get(locationid)
+        l = models.Location.query.get(location)
         l.bike_amount+=amount_added
         db.session.add(l)
         db.session.commit()
