@@ -24,7 +24,7 @@ class addUserForm(Form):
 
     def validate_phone(self,phone):
         noSpaces=""
-        for i in phone:
+        for i in phone.data:
             if i!=" ":
                 noSpaces+=i
         valid=True
