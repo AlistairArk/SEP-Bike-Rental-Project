@@ -135,9 +135,7 @@ def addUser():
 def addBikes():
     form=addBikesForm(request.form)
     form.location.choices=[(l.id,l.name) for l in models.Location.query.all()]
-    flash("Hello")
     if request.method=="POST" and form.validate_on_submit():
-        flash("Form validates")
         amount = form.amount.data
         location = form.location.data
 
@@ -157,8 +155,6 @@ def addBikes():
         l.bike_amount+=amount_added
         db.session.add(l)
         db.session.commit()
-        m=amount_added+" bikes added."
-        flash(m)
         if amount_added<amount:
             message = "Location full."+amount_added+"/"+amount+" bikes added."
             flash(message)

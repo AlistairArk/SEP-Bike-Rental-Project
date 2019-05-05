@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 
 class addBikesForm(Form):
     amount = IntegerField('amount', [validators.NumberRange(max=10,min=-5)])
-    location = SelectField('location', validators=[DataRequired()])
+    location = SelectField('location', coerce=int, validators=[DataRequired()])
 
 class addLocationForm(Form):
     name = StringField('name', validators=[DataRequired(), Length(min=1,max=50)])
