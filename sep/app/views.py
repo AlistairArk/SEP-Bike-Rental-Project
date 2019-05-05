@@ -362,31 +362,40 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     #getting current time
     now=datetime.datetime.utcnow()
 
-    bike_amount=queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now)
+    bike_amount=queries(sdatetime,edatetime,slocation,elocation,bike_amount,now)
 
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
         if b.start_location == slocation and b.start_time>=sdatetime:
-            futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,b.bike_amount,bike_amount,sdatetime)
+            futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
             if (futureba-numbikes)<=b.bike_amount:
                 futureBookingsFeasible=False
                 m="Booking affects future booking ",b.id
                 flash(m)
                 break
 
+    #checking that there will be space in the end location on their return time
+    endLocationSpace=True
+    end_ba = queries(edatetime,edatetime,elocation,elocation,bike_amount,now)
+    endloc=models.Location.query.get(elocation)
+    if end_ba+numbikes>endloc.max_capacity:
+        endLocationSpace=False
+
     #if after all checks there is enough bikes in our location and it doesn't affect future bookings
     #then booking is successful
-    if bike_amount>=numbikes and futureBookingsFeasible==True:
+    if bike_amount>=numbikes and futureBookingsFeasible==True and endLocationSpace==True:
         flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
         return True
     else:
         flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
         if futureBookingsFeasible==False:
-            flash("Booking unavailable as bikes are reserved for another booking.")
+            flash("Booking unavailable as bikes in this location are reserved for another booking.")
+        if endLocationSpace==False:
+            flash("Booking unavailable as the end location will be full at the end of this booking.")
         return False
 
-def queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now):
+def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
     bike_amount=bike_amount
     for b in models.Booking.query.all():
         m1="booking no. "+str(b.id)
