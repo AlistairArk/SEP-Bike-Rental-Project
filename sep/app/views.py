@@ -248,27 +248,12 @@ def employeeAdded():
 @loginRequired
 def addLocation():
     form=addLocationForm(request.form)
-    return render_template('newLocation.html',
-                            form=form)
-
-
-
-@app.route('/locationAdded',methods=['GET','POST'])
-@loginRequired
-def locationAdded():
-    if request.method == 'POST':
-        locationInfo = request.form
-        for key,value in locationInfo.items():
-            if key=='name':
-                name=value
-            elif key=='addr':
-                addr=value
-            elif key=='max_capacity':
-                max_capacity=value
-            elif key=='longt':
-                longt=float(value)
-            elif key=='latt':
-                latt=float(value)
+    if request.method=="POST" and form.validate_on_submit():
+        name=form.name.data
+        addr=form.addr.data
+        max_capacity=form.max_capacity.data
+        longt=float(form.longt.data)
+        latt=float(form.latt.data)
         l = models.Location(name=name,
                             bike_amount=0,
                             max_capacity=max_capacity,
@@ -278,8 +263,10 @@ def locationAdded():
         db.session.add(l)
         db.session.commit()
         flash("Location added!")
-        return render_template('locationAdded.html',
-                                name=name)
+
+    return render_template('newLocation.html',
+                            form=form)
+
 
 ###############   END OF ADD LOCATION ROUTES   #################################
 
@@ -291,7 +278,6 @@ def locationAdded():
 @loginRequired
 def locationStats():
     locations = models.Location.query.all()
-    # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
     return render_template('locationStats.html',
                             locations=locations)
 
