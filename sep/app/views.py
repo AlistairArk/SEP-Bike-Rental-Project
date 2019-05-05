@@ -312,8 +312,9 @@ def locationStats():
 def receipt(sdatetime, booking):
 
     bookingob = models.Booking.query.filter_by(id=booking).first()
-    useremail= bookingob.email
-    user = models.User.query.filter_by(email=useremail).first()
+    userid = bookingob.user_id
+    user = models.User.query.filter_by(id=userid).first()
+    useremail= user.email
     datebooked = bookingob.bookingTime
     name = user.name
     endtime = bookingob.end_time
