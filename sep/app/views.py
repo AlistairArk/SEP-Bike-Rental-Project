@@ -364,7 +364,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     m="now: ",now
     flash(m)
 
-    bike_amount=queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount)
+    bike_amount=queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now)
 
     flash("Before final comparison")
     #if after all checks there is enough bikes in our location then booking is successful
@@ -376,7 +376,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
         flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
     flash("After final comparison")
 
-def queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount):
+def queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now):
     bike_amount=bike_amount
     for b in models.Booking.query.all():
         m1="booking no. ",b.id
