@@ -389,7 +389,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
 def queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now):
     bike_amount=bike_amount
     for b in models.Booking.query.all():
-        m1="booking no. ",b.id
+        m1="booking no. "+str(b.id)
         # (PINK) checking bookings where bikes are taken out between now and sdatetime
         #and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
@@ -408,7 +408,7 @@ def queries(sdatetime,edatetime,slocation,elocation,numbikes,bike_amount,now):
             bike_amount+=b.bike_amount
             flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
         else:
-            flash(m1+"Did not hit any colour criteria.")
+            flash(m1+" Did not hit any colour criteria.")
     return bike_amount
 
 @app.route('/')
