@@ -504,95 +504,95 @@ def returnBike(bike_id,booking_id):
 ######## API
 
 
-#def log(*args):
-#    for line in args:
-#       with open('log.log', 'a') as the_file:
-#           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
-#           the_file.write("\n["+str(time)+"] "+line)
+def log(*args):
+   for line in args:
+      with open('log.log', 'a') as the_file:
+          time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
+          the_file.write("\n["+str(time)+"] "+line)
 
-# def api_loginRequired(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'api_logged_in' in session:
-#             return f(*args, **kwargs)
-#         return jsonify({'error': 'Authentificaton failed'})
-#     return decorated_function
-#
-# @app.route('/api/login', methods=['POST'])
-# def apiLogin():
-#     """
-#     Handles json request for login, provides authentification.
-#     updates cookies if details are correct.
-#     return json responce
-#     """
-#
-#     json = request.get_json()
-#
-#     if json['username'] == 'admin' and json['password'] == 'password':
-#         return jsonify({'message': 'Success'})
-#
-#     return jsonify({'error': 'Authentificaton failed'})
-#
-#
-# @app.route('/api/register', methods=['POST'])
-# def apiRegister():
-#     """
-#     Attempt to create a new account for the request
-#     return the message to the device depending on the outcome
-#     """
-#
-#     json = request.get_json()
-#
-#     if json['username'] == 'admin' and json['password'] == 'password':
-#         return jsonify({'message': 'Success'})
-#
-#     return jsonify({'error': 'Authentificaton failed'})
-#
-# @app.route('/api/getlocations', methods=['POST'])
-# def apiGetLocations():
-#     """
-#     Returns all the locations bikes can be taken out from
-#     Also returns number of bikes available
-#     """
-#
-#     json = request.get_json()
-#     return jsonify({'error': 'Authentificaton failed'})
-#
-# @app.route('/api/booking', methods=['POST'])
-# def apiBooking():
-#     """
-#     Creates a booking by invoking the create booking function
-#     Handle card details
-#     """
-#
-#     json = request.get_json()
-#     return jsonify({'error': 'Authentificaton failed'})
-#
-#
-# @app.route('/api/getOrders', methods=['POST'])
-# def apiGetOrders():
-#     """
-#     Returns all orders tied to a specific account
-#     """
-#
-#     json = request.get_json()
-#     return jsonify({'error': 'Authentificaton failed'})
-#
-#
-# @app.route('/api/collectbikes', methods=['POST'])
-# def apiCollectBikes():
-#     """
-#     Marks a bike as unavailable
-#     """
-#
-#     json = request.get_json()
-#     return jsonify({'error': 'Authentificaton failed'})
-#
-# @app.route('/api/returnBike', methods=['POST'])
-# def apiReturnBike():
-#     """
-#     Marks a bike as available
-#     """
-#
-#     json = request.get_json()
-#     return jsonify({'error': 'Authentificaton failed'})
+def api_loginRequired(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'api_logged_in' in session:
+            return f(*args, **kwargs)
+        return jsonify({'error': 'Authentificaton failed'})
+    return decorated_function
+
+@app.route('/api/login', methods=['POST'])
+def apiLogin():
+    """
+    Handles json request for login, provides authentification.
+    updates cookies if details are correct.
+    return json responce
+    """
+
+    json = request.get_json()
+
+    if json['username'] == 'admin' and json['password'] == 'password':
+        return jsonify({'message': 'Success'})
+
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/register', methods=['POST'])
+def apiRegister():
+    """
+    Attempt to create a new account for the request
+    return the message to the device depending on the outcome
+    """
+
+    json = request.get_json()
+
+    if json['username'] == 'admin' and json['password'] == 'password':
+        return jsonify({'message': 'Success'})
+
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/getlocations', methods=['POST'])
+def apiGetLocations():
+    """
+    Returns all the locations bikes can be taken out from
+    Also returns number of bikes available
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/booking', methods=['POST'])
+def apiBooking():
+    """
+    Creates a booking by invoking the create booking function
+    Handle card details
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/getOrders', methods=['POST'])
+def apiGetOrders():
+    """
+    Returns all orders tied to a specific account
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+
+@app.route('/api/collectbikes', methods=['POST'])
+def apiCollectBikes():
+    """
+    Marks a bike as unavailable
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
+
+@app.route('/api/returnBike', methods=['POST'])
+def apiReturnBike():
+    """
+    Marks a bike as available
+    """
+
+    json = request.get_json()
+    return jsonify({'error': 'Authentificaton failed'})
