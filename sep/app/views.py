@@ -327,7 +327,7 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
     edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
-    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)
+    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
     if message=="Booking successfully created! Booking confirmation has been emailed to "+email+".":
         b = models.Booking( cost= cost,
                             start_time=sdatetime,
@@ -347,7 +347,7 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     # flash(m)
     return message
 
-def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
+def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
     #simulating bike_amount at slocation between now and stime
 
     #checking bike amount in slocation currently (exclude bikes that are in use)
