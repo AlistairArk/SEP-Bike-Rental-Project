@@ -2,6 +2,7 @@ from flask_wtf import Form
 from .models import User
 from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, PasswordField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
+import datetime
 # from wtforms_components import TimeField
 
 class addBikesForm(Form):
@@ -40,3 +41,12 @@ class addBookingForm(Form):
             raise ValidationError('Must add at least one bike to booking.')
         elif numbikes.data>4:
             raise ValidationError('Maximum 4 bikes per booking.')
+
+    def validate_starttime(self,stime):
+        now = datetime.datetime.utcnow()
+        if stime.data < now:
+            raise ValidationError('Booking are only available in the future.')
+
+    def validate_endtime(self,etime):
+        if etime.data <= stime.data:
+            raise ValidationError('End time must be after starttime.')
