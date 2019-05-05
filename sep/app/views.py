@@ -403,17 +403,35 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
     now=datetime.datetime.utcnow()
 
     bike_amount=queries(sdatetime,edatetime,slocation,elocation,bike_amount,now)
+    m3="bike_amount after previous bookings: ",bike_amount
+    flash(m3)
 
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
-        if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time and elocation!=slocation):
+        m="Checking future booking Id ",b.id
+        flash(m)
+        if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
+            m1="Start location matches and booking ",b.id," starts after new booking."
+            flash(m1)
+            if edatetime>b.start_time:
+                m2="new booking ends after the start of booking ",b.id
+                flash(m2)
+            if elocation!=slocation:
+                flash("new elocation!=new slocation")
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
+            m4="Number of bikes available before future booking ",b.id,": ",futureba
+            flash(m4)
             if (futureba-numbikes)<=b.bike_amount:
+                m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
+                flash(m5)
                 futureBookingsFeasible=False
                 # m="Booking affects future booking ",b.id
                 # flash(m)
                 break
+            else:
+                m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
+                flash(m6)
 
     #checking that there will be space in the end location on their return time
     endLocationSpace=True
@@ -441,26 +459,26 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
 def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
     bike_amount=bike_amount
     for b in models.Booking.query.all():
-        # m1="booking no. "+str(b.id)
-        # (PINK) checking bookings where bikes are taken out between now and sdatetime
-        #and are returned after sdatetime
+        m1="booking no. "+str(b.id)
+        (PINK) checking bookings where bikes are taken out between now and sdatetime
+        and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
             bike_amount-=b.bike_amount
-            # flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
+            flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
         # (PURPLE) checking bookings which take bikes out during our booking
         # elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
         #     bike_amount-=b.bike_amount
-        #     flash(m1+" ---> PURPLE bike_amount: "+str(bike_amount))
+            # flash(m1+" ---> PURPLE bike_amount: "+str(bike_amount))
         # (ORANGE) checking bookings which take bikes from slocation and return to a different location
         elif b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.start_location!=b.end_location:
             bike_amount-=b.bike_amount
-            # flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
+            flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
         # (GREEN) checking bookings where end location is our location and they're returned before sdatetime
         elif b.end_location==slocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
             bike_amount+=b.bike_amount
-            # flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
-        # else:
-            # flash(m1+" Did not hit any colour criteria.")
+            flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
+        else:
+            flash(m1+" Did not hit any colour criteria.")
     return bike_amount
 
 def send_confirmation(recemail, bookingid, sdatetime):
