@@ -156,7 +156,7 @@ def addBikes():
         db.session.add(l)
         db.session.commit()
         if amount_added<amount:
-            message = "Location full."+amount_added+"/"+amount+" bikes added."
+            message = "Location full.",amount_added,"/",amount," bikes added."
             flash(message)
         else:
             flash("All bikes successfully added!")
