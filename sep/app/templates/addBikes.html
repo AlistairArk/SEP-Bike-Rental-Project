@@ -18,7 +18,7 @@
           <div class="standard-form-header">
               <h3>Add Bikes:</h3>
           </div>
-          <form action="{{ url_for('bikesAdded') }}" method="POST" class="standard-form-form">
+          <form action="{{ url_for('addBike') }}" method="POST" class="standard-form-form">
             {{ form.hidden_tag() }}
               <div class="form-group row" style="width: 100%;">
                   <label for="number-of-bikes" class="col-sm-4 col-form-label text-md-right" style="padding-top: 11px;">Number of Bikes</label>

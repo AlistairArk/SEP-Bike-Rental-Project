@@ -302,14 +302,12 @@ def takeBike(bike_id,booking_id):
     db.session.add(bike)
     db.session.add(booking)
     db.session.commit()
-    #still need to mark booked_bike taken   ?
 
 def returnBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
     bike.in_use=False
     db.session.add(bike)
     db.session.commit()
-    #still need to mark booked_bike returned & add return time   ?
 
 
 ######## API
