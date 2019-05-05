@@ -417,7 +417,7 @@ def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
         elif b.end_location==slocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
             bike_amount+=b.bike_amount
             # flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
-        else:
+        # else:
             # flash(m1+" Did not hit any colour criteria.")
     return bike_amount
 
