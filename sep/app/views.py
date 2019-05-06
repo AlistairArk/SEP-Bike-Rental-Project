@@ -349,7 +349,8 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
                             paid=False,
                             user_id= user.id,
                             end_location=elocation,
-                            start_location=slocation
+                            start_location=slocation,
+                            complete=True
                             )
 
         db.session.add(b)
