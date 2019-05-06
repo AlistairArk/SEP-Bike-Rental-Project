@@ -4,53 +4,82 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Orders {
-    
-    @SerializedName("name")
-    @Expose
-    final String name;
 
-    @SerializedName("latitude")
+    @SerializedName("id")
     @Expose
-    final float latitude;
+    final String id;
 
-    @SerializedName("longitude")
+    @SerializedName("bikeNumber")
     @Expose
-    final float longitude;
+    final int bikeNumber;
 
-    @SerializedName("bikesAvailable")
+    @SerializedName("location")
     @Expose
-    final int bikesAvailable;
+    final String location;
 
-    public Locations(String name,float latitude, float longitude,int bikesAvailable) {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.bikesAvailable = bikesAvailable;
+    @SerializedName("StartDate")
+    @Expose
+    final String startDate;
+
+    @SerializedName("endDate")
+    @Expose
+    final String endDate;
+
+    @SerializedName("collected")
+    @Expose
+    final Boolean collected;
+
+    @SerializedName("returned")
+    @Expose
+    final Boolean returned;
+
+    public Orders(String id, int bikeNumber, String location, String startDate, String endDate, Boolean collected, Boolean returned) {
+        this.id = id;
+        this.bikeNumber = bikeNumber;
+        this.location = location;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.collected = collected;
+        this.returned = returned;
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    public float getLatitude() {
-        return latitude;
+    public int getBikeNumber() {
+        return bikeNumber;
+    }
+    public String getEndDate() {
+        return endDate;
     }
 
-    public float getLongitude() {
-        return longitude;
+    public String getLocation() {
+        return location;
     }
 
-    public int getBikesAvailable() {
-        return bikesAvailable;
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public Boolean getCollected() {
+        return collected;
+    }
+
+    public Boolean getReturned() {
+        return returned;
     }
 
     @Override
     public String toString() {
-        return "Locations{" +
-                "name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", bikesAvailable=" + bikesAvailable +
+        return "Order{" +
+                "id='" + id + '\'' +
+                ", bikeNumber=" + bikeNumber +
+                ", location=" + location +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", collected=" + collected +
+                ", returned=" + returned +
                 '}';
     }
 }

@@ -103,35 +103,25 @@ def webLoginRequest():
 @loginRequired
 def addUser():
     form=addUserForm(request.form)
+    if request.method=='POST' and form.validate_on_submit():
+        usertype="customer"
+        name=form.name.data
+        email=form.email.data
+        phone=form.phone.data
+        username=form.username.data
+        password=form.password.data
+        e = models.User(name=name,
+                        email=email,
+                        phone=phone,
+                        username=username,
+                        password=password,
+                        user_type=usertype)
+        db.session.add(e)
+        db.session.commit()
+        flash("User added!")
     return render_template('addUser.html',
                             form=form)
 
-@app.route('/userAdded',methods=['GET','POST'])
-@loginRequired
-def userAdded():
-    if request.method == 'POST':
-        userInfo = request.form
-        usertype = "customer"
-        for key,value in userInfo.items():
-            if key=='name':
-                name=value
-            elif key=='email':
-                email=value
-            elif key=='phone':
-                phone=value
-            elif key=='username':
-                username=value
-            elif key=='password':
-                password=value
-        u = models.User(name=name,
-                            email=email,
-                            phone=phone,
-                            username=username,
-                            password=password,
-                            user_type=usertype)
-        db.session.add(u)
-        db.session.commit()
-        return render_template('userAdded.html')
 
 ###############   END OF ADD USER ROUTES   #####################################
 
@@ -139,62 +129,38 @@ def userAdded():
 
 ###############   ADD BIKES ROUTES   ###########################################
 
-@app.route('/bikesAdded',methods=['GET','POST'])
-@loginRequired
-def bikesAdded():
-    # bikeForm=addBikesForm(request.form)
-    if request.method == 'POST':
-        bikeInfo = request.form
-        for key,value in bikeInfo.items():
-            if key=='amount':
-                amount=int(value)
-            elif key=='location':
-                locationid=int(value)
-        l = models.Location.query.get(locationid)
-        max = l.max_capacity
-        bike_amount = l.bike_amount
-        amount_added=0
-        for i in range(amount):
-            if bike_amount<max:
-                bike=models.Bike(location_id=locationid,in_use=0,status="new")
-                db.session.add(bike)
-                db.session.commit()
-                amount_added+=1
-                bike_amount+=1
-        l = models.Location.query.get(locationid)
-        l.bike_amount+=amount_added
-        db.session.add(l)
-        db.session.commit()
-        if amount_added<amount:
-            all_added=False
-            message = "Location full."+amount_added+"/"+amount+" bikes added."
-            flash(message)
-        else:
-            all_added=True
-            flash("All bikes successfully added!")
-        return render_template('bikesAdded.html',
-                                amount=amount,
-                                amount_added=amount_added,
-                                all_added=all_added,
-                                location=l.name)
-
 
 @app.route('/addBikes',methods=['GET','POST'])
 @loginRequired
 def addBikes():
-    # bikes=models.Bike.query.all()
     form=addBikesForm(request.form)
     form.location.choices=[(l.id,l.name) for l in models.Location.query.all()]
-    # form.location.choices=[(1,'Leeds'),(2,'Manchester'),(3,'Newcastle'),(4,'Durham'),(5,'Sheffield')]
-    flash("hello")
-    # if form.validate_on_submit():
-    #     amount = form.amount.data
-    #     location = form.location.data
+    if request.method=="POST" and form.validate_on_submit():
+        amount = form.amount.data
+        location = form.location.data
 
-        # flash("Successfully received form data: %s at %s"%(form.amount.data,form.location.data))
-        # return render_template('dbtesting.html',
-        #                         amount=amount,
-        #                         location=location)
+        l = models.Location.query.get(location)
+        max = l.max_capacity
+        bike_amount = l.bike_amount
+        amount_added=0
+
+        for i in range(amount):
+            if bike_amount<max:
+                bike=models.Bike(location_id=location,in_use=0,status="new")
+                db.session.add(bike)
+                db.session.commit()
+                amount_added+=1
+                bike_amount+=1
+        l = models.Location.query.get(location)
+        l.bike_amount+=amount_added
+        db.session.add(l)
+        db.session.commit()
+        if amount_added<amount:
+            message = "Location full."+str(amount_added)+"/"+str(amount)+" bikes added."
+            flash(message)
+        else:
+            flash("All bikes successfully added!")
+
     return render_template('addBikes.html',
                             form=form)
 
@@ -208,26 +174,13 @@ def addBikes():
 @loginRequired
 def addEmployee():
     form=addUserForm(request.form)
-    return render_template('addEmployee.html',
-                            form=form)
-
-@app.route('/employeeAdded',methods=['GET','POST'])
-@loginRequired
-def employeeAdded():
-    if request.method == 'POST':
-        employeeInfo = request.form
-        usertype = "employee"
-        for key,value in employeeInfo.items():
-            if key=='name':
-                name=value
-            elif key=='email':
-                email=value
-            elif key=='phone':
-                phone=value
-            elif key=='username':
-                username=value
-            elif key=='password':
-                password=value
+    if request.method=='POST' and form.validate_on_submit():
+        usertype="employee"
+        name=form.name.data
+        email=form.email.data
+        phone=form.phone.data
+        username=form.username.data
+        password=form.password.data
         e = models.User(name=name,
                         email=email,
                         phone=phone,
@@ -236,7 +189,10 @@ def employeeAdded():
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
-        return render_template('employeeAdded.html')
+        flash("Employee added!")
+    return render_template('addEmployee.html',
+                            form=form)
+
 
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
 
@@ -248,27 +204,13 @@ def employeeAdded():
 @loginRequired
 def addLocation():
     form=addLocationForm(request.form)
-    return render_template('newLocation.html',
-                            form=form)
-
-
-
-@app.route('/locationAdded',methods=['GET','POST'])
-@loginRequired
-def locationAdded():
-    if request.method == 'POST':
-        locationInfo = request.form
-        for key,value in locationInfo.items():
-            if key=='name':
-                name=value
-            elif key=='addr':
-                addr=value
-            elif key=='max_capacity':
-                max_capacity=value
-            elif key=='longt':
-                longt=float(value)
-            elif key=='latt':
-                latt=float(value)
+    if request.method=="POST" and form.validate_on_submit():
+        flash("Location added!")
+        name=form.name.data
+        addr=form.addr.data
+        max_capacity=form.max_capacity.data
+        longt=float(form.longt.data)
+        latt=float(form.latt.data)
         l = models.Location(name=name,
                             bike_amount=0,
                             max_capacity=max_capacity,
@@ -277,9 +219,10 @@ def locationAdded():
                             latt=latt)
         db.session.add(l)
         db.session.commit()
-        flash("Location added!")
-        return render_template('locationAdded.html',
-                                name=name)
+
+    return render_template('newLocation.html',
+                            form=form)
+
 
 ###############   END OF ADD LOCATION ROUTES   #################################
 
@@ -291,7 +234,6 @@ def locationAdded():
 @loginRequired
 def locationStats():
     locations = models.Location.query.all()
-    # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
     return render_template('locationStats.html',
                             locations=locations)
 
@@ -359,14 +301,12 @@ def takeBike(bike_id,booking_id):
     db.session.add(bike)
     db.session.add(booking)
     db.session.commit()
-    #still need to mark booked_bike taken   ?
 
 def returnBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
     bike.in_use=False
     db.session.add(bike)
     db.session.commit()
-    #still need to mark booked_bike returned & add return time   ?
 
 
 ######## API
@@ -383,24 +323,50 @@ def api_loginRequired(f):
     def decorated_function(*args, **kwargs):
         if 'api_logged_in' in session:
             return f(*args, **kwargs)
-        return jsonify({'error': 'Authentificaton failed'})
+        return jsonify({'error': 'Authentication failed'})
     return decorated_function
 
 @app.route('/api/login', methods=['POST'])
 def apiLogin():
     """
-    Handles json request for login, provides authentification.
+    Handles json request for login, provides authentication.
     updates cookies if details are correct.
     return json responce
     """
 
-    json = request.get_json()
+    content = request.get_json(force=True)
 
-    if json['username'] == 'admin' and json['password'] == 'password':
-        return jsonify({'message': 'Success'})
+    username = content['username']
+    password = content['password']
 
-    return jsonify({'error': 'Authentificaton failed'})
+    loginData = function.login(username=username, password=password)
 
+    if loginData[0]:
+        session["api_logged_in"] = True
+        session["username"] = loginData[2]
+        session["userType"] = loginData[1]
+        session["name"] = loginData[3]
+
+        user = models.User.query.filter_by(username=username).first()
+        session["userId"] = user.id
+
+        data =  {
+                "username":"",
+                "password":"",
+                "status":"Login Accepted"
+            }
+
+    else:
+        data =  {
+            "username":"",
+            "password":"",
+            "status":"Incorrect Login Information"
+        }
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+        
 
 @app.route('/api/register', methods=['POST'])
 def apiRegister():
@@ -408,25 +374,36 @@ def apiRegister():
     Attempt to create a new account for the request
     return the message to the device depending on the outcome
     """
-
     json = request.get_json()
 
-    if json['username'] == 'admin' and json['password'] == 'password':
-        return jsonify({'message': 'Success'})
+    return jsonify({'error': 'Authentication failed'})
 
-    return jsonify({'error': 'Authentificaton failed'})
-
-@app.route('/api/getlocations', methods=['POST'])
+@app.route('/api/getlocations', methods=['GET'])
 def apiGetLocations():
     """
     Returns all the locations bikes can be taken out from
     Also returns number of bikes available
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    data = []
+
+    locations = models.Location.query.all()
+
+    for location in locations:
+        locData =  {
+                "name":str(location.name),
+                "latitude":str(location.latt),
+                "longitude":str(location.longt),
+                "bikesAvailable":str(location.bike_amount)
+            }
+
+        data.append(locData)
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
 
 @app.route('/api/booking', methods=['POST'])
+@api_loginRequired
 def apiBooking():
     """
     Creates a booking by invoking the create booking function
@@ -434,33 +411,71 @@ def apiBooking():
     """
 
     json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    return jsonify({'error': 'Authentication failed'})
 
 
 @app.route('/api/getOrders', methods=['POST'])
+@api_loginRequired
 def apiGetOrders():
     """
     Returns all orders tied to a specific account
     """
+    userid = session['userId']
+    orders=models.Booking.query.filter_by(user_id=userid).all()
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    data = []
 
+    for order in orders:
+        returned = False
+        bikeNumber = 0
+        locations = models.Location.query.filter_by(id=order.start_location).first()
+        for bike in order.bikes:
+            if bike.in_use:
+                bikeNumber += 1
+                returned = True
+        
+        orderData = {
+            "id":str(order.id),
+            "cost":str(order.cost),
+            "startTime":str(order.start_time),
+            "endTime":str(order.end_time),
+            "bikeNumber":str(bikeNumber),
+            "location":str(location.name),
+            "bikesReturned":str(returned)
+        }
+        data.append(orderData)
+    
+    print(data) 
+    
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
 
 @app.route('/api/collectbikes', methods=['POST'])
+@api_loginRequired
 def apiCollectBikes():
     """
     Marks a bike as unavailable
     """
 
     json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    return jsonify({'error': 'Authentication failed'})
 
 @app.route('/api/returnBike', methods=['POST'])
+@api_loginRequired
 def apiReturnBike():
     """
     Marks a bike as available
     """
 
     json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    return jsonify({'error': 'Authentication failed'})
+
+
+@app.route('/api/logout', methods=['POST'])
+@api_loginRequired
+def apiLogout():
+
+    session.clear()
+    return jsonify({'message': 'Complete'})
+
+
