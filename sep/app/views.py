@@ -546,7 +546,7 @@ def apiLogin():
 
     jsonifiedData = json.dumps(data)
     return jsonifiedData
-        
+
 
 @app.route('/api/register', methods=['POST'])
 def apiRegister():
@@ -615,8 +615,11 @@ def apiGetOrders():
             returned = "false"
             bikeNumber = 0
             location = models.Location.query.filter_by(id=order.start_location).first()
-        
-            
+
+            if order.complete:
+                returned = "true"
+
+
             orderData = {
                 "id":str(order.id),
                 "cost":str(order.cost),
@@ -624,14 +627,14 @@ def apiGetOrders():
                 "endDate":str(order.end_time),
                 "bikeNumber":str(bikeNumber),
                 "location":str(location.name),
-                "bikesInUse":"true",
+                "bikesInUse":returned,
                 "username":"",
                 "password":""
             }
             data.append(orderData)
-        
-        print(data) 
-        
+
+        print(data)
+
         jsonifiedData = json.dumps(data)
         return jsonifiedData
 
