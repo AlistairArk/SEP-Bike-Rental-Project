@@ -458,6 +458,16 @@ def apiBooking():
     Creates a booking by invoking the create booking function
     Handle card details
     """
+    content = request.get_json(force=True)
+
+    username = content['username']
+    password = content['password']
+    email = content['email']
+    phone = content['phone']
+    name = content['username']   #!!!!!! add name field to register activity
+    usertype="customer"
+
+    message = createBooking(email,stime,etime,slocation,elocation,numbikes)
 
     json = request.get_json()
     return jsonify({'error': 'Authentication failed'})

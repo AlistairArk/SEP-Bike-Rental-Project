@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(startMainMenu);
                     finish();
                 }
-                if(reply.equals("Registration could not be completed")){
+                else{//if(reply.equals("Registration could not be completed")){
                     Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
                 }
             }
