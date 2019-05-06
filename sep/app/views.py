@@ -370,7 +370,7 @@ def availability():
             elif message == "Success":
                 amount += amount
             elif (message != "Success" and amount != 1) or amount == 4:
-                m = "There are at least " + amount + "bike/s available at that time."
+                m = "There are at least " + str(amount) + "bike/s available at that time."
                 break
             else:
                 m = "Something is wrong"
