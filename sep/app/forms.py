@@ -3,6 +3,7 @@ from .models import User
 from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, PasswordField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 import datetime
+from datetime import timedelta
 # from wtforms_components import TimeField
 
 class addBikesForm(Form):
@@ -71,9 +72,13 @@ class addBookingForm(Form):
         sdatetime = datetime.datetime.strptime(stime.data,"%Y-%m-%dT%H:%M")
         if sdatetime < now:
             raise ValidationError("Bookings are only available to be made in the future.")
+        if sdatetime>now+timedelta(weeks=2):
+            raise ValidationError("Bookings can only be made up to 2 weeks in advance.")
 
     def validate_etime(self,etime):
         sdatetime = datetime.datetime.strptime(self.stime.data,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
         if edatetime <= sdatetime:
             raise ValidationError('End time must be after the specified start time.')
+        if (edatetime-sdatetime)>timedelta(weeks=1):
+            raise ValidationError("Bikes can only be hired for maximum 7 days at a time.")
