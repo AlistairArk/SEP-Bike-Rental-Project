@@ -347,6 +347,18 @@ def availability():
     form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
     form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
 
+    if request.method=="POST" and form.validate_on_submit():
+        stime=request.form['stime']
+        etime=request.form['etime']
+        slocation = form.slocation.data
+        elocation = form.elocation.data
+
+        sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+        edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
+
+        message=checkAvailability(sdatetime,edatetime,slocation,elocation,1)
+        flash(message)
+
     return render_template("availability.html", form=form, topname = session["name"])
 
 ###############   END OF AVAILABILITY ROUTES   #################################
@@ -381,8 +393,10 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
     edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
-    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
-    if message=="Booking successfully created! Booking confirmation has been emailed to "+email+".":
+    # message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
+    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)
+    if message=="Booking successfully created!"
+                                                # Booking confirmation has been emailed to "+email+".":
         duration=edatetime-sdatetime
         duration_hours=duration.total_seconds()/3600.0
         cost=(numbikes*3.5)+(duration_hours/2*numbikes*0.1)
@@ -405,7 +419,8 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     # flash(m)
     return message
 
-def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
+# def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
+def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     #simulating bike_amount at slocation between now and stime
 
     #checking bike amount in slocation currently (exclude bikes that are in use)
@@ -460,7 +475,8 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
     #then booking is successful
     if bike_amount>=numbikes and futureBookingsFeasible==True and endLocationSpace==True:
         # flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
-        message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+        message="Booking successfully created!"
+                                                # Booking confirmation has been emailed to "+email+"."
         return message
     else:
         # flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
