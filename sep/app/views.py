@@ -395,7 +395,7 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
 
     # message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
     message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)
-    if message=="Booking successfully created!"
+    if message=="Booking successfully created!":
                                                 # Booking confirmation has been emailed to "+email+".":
         duration=edatetime-sdatetime
         duration_hours=duration.total_seconds()/3600.0
