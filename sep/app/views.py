@@ -362,15 +362,15 @@ def availability():
             m = "entering while loop"
             flash(m)
             flash(amount)
-            message=checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
+            message = checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
             flash(message)
             if message != "Success" and amount == 1:
                 m="There are no bike available at that time."
                 break
             elif message == "Success":
-                amount += amount
+                amount += 1
             elif (message != "Success" and amount != 1) or amount == 4:
-                m = "There are at least " + str(amount) + "bike/s available at that time."
+                m = "There are at least " + str(amount) + " bike/s available at that time."
                 break
             else:
                 m = "Something is wrong"
