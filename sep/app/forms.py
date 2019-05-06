@@ -66,15 +66,17 @@ class addBookingForm(Form):
         elif numbikes.data>4:
             raise ValidationError('Maximum 4 bikes per booking.')
 
-    def validate_starttime(self,stime):
+    def validate_stime(self,stime):
         # now = datetime.datetime.utcnow()
         sdatetime = datetime.datetime.strptime(stime.data,"%Y-%m-%dT%H:%M")
+        print(stime)
+        print("hello")
         # if sdatetime < now:
         m="Bookings are only available in the future, not stime: ",stime," sdatetime: ",sdatetime
-        raise ValidationError('Booking are only available in the future.')
+        raise ValidationError(m)
 
-    def validate_endtime(self,etime):
+    def validate_etime(self,etime):
         sdatetime = datetime.datetime.strptime(stime.data,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
-        if edatetime <= sdatetime:
-            raise ValidationError('End time must be after starttime.')
+        # if edatetime <= sdatetime:
+        raise ValidationError('End time must be after starttime.')
