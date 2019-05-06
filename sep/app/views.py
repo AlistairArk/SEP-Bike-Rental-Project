@@ -451,7 +451,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
             if edatetime>b.start_time:
                 m2="new booking ends after the start of booking ",b.id
                 # flash(m2)
-            if elocation!=slocation:
+            # if elocation!=slocation:
                 # flash("new elocation!=new slocation")
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
             m4="Number of bikes available before future booking ",b.id,": ",futureba
