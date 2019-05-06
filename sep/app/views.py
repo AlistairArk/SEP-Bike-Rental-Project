@@ -583,7 +583,6 @@ def apiGetLocations():
     return jsonifiedData
 
 @app.route('/api/booking', methods=['POST'])
-@api_loginRequired
 def apiBooking():
     """
     Creates a booking by invoking the create booking function
@@ -594,44 +593,55 @@ def apiBooking():
     return jsonify({'error': 'Authentication failed'})
 
 
-@app.route('/api/getOrders', methods=['POST'])
-@api_loginRequired
+@app.route('/api/getorders', methods=['POST', 'GET'])
 def apiGetOrders():
     """
     Returns all orders tied to a specific account
     """
-    userid = session['userId']
-    orders=models.Booking.query.filter_by(user_id=userid).all()
+    content = request.get_json(force=True)
 
-    data = []
+    username = content['username']
+    password = content['password']
 
-    for order in orders:
-        returned = False
-        bikeNumber = 0
-        locations = models.Location.query.filter_by(id=order.start_location).first()
-        for bike in order.bikes:
-            if bike.in_use:
-                bikeNumber += 1
-                returned = True
+    user=models.User.query.filter_by(username = username, password = password).first()
+
+    if user is not None:
+
+        orders=models.Booking.query.filter_by(user_id=user.id).all()
+
+        data = []
+
+        for order in orders:
+            returned = "false"
+            bikeNumber = 0
+            location = models.Location.query.filter_by(id=order.start_location).first()
+
+            if order.complete:
+                returned = "true"
+            
+            orderData = {
+                "id":str(order.id),
+                "cost":str(order.cost),
+                "startDate":str(order.start_time),
+                "endDate":str(order.end_time),
+                "bikeNumber":str(bikeNumber),
+                "location":str(location.name),
+                "bikesInUse":returned,
+                "username":"",
+                "password":""
+            }
+            data.append(orderData)
         
-        orderData = {
-            "id":str(order.id),
-            "cost":str(order.cost),
-            "startTime":str(order.start_time),
-            "endTime":str(order.end_time),
-            "bikeNumber":str(bikeNumber),
-            "location":str(location.name),
-            "bikesReturned":str(returned)
-        }
-        data.append(orderData)
-    
-    print(data) 
-    
-    jsonifiedData = json.dumps(data)
-    return jsonifiedData
+        print(data) 
+        
+        jsonifiedData = json.dumps(data)
+        return jsonifiedData
+
+    else:
+        return jsonify({'error': 'Authentication failed'})
+
 
 @app.route('/api/collectbikes', methods=['POST'])
-@api_loginRequired
 def apiCollectBikes():
     """
     Marks a bike as unavailable
@@ -641,7 +651,6 @@ def apiCollectBikes():
     return jsonify({'error': 'Authentication failed'})
 
 @app.route('/api/returnBike', methods=['POST'])
-@api_loginRequired
 def apiReturnBike():
     """
     Marks a bike as available
@@ -652,7 +661,6 @@ def apiReturnBike():
 
 
 @app.route('/api/logout', methods=['POST'])
-@api_loginRequired
 def apiLogout():
 
     session.clear()
