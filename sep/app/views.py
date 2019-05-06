@@ -356,11 +356,17 @@ def availability():
         sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
-        message=checkAvailability(sdatetime,edatetime,slocation,elocation,1)
-        if message == "Success":
-            flash("There are at least 1 bike available at that time.")
-        else:
-            flash(message)
+        amount = 1
+        while amount < 4:
+            message=checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
+            if message != "Success" and amount == 1:
+                flash("There are no bike available at that time.")
+                break
+            elif message == "Success":
+                amount += amount
+            elif message != "Success" and amount != 1:
+                flash("There are at least " + amount + " available at that time.")
+                break
 
     return render_template("availability.html", form=form, topname = session["name"])
 
