@@ -366,7 +366,7 @@ def apiLogin():
 
     jsonifiedData = json.dumps(data)
     return jsonifiedData
-        
+
 
 @app.route('/api/register', methods=['POST'])
 def apiRegister():
@@ -374,9 +374,58 @@ def apiRegister():
     Attempt to create a new account for the request
     return the message to the device depending on the outcome
     """
-    json = request.get_json()
 
-    return jsonify({'error': 'Authentication failed'})
+    content = request.get_json(force=True)
+
+    username = content['username']
+    password = content['password']
+    email = content['email']
+    phone = content['phone']
+    name = content['username']   #!!!!!! add name field to register activity
+    usertype="customer"
+
+    if validate_email(email):
+        data =  {
+                "registrationStatus":"That email is taken"
+                }
+        jsonifiedData = json.dumps(data)
+        return jsonifiedData
+    elif validate_username(username):
+        data =  {
+                "registrationStatus":"That username is taken"
+                }
+        jsonifiedData = json.dumps(data)
+        return jsonifiedData
+    else:
+        data =  {
+                "registrationStatus":"User Registered"
+                }
+
+    e = models.User(name=name,
+                    email=email,
+                    phone=phone,
+                    username=username,
+                    password=password,
+                    user_type=usertype)
+    db.session.add(e)
+    db.session.commit()
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+def validate_username(username):
+    for u in User.query.all():
+        if username.data==u.username:
+            return True
+        else:
+            return False
+
+def validate_email(email):
+    for u in User.query.all():
+        if email.data==u.email:
+            return True
+        else:
+            return False
 
 @app.route('/api/getlocations', methods=['GET'])
 def apiGetLocations():
@@ -433,7 +482,7 @@ def apiGetOrders():
             if bike.in_use:
                 bikeNumber += 1
                 returned = True
-        
+
         orderData = {
             "id":str(order.id),
             "cost":str(order.cost),
@@ -444,9 +493,9 @@ def apiGetOrders():
             "bikesReturned":str(returned)
         }
         data.append(orderData)
-    
-    print(data) 
-    
+
+    print(data)
+
     jsonifiedData = json.dumps(data)
     return jsonifiedData
 
@@ -477,5 +526,3 @@ def apiLogout():
 
     session.clear()
     return jsonify({'message': 'Complete'})
-
-
