@@ -81,7 +81,7 @@ class Booking(db.Model):
     booking_time = db.Column(db.DateTime, nullable=False)
     paid = db.Column(db.Boolean, nullable=False)
     end_location = db.Column(db.Integer, nullable=False)
-    complete = db.Column(db.Boolean, default=False)
+    complete = db.Column(db.Boolean, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     card_id = db.Column(db.Integer, db.ForeignKey('card.id'))
