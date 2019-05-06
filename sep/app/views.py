@@ -510,7 +510,7 @@ def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
             # flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
         # (GREEN) checking bookings where end location is our location and they're returned before sdatetime
         elif b.end_location==slocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
-            # bike_amount+=b.bike_amount
+            bike_amount+=b.bike_amount
             # flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
         # else:
             # flash(m1+" Did not hit any colour criteria.")
