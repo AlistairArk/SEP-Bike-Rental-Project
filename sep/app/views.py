@@ -357,7 +357,10 @@ def availability():
         edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
         message=checkAvailability(sdatetime,edatetime,slocation,elocation,1)
-        flash(message)
+        if message == "Success":
+            flash("There are at least 1 bike available at that time.")
+        else:
+            flash(message)
 
     return render_template("availability.html", form=form, topname = session["name"])
 
@@ -395,8 +398,8 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
 
     # message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
     message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)
-    if message=="Booking successfully created!":
-                                                # Booking confirmation has been emailed to "+email+".":
+    if message=="Success":
+                                                # :
         duration=edatetime-sdatetime
         duration_hours=duration.total_seconds()/3600.0
         cost=(numbikes*3.5)+(duration_hours/2*numbikes*0.1)
@@ -413,7 +416,7 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
 
         db.session.add(b)
         db.session.commit()
-        message=message+" Booking cost: "+str(cost)
+        message="Booking successfully created.Booking confirmation has been emailed to "+email+". Booking cost: "+str(cost)
         send_confirmation(email, b.id, sdatetime)
     # m = "sdatetime: ",sdatetime," | edatetime: ",edatetime," | slocation: ",slocation," | elocation: ",elocation," | numbikes",numbikes
     # flash(m)
@@ -435,34 +438,34 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
 
     bike_amount=queries(sdatetime,edatetime,slocation,elocation,bike_amount,now)
     m3="bike_amount after previous bookings: ",bike_amount
-    flash(m3)
+    # flash(m3)
 
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
         m="Checking future booking Id ",b.id
-        flash(m)
+        # flash(m)
         if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
             m1="Start location matches and booking ",b.id," starts after new booking."
-            flash(m1)
+            # flash(m1)
             if edatetime>b.start_time:
                 m2="new booking ends after the start of booking ",b.id
-                flash(m2)
+                # flash(m2)
             if elocation!=slocation:
-                flash("new elocation!=new slocation")
+                # flash("new elocation!=new slocation")
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
             m4="Number of bikes available before future booking ",b.id,": ",futureba
-            flash(m4)
+            # flash(m4)
             if (futureba-numbikes)<=b.bike_amount:
                 m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
-                flash(m5)
+                # flash(m5)
                 futureBookingsFeasible=False
                 # m="Booking affects future booking ",b.id
                 # flash(m)
                 break
             else:
                 m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
-                flash(m6)
+                # flash(m6)
 
     #checking that there will be space in the end location on their return time
     endLocationSpace=True
@@ -475,7 +478,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     #then booking is successful
     if bike_amount>=numbikes and futureBookingsFeasible==True and endLocationSpace==True:
         # flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
-        message="Booking successfully created!"
+        message="Success"
                                                 # Booking confirmation has been emailed to "+email+"."
         return message
     else:
@@ -496,7 +499,7 @@ def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
         # and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
             bike_amount-=b.bike_amount
-            flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
+            # flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
         # (PURPLE) checking bookings which take bikes out during our booking
         # elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
         #     bike_amount-=b.bike_amount
@@ -504,13 +507,13 @@ def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
         # (ORANGE) checking bookings which take bikes from slocation and return to a different location
         elif b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.start_location!=b.end_location:
             bike_amount-=b.bike_amount
-            flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
+            # flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
         # (GREEN) checking bookings where end location is our location and they're returned before sdatetime
         elif b.end_location==slocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
-            bike_amount+=b.bike_amount
-            flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
+            # bike_amount+=b.bike_amount
+            # flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
         else:
-            flash(m1+" Did not hit any colour criteria.")
+            # flash(m1+" Did not hit any colour criteria.")
     return bike_amount
 
 def send_confirmation(recemail, bookingid, sdatetime):
