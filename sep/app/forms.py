@@ -54,3 +54,9 @@ class addBookingForm(Form):
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
         if edatetime <= sdatetime:
             raise ValidationError('End time must be after starttime.')
+
+class availabilityForm(Form):
+    stime = StringField('stime', validators=[DataRequired()])
+    etime = StringField('etime', validators=[DataRequired()])
+    slocation = SelectField('slocation', coerce=int, validators=[DataRequired()])
+    elocation = SelectField('elocation', coerce=int, validators=[DataRequired()])

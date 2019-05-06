@@ -306,7 +306,7 @@ def locationStats():
 
 
 
-###############   BOOKING CONFIMATION ROUTES   ##########################
+###############   BOOKING PDF ROUTES   ##########################
 
 @app.route('/<sdatetime>/<booking>.pdf')
 def receipt(sdatetime, booking):
@@ -333,11 +333,27 @@ def receipt(sdatetime, booking):
 
     return render_pdf(HTML(string=html))
 
-###############   END OF BOOKING CONFIMATION ROUTES   ##########################
+###############   END OF BOOKING PDF ROUTES   ##################################
 
 
 
-################## CREATE BOOKING ROUTES #########
+###############   AVAILABILITY ROUTES   ########################################
+
+@app.route('/availability', methods=['GET','POST'])
+@loginRequired
+def availability():
+    form=availabilityForm()
+
+    form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+
+    return render_template("availability.html", form=form, topname = session["name"])
+
+###############   END OF AVAILABILITY ROUTES   #################################
+
+
+
+###############   CREATE BOOKING ROUTES   ######################################
 
 
 @app.route('/newBooking', methods=['GET','POST'])
