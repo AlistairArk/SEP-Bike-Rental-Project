@@ -618,7 +618,12 @@ def apiGetOrders():
 
             if order.complete:
                 returned = "true"
+<<<<<<< HEAD
+
+
+=======
             
+>>>>>>> api-calls
             orderData = {
                 "id":str(order.id),
                 "cost":str(order.cost),
