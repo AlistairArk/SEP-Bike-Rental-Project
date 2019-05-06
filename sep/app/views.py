@@ -323,13 +323,13 @@ def api_loginRequired(f):
     def decorated_function(*args, **kwargs):
         if 'api_logged_in' in session:
             return f(*args, **kwargs)
-        return jsonify({'error': 'Authentificaton failed'})
+        return jsonify({'error': 'Authentication failed'})
     return decorated_function
 
 @app.route('/api/login', methods=['POST'])
 def apiLogin():
     """
-    Handles json request for login, provides authentification.
+    Handles json request for login, provides authentication.
     updates cookies if details are correct.
     return json responce
     """
@@ -378,8 +378,7 @@ def apiRegister():
 
     return jsonify({'error': 'Authentication failed'})
 
-@app.route('/api/getlocations', methods=['POST'])
-@api_loginRequired
+@app.route('/api/getlocations', methods=['GET'])
 def apiGetLocations():
     """
     Returns all the locations bikes can be taken out from
@@ -395,7 +394,7 @@ def apiGetLocations():
                 "name":str(location.name),
                 "latitude":str(location.latt),
                 "longitude":str(location.longt),
-                "bikesAvailable":str(bike_amount)
+                "bikesAvailable":str(location.bike_amount)
             }
 
         data.append(locData)
