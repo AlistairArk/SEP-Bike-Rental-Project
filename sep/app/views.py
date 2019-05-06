@@ -359,6 +359,7 @@ def availability():
         amount = 1
         m = " "
         while (amount < 4):
+            m = "entering while loop"
             message=checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
             if message != "Success" and amount == 1:
                 m="There are no bike available at that time."
