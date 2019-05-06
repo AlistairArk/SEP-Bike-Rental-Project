@@ -337,7 +337,10 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     if message=="Booking successfully created! Booking confirmation has been emailed to "+email+".":
         duration=edatetime-sdatetime
         duration_hours=duration.total_seconds()/3600.0
-        cost=(numbikes*3.5)+(duration_hours/2*numbikes*0.1)
+    	if duration<=24:
+    		cost=round(float((numbikes*3.5)+(duration_hours/2*numbikes*0.1)),2)
+    	else:
+    		cost=round((numbikes*3)+(duration_hours/2.2*numbikes*0.1),2)
         b = models.Booking( cost= cost,
                             start_time=sdatetime,
                             end_time=edatetime,
