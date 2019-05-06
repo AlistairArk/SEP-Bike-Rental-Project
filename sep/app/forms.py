@@ -2,12 +2,16 @@ from flask_wtf import Form
 from .models import User
 from wtforms import TextAreaField, StringField, BooleanField, validators, IntegerField, SelectField, FloatField, PasswordField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
+<<<<<<< HEAD
 import datetime
+=======
+
+>>>>>>> add-bikes-locations
 # from wtforms_components import TimeField
 
 class addBikesForm(Form):
     amount = IntegerField('amount', [validators.NumberRange(max=10,min=-5)])
-    location = SelectField('location', validators=[DataRequired()])
+    location = SelectField('location', coerce=int, validators=[DataRequired()])
 
 class addLocationForm(Form):
     name = StringField('name', validators=[DataRequired(), Length(min=1,max=50)])
@@ -22,6 +26,30 @@ class addUserForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     phone = StringField('phone', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=30)])
+
+    def validate_phone(self,phone):
+        noSpaces=""
+        for i in phone.data:
+            if i!=" ":
+                noSpaces+=i
+        valid=True
+        try:
+            isInteger=int(noSpaces)
+            if len(noSpaces)<9 or len(noSpaces)>11:
+                raise ValidationError("Not a valid length for a UK phone.")
+        except:
+            raise ValidationError("Invalid characters entered.")
+
+    def validate_username(self,username):
+        for u in User.query.all():
+            if username.data==u.username:
+                raise ValidationError("This username is already taken.")
+
+    def validate_email(self,email):
+        for u in User.query.all():
+            if email.data==u.email:
+                raise ValidationError("This email is already taken.")
+
 
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
