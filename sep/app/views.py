@@ -444,7 +444,7 @@ def apiGetOrders():
                 "endDate":str(order.end_time),
                 "bikeNumber":str(bikeNumber),
                 "location":str(location.name),
-                "bikesInUse":"true"),
+                "bikesInUse":"true",
                 "username":"",
                 "password":""
             }
