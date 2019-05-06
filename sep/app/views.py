@@ -435,7 +435,9 @@ def apiGetOrders():
             returned = "false"
             bikeNumber = 0
             location = models.Location.query.filter_by(id=order.start_location).first()
-        
+
+            if order.complete:
+                returned = "true"
             
             orderData = {
                 "id":str(order.id),
@@ -444,7 +446,7 @@ def apiGetOrders():
                 "endDate":str(order.end_time),
                 "bikeNumber":str(bikeNumber),
                 "location":str(location.name),
-                "bikesInUse":"true",
+                "bikesInUse":returned,
                 "username":"",
                 "password":""
             }
