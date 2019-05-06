@@ -361,6 +361,7 @@ def availability():
         while (amount < 4):
             m = "entering while loop"
             message=checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
+            flash(message)
             if message != "Success" and amount == 1:
                 m="There are no bike available at that time."
                 break
