@@ -1,13 +1,20 @@
 from app import app, function
-from flask import render_template, redirect, url_for, flash, request, jsonify, session
+from flask import render_template, redirect, url_for, flash, request, jsonify, session, make_response
+from flask_weasyprint import HTML, render_pdf
+from flask_mail import Mail, Message
 from app import app, models, db
 from functools import wraps
 from .forms import *
 import json
 
 
+mail = Mail(app)
+
+
 
 import datetime
+
+
 
 ###############   LOG IN ROUTES   ##############################################
 
@@ -49,7 +56,7 @@ def webLogin():
 @app.route('/index')
 @loginRequired
 def webIndex():
-    return render_template("index.html", name = session["name"])
+    return render_template("index.html", topname = session["name"])
 
 
 @app.route('/resetPassword')
@@ -120,8 +127,34 @@ def addUser():
         db.session.commit()
         flash("User added!")
     return render_template('addUser.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
+@app.route('/userAdded',methods=['GET','POST'])
+@loginRequired
+def userAdded():
+    if request.method == 'POST':
+        userInfo = request.form
+        usertype = "customer"
+        for key,value in userInfo.items():
+            if key=='name':
+                name=value
+            elif key=='email':
+                email=value
+            elif key=='phone':
+                phone=value
+            elif key=='username':
+                username=value
+            elif key=='password':
+                password=value
+        u = models.User(name=name,
+                            email=email,
+                            phone=phone,
+                            username=username,
+                            password=password,
+                            user_type=usertype)
+        db.session.add(u)
+        db.session.commit()
+        return render_template('userAdded.html', topname = session["name"])
 
 ###############   END OF ADD USER ROUTES   #####################################
 
@@ -162,7 +195,7 @@ def addBikes():
             flash("All bikes successfully added!")
 
     return render_template('addBikes.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 ###############   END OF ADD BIKES ROUTES   ####################################
 
@@ -235,9 +268,41 @@ def addLocation():
 def locationStats():
     locations = models.Location.query.all()
     return render_template('locationStats.html',
-                            locations=locations)
+                            locations=locations, topname = session["name"])
 
 ################# END OF LOCATION STATS ROUTES ##################
+
+
+
+###############   BOOKING CONFIMATION ROUTES   ##########################
+
+@app.route('/<sdatetime>/<booking>.pdf')
+def receipt(sdatetime, booking):
+
+    bookingob = models.Booking.query.filter_by(id=booking).first()
+    userid = bookingob.user_id
+    user = models.User.query.filter_by(id=userid).first()
+    useremail= user.email
+    datebooked = bookingob.booking_time
+    name = user.name
+    endtime = bookingob.end_time
+    starttime = bookingob.start_time
+
+    # strdatetime = datetime.datetime.strptime(sdatetime,"%Y-%m-%dT%H:%M")
+    duration=endtime-starttime
+    duration_hours=duration.total_seconds()/3600.0
+
+    time = duration_hours
+    numbikes = bookingob.bike_amount
+    total = bookingob.cost
+
+    html = render_template('receipt.html', datebooked = datebooked, booking=booking, name=name, useremail=useremail, starttime=starttime, endtime=endtime, time=time, numbikes=numbikes, latefee=0, total=total)
+
+
+    return render_pdf(HTML(string=html))
+
+###############   END OF BOOKING CONFIMATION ROUTES   ##########################
+
 
 
 ################## CREATE BOOKING ROUTES #########
@@ -260,44 +325,156 @@ def newBooking():
         # if user is not None:
         message = createBooking(email,stime,etime,slocation,elocation,numbikes)
         flash(message)
-    return render_template("newBooking.html", form=form)
+    return render_template("newBooking.html", form=form, topname = session["name"])
 
 def createBooking(email,stime,etime,slocation,elocation,numbikes):
     user = models.User.query.filter_by(email=email).first()
-    cost = 13.44
-    bookingTime = datetime.datetime.now()
-    startloc = models.Location.query.filter_by(id=slocation).first()
+    bookingTime = datetime.datetime.utcnow()
     sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
     edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
-    b = models.Booking( cost= cost,
-                        start_time=sdatetime,
-                        end_time=edatetime,
-                        bike_amount=numbikes,
-                        booking_time= bookingTime,
-                        paid=False,
-                        user_id= user.id,
-                        end_location=elocation,
-                        start_location=startloc.id
-                        )
+    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
+    if message=="Booking successfully created! Booking confirmation has been emailed to "+email+".":
+        duration=edatetime-sdatetime
+        duration_hours=duration.total_seconds()/3600.0
+        if duration_hours<=24.0:
+            cost=round(float((numbikes*3.5)+(duration_hours/2*numbikes*0.1)),2)
+        else:
+            cost=round((numbikes*3)+(duration_hours/2.2*numbikes*0.1),2)
+        b = models.Booking( cost= cost,
+                            start_time=sdatetime,
+                            end_time=edatetime,
+                            bike_amount=numbikes,
+                            booking_time= bookingTime,
+                            paid=False,
+                            user_id= user.id,
+                            end_location=elocation,
+                            start_location=slocation,
+                            complete=True
+                            )
 
-    db.session.add(b)
-    db.session.commit()
-
-    message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
-
+        db.session.add(b)
+        db.session.commit()
+        message=message+" Booking cost: "+str(cost)
+        send_confirmation(email, b.id, sdatetime)
+    # m = "sdatetime: ",sdatetime," | edatetime: ",edatetime," | slocation: ",slocation," | elocation: ",elocation," | numbikes",numbikes
+    # flash(m)
     return message
+
+def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
+    #simulating bike_amount at slocation between now and stime
+
+    #checking bike amount in slocation currently (exclude bikes that are in use)
+    bike_amount = 0
+    for bike in models.Bike.query.all():
+        if bike.location_id==slocation and bike.in_use==False:
+            bike_amount+=1
+
+    # flash("Starting bike amount: "+str(bike_amount))
+    #getting current time
+    now=datetime.datetime.utcnow()
+
+    bike_amount=queries(sdatetime,edatetime,slocation,elocation,bike_amount,now)
+    # m3="bike_amount after previous bookings: ",bike_amount
+    # flash(m3)
+
+    futureBookingsFeasible=True
+    #checking future bookings in same location - will this booking mean they won't have bikes?
+    for b in models.Booking.query.all():
+        # m="Checking future booking Id ",b.id
+        # flash(m)
+        if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
+            # m1="Start location matches and booking ",b.id," starts after new booking."
+            # flash(m1)
+            # if edatetime>b.start_time:
+                # m2="new booking ends after the start of booking ",b.id
+                # flash(m2)
+            # if elocation!=slocation:
+                # flash("new elocation!=new slocation")
+            futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
+            # m4="Number of bikes available before future booking ",b.id,": ",futureba
+            # flash(m4)
+            if (futureba-numbikes)<=b.bike_amount:
+                # m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
+                # flash(m5)
+                futureBookingsFeasible=False
+                # m="Booking affects future booking ",b.id
+                # flash(m)
+                break
+            # else:
+                # m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
+                # flash(m6)
+
+    #checking that there will be space in the end location on their return time
+    endLocationSpace=True
+    end_ba = queries(edatetime,edatetime,elocation,elocation,bike_amount,now)
+    endloc=models.Location.query.get(elocation)
+    if end_ba+numbikes>endloc.max_capacity:
+        endLocationSpace=False
+
+    #if after all checks there is enough bikes in our location and it doesn't affect future bookings
+    #then booking is successful
+    if bike_amount>=numbikes and futureBookingsFeasible==True and endLocationSpace==True:
+        # flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
+        message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+        return message
+    else:
+        # flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
+        if futureBookingsFeasible==False:
+            message="Booking unavailable as bikes in this location are reserved for another booking."
+        if endLocationSpace==False:
+            message="Booking unavailable as the end location will be full at the end of this booking."
+        if bike_amount<=numbikes:
+            message="Booking unavailable as the start location will not have enough bikes at the start time."
+        return message
+
+def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
+    bike_amount=bike_amount
+    for b in models.Booking.query.all():
+        # m1="booking no. "+str(b.id)
+        # (PINK) checking bookings where bikes are taken out between now and sdatetime
+        # and are returned after sdatetime
+        if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
+            bike_amount-=b.bike_amount
+            # flash(m1+" ---> PINK bike_amount: "+str(bike_amount))
+        # (PURPLE) checking bookings which take bikes out during our booking
+        # elif b.start_location==slocation and b.start_time>sdatetime and b.start_time<=edatetime:
+        #     bike_amount-=b.bike_amount
+            # flash(m1+" ---> PURPLE bike_amount: "+str(bike_amount))
+        # (ORANGE) checking bookings which take bikes from slocation and return to a different location
+        elif b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.start_location!=b.end_location:
+            bike_amount-=b.bike_amount
+            # flash(m1+" ---> ORANGE bike_amount: "+str(bike_amount))
+        # (GREEN) checking bookings where end location is our location and they're returned before sdatetime
+        elif b.end_location==slocation and b.end_time>=now and b.end_time<=sdatetime and (b.start_location!=slocation or b.start_time<now) :
+            bike_amount+=b.bike_amount
+            # flash(m1+" ---> GREEN bike_amount: "+str(bike_amount))
+        # else:
+            # flash(m1+" Did not hit any colour criteria.")
+    return bike_amount
+
+def send_confirmation(recemail, bookingid, sdatetime):
+   msg = Message('LEEDS RIDE BOOKING CONFIRMATION', sender = 'bikesride24@gmail.com', recipients = [recemail])
+
+   link = url_for('receipt', sdatetime=sdatetime, booking=bookingid, _external = True)
+
+   msg.body = "This is a link to your booking confirmation: {}".format(link)
+
+   mail.send(msg)
 
 @app.route('/')
 @loginRequired
 def index():
-    return render_template("index.html")
+    return render_template("index.html", topname = session["name"])
 
 def takeBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
     bike.in_use=True
     booking = models.Booking.query.get(booking_id)
     booking.bikes.append(bike)
+    loc = models.Location.query.get(booking.start_location)
+    loc.bike_amount-=1
+    db.session.add(loc)
     db.session.add(bike)
     db.session.add(booking)
     db.session.commit()
@@ -305,14 +482,17 @@ def takeBike(bike_id,booking_id):
 def returnBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
     bike.in_use=False
+    loc = models.Location.query.get(booking.start_location)
+    loc.bike_amount+=1
+    db.session.add(loc)
     db.session.add(bike)
     db.session.commit()
 
 
 ######## API
 
-import datetime
-#def log(*args):
+#
+# def log(*args):
 #    for line in args:
 #       with open('log.log', 'a') as the_file:
 #           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
