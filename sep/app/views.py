@@ -369,9 +369,11 @@ def availability():
                 break
             elif message == "Success":
                 amount += 1
-            elif (message != "Success" and amount != 1) or amount == 4:
-                m = "There are at least " + str(amount) + " bike/s available at that time."
+            elif message != "Success" and amount != 1:
+                m = "There are " + str(amount-1) + " bike/s available at this time."
                 break
+            elif amount == 4:
+                m = "There are at least 4 bikes available at this time."
             else:
                 m = "Something is wrong"
         flash(m)
