@@ -70,11 +70,10 @@ class addBookingForm(Form):
         now = datetime.datetime.utcnow()
         sdatetime = datetime.datetime.strptime(stime.data,"%Y-%m-%dT%H:%M")
         if sdatetime < now:
-            m="Bookings are only available in the future"
-            raise ValidationError(m)
+            raise ValidationError("Bookings are only available to be made in the future.")
 
     def validate_etime(self,etime):
         sdatetime = datetime.datetime.strptime(self.stime.data,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
         if edatetime <= sdatetime:
-            raise ValidationError('End time must be after starttime.')
+            raise ValidationError('End time must be after the specified start time.')
