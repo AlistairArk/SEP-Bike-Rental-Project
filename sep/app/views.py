@@ -460,17 +460,20 @@ def apiBooking():
     """
     content = request.get_json(force=True)
 
-    username = content['username']
-    password = content['password']
-    email = content['email']
-    phone = content['phone']
-    name = content['username']   #!!!!!! add name field to register activity
-    usertype="customer"
+    name = content['username']
+    user = models.User.query.filter_by(username=name).first()
 
-    message = createBooking(email,stime,etime,slocation,elocation,numbikes)
+    email = user.email
+    stime = content['startTime']
+    etime = content['endTime']
+    sLocation = content['startLocation']
+    eLocation = content['endLocation']
+    numbikes = content['bikeNumber']
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    data = createBooking(email,stime,etime,slocation,elocation,numbikes)
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
 
 
 @app.route('/api/getOrders', methods=['POST'])
