@@ -356,24 +356,23 @@ def availability():
         sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
+        sloc = models.Location.query.filter_by(id=slocation).first()
+        eloc = models.Location.query.filter_by(id=elocation).first()
+
         amount = 1
         m = " "
         while (amount < 5):
-            m = "entering while loop"
-            flash(m)
-            flash(amount)
             message = checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
-            flash(message)
             if message != "Success" and amount == 1:
-                m="There are no bike available at that time."
+                m="There are no bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name"."
                 break
             elif message == "Success":
                 amount += 1
             elif message != "Success" and amount != 1:
-                m = "There are " + str(amount-1) + " bike/s available at this time."
+                m = "There are " + str(amount-1) + " bike/s available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name"."
                 break
             elif amount == 4:
-                m = "There are at least 4 bikes available at this time."
+                m = "There are at least 4 bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name"."
             else:
                 m = "Something is wrong"
         flash(m)
@@ -415,7 +414,6 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     # message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
     message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)
     if message=="Success":
-                                                # :
         duration=edatetime-sdatetime
         duration_hours=duration.total_seconds()/3600.0
         cost=(numbikes*3.5)+(duration_hours/2*numbikes*0.1)
