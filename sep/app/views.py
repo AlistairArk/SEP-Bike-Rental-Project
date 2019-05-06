@@ -358,8 +358,10 @@ def availability():
 
         amount = 1
         m = " "
-        while (amount < 4):
+        while (amount < 5):
             m = "entering while loop"
+            flash(m)
+            flash(amount)
             message=checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
             flash(message)
             if message != "Success" and amount == 1:
@@ -367,8 +369,8 @@ def availability():
                 break
             elif message == "Success":
                 amount += amount
-            elif message != "Success" and amount != 1:
-                m="There are at least " + amount + "bike/s available at that time."
+            elif (message != "Success" and amount != 1) or amount == 4:
+                m = "There are at least " + amount + "bike/s available at that time."
                 break
             else:
                 m = "Something is wrong"
