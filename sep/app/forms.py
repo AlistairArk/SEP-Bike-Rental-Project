@@ -7,7 +7,7 @@ import datetime
 
 class addBikesForm(Form):
     amount = IntegerField('amount', [validators.NumberRange(max=10,min=-5)])
-    location = SelectField('location', validators=[DataRequired()])
+    location = SelectField('location', coerce=int, validators=[DataRequired()])
 
 class addLocationForm(Form):
     name = StringField('name', validators=[DataRequired(), Length(min=1,max=50)])
@@ -22,6 +22,30 @@ class addUserForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
     phone = StringField('phone', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=30)])
+
+    def validate_phone(self,phone):
+        noSpaces=""
+        for i in phone.data:
+            if i!=" ":
+                noSpaces+=i
+        valid=True
+        try:
+            isInteger=int(noSpaces)
+            if len(noSpaces)<9 or len(noSpaces)>11:
+                raise ValidationError("Not a valid length for a UK phone.")
+        except:
+            raise ValidationError("Invalid characters entered.")
+
+    def validate_username(self,username):
+        for u in User.query.all():
+            if username.data==u.username:
+                raise ValidationError("This username is already taken.")
+
+    def validate_email(self,email):
+        for u in User.query.all():
+            if email.data==u.email:
+                raise ValidationError("This email is already taken.")
+
 
 class addBookingForm(Form):
     email = StringField('email', validators=[DataRequired(), Email()])
@@ -42,15 +66,14 @@ class addBookingForm(Form):
         elif numbikes.data>4:
             raise ValidationError('Maximum 4 bikes per booking.')
 
-    def validate_starttime(self,stime):
-        # now = datetime.datetime.utcnow()
-        # sdatetime = datetime.datetime.strptime(stime.data,"%Y-%m-%dT%H:%M")
-        # if sdatetime < now:
-        if stime:
-            raise ValidationError('Booking are only available in the future.')
-
-    def validate_endtime(self,etime):
+    def validate_stime(self,stime):
+        now = datetime.datetime.utcnow()
         sdatetime = datetime.datetime.strptime(stime.data,"%Y-%m-%dT%H:%M")
+        if sdatetime < now:
+            raise ValidationError("Bookings are only available to be made in the future.")
+
+    def validate_etime(self,etime):
+        sdatetime = datetime.datetime.strptime(self.stime.data,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
         if edatetime <= sdatetime:
-            raise ValidationError('End time must be after starttime.')
+            raise ValidationError('End time must be after the specified start time.')
