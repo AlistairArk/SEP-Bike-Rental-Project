@@ -129,7 +129,6 @@ def addUser():
     return render_template('addUser.html',
                             form=form, topname = session["name"])
 
-<<<<<<< HEAD
 @app.route('/userAdded',methods=['GET','POST'])
 @loginRequired
 def userAdded():
@@ -156,8 +155,6 @@ def userAdded():
         db.session.add(u)
         db.session.commit()
         return render_template('userAdded.html', topname = session["name"])
-=======
->>>>>>> add-bikes-locations
 
 ###############   END OF ADD USER ROUTES   #####################################
 
@@ -196,15 +193,6 @@ def addBikes():
             flash(message)
         else:
             flash("All bikes successfully added!")
-<<<<<<< HEAD
-        return render_template('bikesAdded.html',
-                                amount=amount,
-                                amount_added=amount_added,
-                                all_added=all_added,
-                                location=l.name, topname = session["name"])
-
-=======
->>>>>>> add-bikes-locations
 
     return render_template('addBikes.html',
                             form=form, topname = session["name"])
@@ -219,28 +207,6 @@ def addBikes():
 @loginRequired
 def addEmployee():
     form=addUserForm(request.form)
-<<<<<<< HEAD
-    return render_template('addEmployee.html',
-                            form=form, topname = session["name"])
-
-@app.route('/employeeAdded',methods=['GET','POST'])
-@loginRequired
-def employeeAdded():
-    if request.method == 'POST':
-        employeeInfo = request.form
-        usertype = "employee"
-        for key,value in employeeInfo.items():
-            if key=='name':
-                name=value
-            elif key=='email':
-                email=value
-            elif key=='phone':
-                phone=value
-            elif key=='username':
-                username=value
-            elif key=='password':
-                password=value
-=======
     if request.method=='POST' and form.validate_on_submit():
         usertype="employee"
         name=form.name.data
@@ -248,7 +214,6 @@ def employeeAdded():
         phone=form.phone.data
         username=form.username.data
         password=form.password.data
->>>>>>> add-bikes-locations
         e = models.User(name=name,
                         email=email,
                         phone=phone,
@@ -257,14 +222,10 @@ def employeeAdded():
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
-<<<<<<< HEAD
-        return render_template('employeeAdded.html', topname = session["name"])
-=======
         flash("Employee added!")
     return render_template('addEmployee.html',
                             form=form)
 
->>>>>>> add-bikes-locations
 
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
 
@@ -276,29 +237,6 @@ def employeeAdded():
 @loginRequired
 def addLocation():
     form=addLocationForm(request.form)
-<<<<<<< HEAD
-    return render_template('newLocation.html',
-                            form=form, topname = session["name"])
-
-
-
-@app.route('/locationAdded',methods=['GET','POST'])
-@loginRequired
-def locationAdded():
-    if request.method == 'POST':
-        locationInfo = request.form
-        for key,value in locationInfo.items():
-            if key=='name':
-                name=value
-            elif key=='addr':
-                addr=value
-            elif key=='max_capacity':
-                max_capacity=value
-            elif key=='longt':
-                longt=float(value)
-            elif key=='latt':
-                latt=float(value)
-=======
     if request.method=="POST" and form.validate_on_submit():
         flash("Location added!")
         name=form.name.data
@@ -306,7 +244,6 @@ def locationAdded():
         max_capacity=form.max_capacity.data
         longt=float(form.longt.data)
         latt=float(form.latt.data)
->>>>>>> add-bikes-locations
         l = models.Location(name=name,
                             bike_amount=0,
                             max_capacity=max_capacity,
@@ -315,16 +252,10 @@ def locationAdded():
                             latt=latt)
         db.session.add(l)
         db.session.commit()
-<<<<<<< HEAD
-        flash("Location added!")
-        return render_template('locationAdded.html',
-                                name=name, topname = session["name"])
-=======
 
     return render_template('newLocation.html',
                             form=form)
 
->>>>>>> add-bikes-locations
 
 ###############   END OF ADD LOCATION ROUTES   #################################
 
