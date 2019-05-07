@@ -36,6 +36,6 @@ public class SaveSharedPreference
 
     public static String getPrefPassword(Context ctx)
     {
-        return getSharedPreferences(ctx).getString(PREF_USERNAME, "");
+        return getSharedPreferences(ctx).getString(PREF_PASSWORD, "");
     }
 }

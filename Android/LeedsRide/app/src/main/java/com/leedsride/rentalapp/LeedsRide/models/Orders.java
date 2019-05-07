@@ -4,53 +4,97 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Orders {
-    
-    @SerializedName("name")
-    @Expose
-    final String name;
 
-    @SerializedName("latitude")
+    @SerializedName("id")
     @Expose
-    final float latitude;
+    final int id;
 
-    @SerializedName("longitude")
+    @SerializedName("cost")
     @Expose
-    final float longitude;
+    final Float cost;
 
-    @SerializedName("bikesAvailable")
+    @SerializedName("bikeNumber")
     @Expose
-    final int bikesAvailable;
+    final int bikeNumber;
 
-    public Locations(String name,float latitude, float longitude,int bikesAvailable) {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.bikesAvailable = bikesAvailable;
+    @SerializedName("location")
+    @Expose
+    final String location;
+
+    @SerializedName("startDate")
+    @Expose
+    final String startDate;
+
+    @SerializedName("endDate")
+    @Expose
+    final String endDate;
+
+    @SerializedName("bikesInUse")
+    @Expose
+    final Boolean bikesInUse;
+
+    @SerializedName("username")
+    @Expose
+    final String username;
+
+    @SerializedName("password")
+    @Expose
+    final String password;
+
+    public Orders(int id, float cost, int bikeNumber, String location, String startDate, String endDate, Boolean bikesInUse, String username, String password) {
+        this.id = id;
+        this.cost = cost;
+        this.bikeNumber = bikeNumber;
+        this.location = location;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.bikesInUse = bikesInUse;
+        this.username = username;
+        this.password = password;
+
+
     }
 
-    public String getName() {
-        return name;
+    public int getId() {
+        return id;
     }
 
-    public float getLatitude() {
-        return latitude;
+    public int getBikeNumber() {
+        return bikeNumber;
     }
 
-    public float getLongitude() {
-        return longitude;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public int getBikesAvailable() {
-        return bikesAvailable;
+    public String getLocation() {
+        return location;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public Boolean getBikesInUse() {
+        return bikesInUse;
+    }
+
+    public float getCost() {
+        return cost;
     }
 
     @Override
     public String toString() {
-        return "Locations{" +
-                "name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", bikesAvailable=" + bikesAvailable +
+        return "Order{" +
+                "id='" + id + '\'' +
+                ", cost=" + cost +
+                ", bikeNumber=" + bikeNumber +
+                ", location=" + location +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", bikesInUse=" + bikesInUse +
+                ", username=" + username +
+                ", password=" + password +
                 '}';
     }
 }

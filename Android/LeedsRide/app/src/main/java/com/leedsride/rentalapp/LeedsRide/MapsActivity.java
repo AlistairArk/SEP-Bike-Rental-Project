@@ -64,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Booking booking;
 
-    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String BASE_URL = "https://sc17gs.pythonanywhere.com/api/"; ////base url does not include exact path ///should make this available to all activities
     private static final String TAG = MapsActivity.class.getSimpleName();
 
 
@@ -195,13 +195,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ///implement instance of restAPI interface
         restAPI sampleAPI = retrofit.create(restAPI.class);
 
-        //create call which uses attemptLogin method from restAPI interface
+        //create call which uses getLocations method from restAPI interface
         Call<List<Locations>> call = sampleAPI.getLocations();
 
         //add call to queue (in this case nothing in queue)
         call.enqueue(new Callback<List<Locations>>() {
             @Override
             public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
+
+
+                System.out.println(response.message());
 
                 List<Locations> locations = response.body();
 

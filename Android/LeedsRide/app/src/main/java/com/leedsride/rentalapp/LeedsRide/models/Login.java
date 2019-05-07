@@ -15,7 +15,7 @@ public class Login {
     @SerializedName("password")
     @Expose
     private String password;
-    @SerializedName("loginStatus")
+    @SerializedName("status")
     @Expose
     private String loginStatus;
 
@@ -36,6 +36,7 @@ public class Login {
 //        this.loginStatus = loginStatus;
 //    }
 
+
     public String getLoginStatus() {
         return loginStatus;
     }
@@ -45,7 +46,7 @@ public class Login {
         return "Conversation{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", login status='" + loginStatus + '\'' +
+                ", status='" + loginStatus + '\'' +
                 '}';
     }
 }

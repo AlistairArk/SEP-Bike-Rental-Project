@@ -6,6 +6,7 @@ from app import app, models, db
 from functools import wraps
 from .forms import *
 import json
+from passlib.hash import sha256_crypt
 
 
 mail = Mail(app)
@@ -56,7 +57,7 @@ def webLogin():
 @app.route('/index')
 @loginRequired
 def webIndex():
-    return render_template("index.html", topname = session["name"])
+    return render_template("locationStats.html", topname = session["name"])
 
 
 @app.route('/resetPassword')
@@ -100,7 +101,7 @@ def webLoginRequest():
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
-###############   END OG LOG IN ROUTES   #######################################
+###############   END OF LOG IN ROUTES   #######################################
 
 
 
@@ -110,6 +111,22 @@ def webLoginRequest():
 @loginRequired
 def addUser():
     form=addUserForm(request.form)
+    if request.method=='POST' and form.validate_on_submit():
+        usertype="customer"
+        name=form.name.data
+        email=form.email.data
+        phone=form.phone.data
+        username=form.username.data
+        password=form.password.data
+        e = models.User(name=name,
+                        email=email,
+                        phone=phone,
+                        username=username,
+                        password=sha256_crypt.encrypt(password),
+                        user_type=usertype)
+        db.session.add(e)
+        db.session.commit()
+        flash("User added!")
     return render_template('addUser.html',
                             form=form, topname = session["name"])
 
@@ -134,7 +151,7 @@ def userAdded():
                             email=email,
                             phone=phone,
                             username=username,
-                            password=password,
+                            password=sha256_crypt.encrypt(password),
                             user_type=usertype)
         db.session.add(u)
         db.session.commit()
@@ -146,62 +163,38 @@ def userAdded():
 
 ###############   ADD BIKES ROUTES   ###########################################
 
-@app.route('/bikesAdded',methods=['GET','POST'])
-@loginRequired
-def bikesAdded():
-    # bikeForm=addBikesForm(request.form)
-    if request.method == 'POST':
-        bikeInfo = request.form
-        for key,value in bikeInfo.items():
-            if key=='amount':
-                amount=int(value)
-            elif key=='location':
-                locationid=int(value)
-        l = models.Location.query.get(locationid)
-        max = l.max_capacity
-        bike_amount = l.bike_amount
-        amount_added=0
-        for i in range(amount):
-            if bike_amount<max:
-                bike=models.Bike(location_id=locationid,in_use=0,status="new")
-                db.session.add(bike)
-                db.session.commit()
-                amount_added+=1
-                bike_amount+=1
-        l = models.Location.query.get(locationid)
-        l.bike_amount+=amount_added
-        db.session.add(l)
-        db.session.commit()
-        if amount_added<amount:
-            all_added=False
-            message = "Location full."+amount_added+"/"+amount+" bikes added."
-            flash(message)
-        else:
-            all_added=True
-            flash("All bikes successfully added!")
-        return render_template('bikesAdded.html',
-                                amount=amount,
-                                amount_added=amount_added,
-                                all_added=all_added,
-                                location=l.name, topname = session["name"])
-
 
 @app.route('/addBikes',methods=['GET','POST'])
 @loginRequired
 def addBikes():
-    # bikes=models.Bike.query.all()
     form=addBikesForm(request.form)
     form.location.choices=[(l.id,l.name) for l in models.Location.query.all()]
-    # form.location.choices=[(1,'Leeds'),(2,'Manchester'),(3,'Newcastle'),(4,'Durham'),(5,'Sheffield')]
-    flash("hello")
-    # if form.validate_on_submit():
-    #     amount = form.amount.data
-    #     location = form.location.data
+    if request.method=="POST" and form.validate_on_submit():
+        amount = form.amount.data
+        location = form.location.data
 
-        # flash("Successfully received form data: %s at %s"%(form.amount.data,form.location.data))
-        # return render_template('dbtesting.html',
-        #                         amount=amount,
-        #                         location=location)
+        l = models.Location.query.get(location)
+        max = l.max_capacity
+        bike_amount = l.bike_amount
+        amount_added=0
+
+        for i in range(amount):
+            if bike_amount<max:
+                bike=models.Bike(location_id=location,in_use=0,status="new")
+                db.session.add(bike)
+                db.session.commit()
+                amount_added+=1
+                bike_amount+=1
+        l = models.Location.query.get(location)
+        l.bike_amount+=amount_added
+        db.session.add(l)
+        db.session.commit()
+        if amount_added<amount:
+            message = "Location full."+str(amount_added)+"/"+str(amount)+" bikes added."
+            flash(message)
+        else:
+            flash("All bikes successfully added!")
+
     return render_template('addBikes.html',
                             form=form, topname = session["name"])
 
@@ -215,35 +208,25 @@ def addBikes():
 @loginRequired
 def addEmployee():
     form=addUserForm(request.form)
-    return render_template('addEmployee.html',
-                            form=form, topname = session["name"])
-
-@app.route('/employeeAdded',methods=['GET','POST'])
-@loginRequired
-def employeeAdded():
-    if request.method == 'POST':
-        employeeInfo = request.form
-        usertype = "employee"
-        for key,value in employeeInfo.items():
-            if key=='name':
-                name=value
-            elif key=='email':
-                email=value
-            elif key=='phone':
-                phone=value
-            elif key=='username':
-                username=value
-            elif key=='password':
-                password=value
+    if request.method=='POST' and form.validate_on_submit():
+        usertype="employee"
+        name=form.name.data
+        email=form.email.data
+        phone=form.phone.data
+        username=form.username.data
+        password=form.password.data
         e = models.User(name=name,
                         email=email,
                         phone=phone,
                         username=username,
-                        password=password,
+                        password=sha256_crypt.encrypt(password),
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
-        return render_template('employeeAdded.html', topname = session["name"])
+        flash("Employee added!")
+    return render_template('addEmployee.html',
+                            form=form)
+
 
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
 
@@ -255,27 +238,13 @@ def employeeAdded():
 @loginRequired
 def addLocation():
     form=addLocationForm(request.form)
-    return render_template('newLocation.html',
-                            form=form, topname = session["name"])
-
-
-
-@app.route('/locationAdded',methods=['GET','POST'])
-@loginRequired
-def locationAdded():
-    if request.method == 'POST':
-        locationInfo = request.form
-        for key,value in locationInfo.items():
-            if key=='name':
-                name=value
-            elif key=='addr':
-                addr=value
-            elif key=='max_capacity':
-                max_capacity=value
-            elif key=='longt':
-                longt=float(value)
-            elif key=='latt':
-                latt=float(value)
+    if request.method=="POST" and form.validate_on_submit():
+        flash("Location added!")
+        name=form.name.data
+        addr=form.addr.data
+        max_capacity=form.max_capacity.data
+        longt=float(form.longt.data)
+        latt=float(form.latt.data)
         l = models.Location(name=name,
                             bike_amount=0,
                             max_capacity=max_capacity,
@@ -284,9 +253,10 @@ def locationAdded():
                             latt=latt)
         db.session.add(l)
         db.session.commit()
-        flash("Location added!")
-        return render_template('locationAdded.html',
-                                name=name, topname = session["name"])
+
+    return render_template('newLocation.html',
+                            form=form)
+
 
 ###############   END OF ADD LOCATION ROUTES   #################################
 
@@ -298,7 +268,6 @@ def locationAdded():
 @loginRequired
 def locationStats():
     locations = models.Location.query.all()
-    # locations = [[1,'leeds','123 house',5],[2,'headingley','44 drive',6],[3,'burley','77 street',9]]
     return render_template('locationStats.html',
                             locations=locations, topname = session["name"])
 
@@ -416,7 +385,10 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     if message=="Success":
         duration=edatetime-sdatetime
         duration_hours=duration.total_seconds()/3600.0
-        cost=(numbikes*3.5)+(duration_hours/2*numbikes*0.1)
+        if duration_hours<=24.0:
+            cost=round(float((numbikes*3.5)+(duration_hours/2*numbikes*0.1)),2)
+        else:
+            cost=round((numbikes*3)+(duration_hours/2.2*numbikes*0.1),2)
         b = models.Booking( cost= cost,
                             start_time=sdatetime,
                             end_time=edatetime,
@@ -425,7 +397,8 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
                             paid=False,
                             user_id= user.id,
                             end_location=elocation,
-                            start_location=slocation
+                            start_location=slocation,
+                            complete=True
                             )
 
         db.session.add(b)
@@ -451,12 +424,17 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     now=datetime.datetime.utcnow()
 
     bike_amount=queries(sdatetime,edatetime,slocation,elocation,bike_amount,now)
+<<<<<<< HEAD
     m3="bike_amount after previous bookings: ",bike_amount
+=======
+    # m3="bike_amount after previous bookings: ",bike_amount
+>>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
     # flash(m3)
 
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
+<<<<<<< HEAD
         m="Checking future booking Id ",b.id
         # flash(m)
         if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
@@ -464,21 +442,42 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
             # flash(m1)
             if edatetime>b.start_time:
                 m2="new booking ends after the start of booking ",b.id
+=======
+        # m="Checking future booking Id ",b.id
+        # flash(m)
+        if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
+            # m1="Start location matches and booking ",b.id," starts after new booking."
+            # flash(m1)
+            # if edatetime>b.start_time:
+                # m2="new booking ends after the start of booking ",b.id
+>>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m2)
             # if elocation!=slocation:
                 # flash("new elocation!=new slocation")
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
+<<<<<<< HEAD
             m4="Number of bikes available before future booking ",b.id,": ",futureba
             # flash(m4)
             if (futureba-numbikes)<=b.bike_amount:
                 m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
+=======
+            # m4="Number of bikes available before future booking ",b.id,": ",futureba
+            # flash(m4)
+            if (futureba-numbikes)<=b.bike_amount:
+                # m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
+>>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m5)
                 futureBookingsFeasible=False
                 # m="Booking affects future booking ",b.id
                 # flash(m)
                 break
+<<<<<<< HEAD
             else:
                 m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
+=======
+            # else:
+                # m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
+>>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m6)
 
     #checking that there will be space in the end location on their return time
@@ -508,7 +507,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
 def queries(sdatetime,edatetime,slocation,elocation,bike_amount,now):
     bike_amount=bike_amount
     for b in models.Booking.query.all():
-        m1="booking no. "+str(b.id)
+        # m1="booking no. "+str(b.id)
         # (PINK) checking bookings where bikes are taken out between now and sdatetime
         # and are returned after sdatetime
         if b.start_location==slocation and b.start_time>=now and b.start_time<=sdatetime and b.end_time>sdatetime:
@@ -542,7 +541,7 @@ def send_confirmation(recemail, bookingid, sdatetime):
 @app.route('/')
 @loginRequired
 def index():
-    return render_template("index.html", topname = session["name"])
+    return render_template("locationStats.html", topname = session["name"])
 
 def takeBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
@@ -555,7 +554,6 @@ def takeBike(bike_id,booking_id):
     db.session.add(bike)
     db.session.add(booking)
     db.session.commit()
-    #still need to mark booked_bike taken   ?
 
 def returnBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
@@ -565,7 +563,6 @@ def returnBike(bike_id,booking_id):
     db.session.add(loc)
     db.session.add(bike)
     db.session.commit()
-    #still need to mark booked_bike returned & add return time   ?
 
 
 ######## API
@@ -577,28 +574,47 @@ def returnBike(bike_id,booking_id):
 #           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
 #           the_file.write("\n["+str(time)+"] "+line)
 
-def api_loginRequired(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'api_logged_in' in session:
-            return f(*args, **kwargs)
-        return jsonify({'error': 'Authentificaton failed'})
-    return decorated_function
 
 @app.route('/api/login', methods=['POST'])
 def apiLogin():
     """
-    Handles json request for login, provides authentification.
+    Handles json request for login, provides authentication.
     updates cookies if details are correct.
     return json responce
     """
 
-    json = request.get_json()
+    content = request.get_json(force=True)
 
-    if json['username'] == 'admin' and json['password'] == 'password':
-        return jsonify({'message': 'Success'})
+    username = content['username']
+    password = content['password']
 
-    return jsonify({'error': 'Authentificaton failed'})
+    loginData = function.login(username=username, password=password)
+
+    if loginData[0]:
+        session["api_logged_in"] = True
+        session["username"] = loginData[2]
+        session["userType"] = loginData[1]
+        session["name"] = loginData[3]
+
+        user = models.User.query.filter_by(username=username).first()
+        session["userId"] = user.id
+
+        data =  {
+                "username":"",
+                "password":"",
+                "status":"Login Accepted"
+            }
+
+    else:
+        data =  {
+            "username":"",
+            "password":"",
+            "status":"Incorrect Login Information"
+        }
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
 
 
 @app.route('/api/register', methods=['POST'])
@@ -608,22 +624,81 @@ def apiRegister():
     return the message to the device depending on the outcome
     """
 
-    json = request.get_json()
+    content = request.get_json(force=True)
 
-    if json['username'] == 'admin' and json['password'] == 'password':
-        return jsonify({'message': 'Success'})
+    username = content['username']
+    password = content['password']
+    email = content['email']
+    phone = content['phone']
+    name = content['username']   #!!!!!! add name field to register activity
+    usertype="customer"
 
-    return jsonify({'error': 'Authentificaton failed'})
+    if validate_email(email):
+        data =  {
+                "registrationStatus":"That email is taken"
+                }
+        jsonifiedData = json.dumps(data)
+        return jsonifiedData
+    elif validate_username(username):
+        data =  {
+                "registrationStatus":"That username is taken"
+                }
+        jsonifiedData = json.dumps(data)
+        return jsonifiedData
+    else:
+        data =  {
+                "registrationStatus":"User Registered"
+                }
 
-@app.route('/api/getlocations', methods=['POST'])
+    e = models.User(name=name,
+                    email=email,
+                    phone=phone,
+                    username=username,
+                    password=password,
+                    user_type=usertype)
+    db.session.add(e)
+    db.session.commit()
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+def validate_username(username):
+    for u in User.query.all():
+        if username==u.username:
+            return True
+        else:
+            return False
+
+def validate_email(email):
+    for u in User.query.all():
+        if email==u.email:
+            return True
+        else:
+            return False
+
+@app.route('/api/getlocations', methods=['GET'])
 def apiGetLocations():
     """
     Returns all the locations bikes can be taken out from
     Also returns number of bikes available
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    data = []
+
+    locations = models.Location.query.all()
+
+    for location in locations:
+        locData =  {
+                "name":str(location.name),
+                "latitude":str(location.latt),
+                "longitude":str(location.longt),
+                "bikesAvailable":str(location.bike_amount)
+            }
+
+        data.append(locData)
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
 
 @app.route('/api/booking', methods=['POST'])
 def apiBooking():
@@ -631,19 +706,69 @@ def apiBooking():
     Creates a booking by invoking the create booking function
     Handle card details
     """
+    content = request.get_json(force=True)
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    name = content['username']
+    user = models.User.query.filter_by(username=name).first()
+
+    email = user.email
+    stime = content['startTime']
+    etime = content['endTime']
+    slocation = content['startLocation']
+    elocation = content['endLocation']
+    numbikes = content['bikeNumber']
+
+    data = createBooking(email,stime,etime,slocation,elocation,numbikes)
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
 
 
-@app.route('/api/getOrders', methods=['POST'])
+@app.route('/api/getorders', methods=['POST', 'GET'])
 def apiGetOrders():
     """
     Returns all orders tied to a specific account
     """
+    content = request.get_json(force=True)
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    username = content['username']
+    password = content['password']
+
+    user=models.User.query.filter_by(username = username).first()
+
+    if user is not None and sha256_crypt.verify(sha256_crypt.encrypt(password), user.password)==True:
+
+        orders=models.Booking.query.filter_by(user_id=user.id).all()
+
+        data = []
+
+        for order in orders:
+            returned = "false"
+            location = models.Location.query.filter_by(id=order.start_location).first()
+
+            if order.complete:
+                returned = "true"
+
+            orderData = {
+                "id":str(order.id),
+                "cost":str(order.cost),
+                "startDate":str(order.start_time),
+                "endDate":str(order.end_time),
+                "bikeNumber":str(order.bike_amount),
+                "location":str(location.name),
+                "bikesInUse":returned,
+                "username":"",
+                "password":""
+            }
+            data.append(orderData)
+
+        print(data)
+
+        jsonifiedData = json.dumps(data)
+        return jsonifiedData
+
+    else:
+        return jsonify({'error': 'Authentication failed'})
 
 
 @app.route('/api/collectbikes', methods=['POST'])
@@ -652,14 +777,124 @@ def apiCollectBikes():
     Marks a bike as unavailable
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    data = []
 
-@app.route('/api/returnBike', methods=['POST'])
+    content = request.get_json(force=True)
+    list = content['list']
+
+    if len(list) == 0:
+        returnData = {
+            "bookingId": "0",
+            "username": "",
+            "password": "",
+            "bikeId": "0",
+            "response": "error"
+        }
+        data.append(returnData)
+    else:
+        username = list[0]['username']
+        bookingId = int(list[0]['bookingId'])
+
+
+        user=models.User.query.filter_by(username = username).first()
+        order=models.Booking.query.filter_by(id=bookingId).first()
+
+        if user is not None and order is not None:
+            for bike in order.bikes:
+                takeBike(bike.id, bookingId)
+
+            order.complete = True
+            db.session.add(order)
+            db.session.commit()
+
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "success"
+            }
+            data.append(returnData)
+
+        else:
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "error"
+            }
+            data.append(returnData)
+
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+@app.route('/api/returnbikes', methods=['POST'])
 def apiReturnBike():
     """
     Marks a bike as available
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentificaton failed'})
+    data = []
+
+    content = request.get_json(force=True)
+    list = content['list']
+
+    if len(list) == 0:
+        returnData = {
+            "bookingId": "0",
+            "username": "",
+            "password": "",
+            "bikeId": "0",
+            "response": "error"
+        }
+        data.append(returnData)
+    else:
+        username = list[0]['username']
+        bookingId = int(list[0]['bookingId'])
+
+
+        user=models.User.query.filter_by(username = username).first()
+        order=models.Booking.query.filter_by(id=bookingId).first()
+
+        if user is not None and order is not None:
+            for bike in order.bikes:
+                returnBike(bike.id, bookingId)
+
+            order.complete = False
+            db.session.add(order)
+            db.session.commit()
+
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "success"
+            }
+            data.append(returnData)
+
+        else:
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "error"
+            }
+            data.append(returnData)
+
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+
+
+@app.route('/api/logout', methods=['POST'])
+def apiLogout():
+
+    session.clear()
+    return jsonify({'message': 'Complete'})

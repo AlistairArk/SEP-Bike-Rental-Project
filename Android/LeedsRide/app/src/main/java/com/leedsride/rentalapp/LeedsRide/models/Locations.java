@@ -48,9 +48,9 @@ public class Locations {
     public String toString() {
         return "Locations{" +
                 "name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", bikesAvailable=" + bikesAvailable +
+                ", latitude=" + latitude + '\'' +
+                ", longitude=" + longitude + '\'' +
+                ", bikesAvailable=" + bikesAvailable + '\'' +
                 '}';
     }
 }
