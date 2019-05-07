@@ -660,7 +660,7 @@ def apiGetOrders():
 
     user=models.User.query.filter_by(username = username).first()
 
-    if user is not None and sha256_crypt.verify(user.password,sha256_crypt.encrypt(password))==True:
+    if user is not None and sha256_crypt.verify(password,user.password)==True:
 
         orders=models.Booking.query.filter_by(user_id=user.id).all()
 
