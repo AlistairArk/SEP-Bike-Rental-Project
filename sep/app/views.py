@@ -57,7 +57,7 @@ def webLogin():
 @app.route('/index')
 @loginRequired
 def webIndex():
-    return render_template("index.html", topname = session["name"])
+    return render_template("locationStats.html", topname = session["name"])
 
 
 @app.route('/resetPassword')
@@ -466,7 +466,7 @@ def send_confirmation(recemail, bookingid, sdatetime):
 @app.route('/')
 @loginRequired
 def index():
-    return render_template("index.html", topname = session["name"])
+    return render_template("locationStats.html", topname = session["name"])
 
 def takeBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
