@@ -52,7 +52,33 @@ public class UnitTests {
             e.printStackTrace();
         }
     }
+    @Test
+    public void incorrectLogin() {
+        Login login = new Login();
 
+        login.setUsername("random");
+        login.setPassword("random");
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        Call<Login> call = sampleAPI.attemptLogin(login);
+
+        try {
+            //Magic is here at .execute() instead of .enqueue()
+            Response<Login> response = call.execute();
+            Login result = response.body();
+
+            assertEquals("Incorrect Login Information", result.getLoginStatus());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @Test
     public void register() {
         assertEquals(4, 2 + 2);
