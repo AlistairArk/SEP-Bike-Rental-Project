@@ -29,14 +29,14 @@ def login(*args, **kwargs):
     # Check if username exists
     user = models.User.query.filter_by(username=username).first()
 
-    # User not found or password is false
+    # If user not found, or, passwords don't match
     if user==None or sha256_crypt.verify(sha256_crypt.encrypt(password), user.password)=False: 
         return [False, 0, 0, 0]
-    else:
-        # Confirm User
+    
+    else: # confirm valid user
         return [True, user.user_type, user.username, user.name]  # return user type
 
-    ## Comment out for local testing
+    ## Comment in the following and comment out the above when testing locally
     # user_type  = "manager"
     # username   = "prudd"
     # name       = "Paul Rudd"
