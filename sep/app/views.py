@@ -6,6 +6,7 @@ from app import app, models, db
 from functools import wraps
 from .forms import *
 import json
+from passlib.hash import sha256_crypt
 
 
 mail = Mail(app)
@@ -56,7 +57,7 @@ def webLogin():
 @app.route('/index')
 @loginRequired
 def webIndex():
-    return render_template("index.html", topname = session["name"])
+    return render_template("locationStats.html", topname = session["name"])
 
 
 @app.route('/resetPassword')
@@ -100,7 +101,7 @@ def webLoginRequest():
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
-###############   END OG LOG IN ROUTES   #######################################
+###############   END OF LOG IN ROUTES   #######################################
 
 
 
@@ -121,7 +122,7 @@ def addUser():
                         email=email,
                         phone=phone,
                         username=username,
-                        password=password,
+                        password=sha256_crypt.encrypt(password),
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
@@ -150,7 +151,7 @@ def userAdded():
                             email=email,
                             phone=phone,
                             username=username,
-                            password=password,
+                            password=sha256_crypt.encrypt(password),
                             user_type=usertype)
         db.session.add(u)
         db.session.commit()
@@ -218,7 +219,7 @@ def addEmployee():
                         email=email,
                         phone=phone,
                         username=username,
-                        password=password,
+                        password=sha256_crypt.encrypt(password),
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
@@ -465,7 +466,7 @@ def send_confirmation(recemail, bookingid, sdatetime):
 @app.route('/')
 @loginRequired
 def index():
-    return render_template("index.html", topname = session["name"])
+    return render_template("locationStats.html", topname = session["name"])
 
 def takeBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
@@ -660,7 +661,7 @@ def apiGetOrders():
 
     user=models.User.query.filter_by(username = username).first()
 
-    if user is not None:
+    if user is not None and sha256_crypt.verify(sha256_crypt.encrypt(password), user.password)==True:
 
         orders=models.Booking.query.filter_by(user_id=user.id).all()
 
