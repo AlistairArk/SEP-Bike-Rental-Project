@@ -433,7 +433,6 @@ def apiGetOrders():
 
         for order in orders:
             returned = "false"
-            bikeNumber = 0
             location = models.Location.query.filter_by(id=order.start_location).first()
 
             if order.complete:
@@ -444,7 +443,7 @@ def apiGetOrders():
                 "cost":str(order.cost),
                 "startDate":str(order.start_time),
                 "endDate":str(order.end_time),
-                "bikeNumber":str(bikeNumber),
+                "bikeNumber":str(order.bike_amount),
                 "location":str(location.name),
                 "bikesInUse":returned,
                 "username":"",
@@ -467,18 +466,121 @@ def apiCollectBikes():
     Marks a bike as unavailable
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    data = []
 
-@app.route('/api/returnBike', methods=['POST'])
+    content = request.get_json(force=True)
+    list = content['list']
+
+    if len(list) == 0:
+        returnData = {
+            "bookingId": "0",
+            "username": "",
+            "password": "",
+            "bikeId": "0",
+            "response": "error"
+        }
+        data.append(returnData)
+    else:
+        username = list[0]['username']
+        bookingId = int(list[0]['bookingId'])
+
+
+        user=models.User.query.filter_by(username = username).first()
+        order=models.Booking.query.filter_by(id=bookingId).first()
+
+        if user is not None and order is not None:
+            for bike in order.bikes:
+                takeBike(bike.id, bookingId)
+
+            order.complete = True
+            db.session.add(order)
+            db.session.commit()
+
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "success"
+            }
+            data.append(returnData)
+
+        else:
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "error"
+            }
+            data.append(returnData)
+
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+@app.route('/api/returnbikes', methods=['POST'])
 def apiReturnBike():
     """
     Marks a bike as available
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    data = []
 
+    content = request.get_json(force=True)
+    list = content['list']
+
+    if len(list) == 0:
+        returnData = {
+            "bookingId": "0",
+            "username": "",
+            "password": "",
+            "bikeId": "0",
+            "response": "error"
+        }
+        data.append(returnData)
+    else:
+        username = list[0]['username']
+        bookingId = int(list[0]['bookingId'])
+
+
+        user=models.User.query.filter_by(username = username).first()
+        order=models.Booking.query.filter_by(id=bookingId).first()
+
+        if user is not None and order is not None:
+            for bike in order.bikes:
+                returnBike(bike.id, bookingId)
+
+            order.complete = False
+            db.session.add(order)
+            db.session.commit()
+
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "success"
+            }
+            data.append(returnData)
+
+        else:
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "error"
+            }
+            data.append(returnData)
+
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+    
 
 @app.route('/api/logout', methods=['POST'])
 def apiLogout():
