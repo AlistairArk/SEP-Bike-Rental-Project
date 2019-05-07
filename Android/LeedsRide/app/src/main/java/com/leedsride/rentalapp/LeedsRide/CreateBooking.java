@@ -171,9 +171,9 @@ public class CreateBooking extends AppCompatActivity {
         completeBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                  onBraintreeSubmit(null);
-//                booking.setBikeQuantity(numberOfBikes);
-//                booking.setOrderPrice(price);
+
+                onBraintreeSubmit(null);
+
 
             }
         });

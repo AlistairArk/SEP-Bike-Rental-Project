@@ -87,9 +87,9 @@ public class UnitTests {
     public void successfulRegister() {
         Register register = new Register();
 
-        register.setUsername("androidTest");
-        register.setPassword("testing");
-        register.setEmail("testing@test.com");
+        register.setUsername("hi");
+        register.setPassword("password");
+        register.setEmail("test@test.com");
         register.setPhone("07951399157");
 
         Retrofit retrofit = new Retrofit.Builder()

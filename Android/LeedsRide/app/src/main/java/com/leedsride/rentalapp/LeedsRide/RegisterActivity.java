@@ -19,8 +19,8 @@ import com.leedsride.rentalapp.LeedsRide.models.Register;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    //private static final String BASE_URL = "https://sc17gs.pythonanywhere.com/api/";
-    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String BASE_URL = "https://sc17gs.pythonanywhere.com/api/";
+    //private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
     Register register = new Register();
@@ -56,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
                 register.setEmail(email.getText().toString());
                 register.setPhone(phone.getText().toString());
 
-                if(password1==password2){
+                if(password1.equals(password2)){
                     sendNetworkRequest(register);
                 } else {
                     Toast.makeText(getApplicationContext(), "Those passwords don't match!!!", Toast.LENGTH_SHORT).show();
@@ -83,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
         call.enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
-
+                System.out.println(response.message());
                 String reply = response.body().getRegistrationStatus();
                 Log.d(TAG, reply);
 
