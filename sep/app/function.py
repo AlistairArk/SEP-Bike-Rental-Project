@@ -3,7 +3,7 @@ from flask_mail import Mail, Message
 
 import MySQLdb
 from . import db, models
-import hashlib
+from passlib.hash import sha256_crypt
 
 
 '''
@@ -26,12 +26,14 @@ def login(*args, **kwargs):
     password = kwargs.get("password", 0)
 
 
-    # Check if username & password are true
-    user = models.User.query.filter_by(username=username, password=password).first()
+    # Check if username exists
+    user = models.User.query.filter_by(username=username).first()
 
-    if user==None: # User not found
+    # User not found or password is false
+    if user==None or sha256_crypt.verify(sha256_crypt.encrypt(password), user.password)=False: 
         return [False, 0, 0, 0]
     else:
+        # Confirm User
         return [True, user.user_type, user.username, user.name]  # return user type
 
     ## Comment out for local testing
@@ -44,47 +46,6 @@ def login(*args, **kwargs):
 
 
 
-
-def emailExists(email):
-    # Perform database check to validate if input email exists
-    # Return 1 if found and 0 if not found.
-
-    return 1 # Assume email exists as a test
-
-
-# def addUser(*args, **kwargs):
-#     name      = kwargs.get("name",      "")
-#     username  = kwargs.get("username",  "")
-#     email     = kwargs.get("email",     "")
-#     password  = kwargs.get("password",  "")
-#     image     = kwargs.get("image",     "")
-#     phone     = kwargs.get("phone",     "")
-#     userType  = kwargs.get("userType",  "")
-
-#     user = models.User.query.filter_by(username=username).first()
-#     if user==None: # User not found
-#         # add new employee as normal
-
-#         '''
-#         Checks before adding user
-#             - Password security
-#             - Valid number
-
-#         '''
-#         l = models.Location(name      = name,
-#                             username  = username,
-#                             email     = email,
-#                             password  = password,
-#                             phone     = phone,
-#                             user_type = userType)
-
-#         db.session.add(l)
-#         db.session.commit()
-
-
-#         return 1    # if employee was added successfully return 1
-#     else:
-#         return 0    # if employee already exists return 0
 
 
 def resetRequest(*args, **kwargs):
