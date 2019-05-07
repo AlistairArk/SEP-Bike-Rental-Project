@@ -180,6 +180,19 @@ public class UnitTests {
         restAPI sampleAPI = retrofit.create(restAPI.class);
 
         Call<List<Locations>> call = sampleAPI.getLocations();
+
+        try {
+            Response<List<Locations>> response = call.execute();
+            List<Locations> result = response.body();
+
+            assertEquals("Leeds City Centre", result.get(0).getName());
+            assertEquals(5.8116, result.get(0).getLatitude(), 0.01);
+            assertEquals(-1.62727, result.get(0).getLongitude(), 0.01);
+            assertEquals(5, result.get(0).getBikesAvailable());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
