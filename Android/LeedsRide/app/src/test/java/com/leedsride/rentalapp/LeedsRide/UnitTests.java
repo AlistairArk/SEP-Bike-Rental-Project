@@ -106,7 +106,6 @@ public class UnitTests {
             Register result = response.body();
 
             assertEquals("User Registered", result.getRegistrationStatus());
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,9 +115,9 @@ public class UnitTests {
     public void emailFailureRegister() {
         Register register = new Register();
 
-        register.setUsername("androidTest");
-        register.setPassword("testing");
-        register.setEmail("testing@test.com"); ///////////////////Set this to an email that is already in the database
+        register.setUsername("prudd");
+        register.setPassword("password");
+        register.setEmail("prudd@gmail.com"); ///////////////////Set this to an email that is already in the database
         register.setPhone("07951399157");
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -145,8 +144,8 @@ public class UnitTests {
     public void usernameFailureRegister() {
         Register register = new Register();
 
-        register.setUsername("androidTest"); ///////////////////Set this to a username that is already in the database
-        register.setPassword("testing");
+        register.setUsername("prudd"); ///////////////////Set this to a username that is already in the database
+        register.setPassword("password");
         register.setEmail("testing@test.com");
         register.setPhone("07951399157");
 
