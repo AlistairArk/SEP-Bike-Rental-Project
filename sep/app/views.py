@@ -694,11 +694,7 @@ def apiGetOrders():
     else:
         return jsonify({'error': 'Authentication failed'})
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 2069bfd250e4de7c5a622cc90ebaf262021c81a5
 @app.route('/api/collectbikes', methods=['POST'])
 def apiCollectBikes():
     """
@@ -819,7 +815,7 @@ def apiReturnBike():
     jsonifiedData = json.dumps(data)
     return jsonifiedData
 
-    
+
 
 @app.route('/api/logout', methods=['POST'])
 def apiLogout():
