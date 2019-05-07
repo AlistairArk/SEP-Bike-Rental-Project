@@ -7,7 +7,11 @@ public class Orders {
 
     @SerializedName("id")
     @Expose
-    final String id;
+    final int id;
+
+    @SerializedName("cost")
+    @Expose
+    final Float cost;
 
     @SerializedName("bikeNumber")
     @Expose
@@ -17,7 +21,7 @@ public class Orders {
     @Expose
     final String location;
 
-    @SerializedName("StartDate")
+    @SerializedName("startDate")
     @Expose
     final String startDate;
 
@@ -25,31 +29,40 @@ public class Orders {
     @Expose
     final String endDate;
 
-    @SerializedName("collected")
+    @SerializedName("bikesInUse")
     @Expose
-    final Boolean collected;
+    final Boolean bikesInUse;
 
-    @SerializedName("returned")
+    @SerializedName("username")
     @Expose
-    final Boolean returned;
+    final String username;
 
-    public Orders(String id, int bikeNumber, String location, String startDate, String endDate, Boolean collected, Boolean returned) {
+    @SerializedName("password")
+    @Expose
+    final String password;
+
+    public Orders(int id, float cost, int bikeNumber, String location, String startDate, String endDate, Boolean bikesInUse, String username, String password) {
         this.id = id;
+        this.cost = cost;
         this.bikeNumber = bikeNumber;
         this.location = location;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.collected = collected;
-        this.returned = returned;
+        this.bikesInUse = bikesInUse;
+        this.username = username;
+        this.password = password;
+
+
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
     public int getBikeNumber() {
         return bikeNumber;
     }
+
     public String getEndDate() {
         return endDate;
     }
@@ -62,24 +75,26 @@ public class Orders {
         return startDate;
     }
 
-    public Boolean getCollected() {
-        return collected;
+    public Boolean getBikesInUse() {
+        return bikesInUse;
     }
 
-    public Boolean getReturned() {
-        return returned;
+    public float getCost() {
+        return cost;
     }
 
     @Override
     public String toString() {
         return "Order{" +
                 "id='" + id + '\'' +
+                ", cost=" + cost +
                 ", bikeNumber=" + bikeNumber +
                 ", location=" + location +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", collected=" + collected +
-                ", returned=" + returned +
+                ", bikesInUse=" + bikesInUse +
+                ", username=" + username +
+                ", password=" + password +
                 '}';
     }
 }

@@ -204,7 +204,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
 
 
-                System.out.println("lollllll"+response.message());
+                System.out.println(response.message());
 
                 List<Locations> locations = response.body();
 
