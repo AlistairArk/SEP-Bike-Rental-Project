@@ -658,7 +658,7 @@ def apiGetOrders():
     username = content['username']
     password = content['password']
 
-    user=models.User.query.filter_by(username = username, password = password).first()
+    user=models.User.query.filter_by(username = username).first()
 
     if user is not None:
 
