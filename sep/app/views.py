@@ -498,13 +498,6 @@ def returnBike(bike_id,booking_id):
 #           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
 #           the_file.write("\n["+str(time)+"] "+line)
 
-def api_loginRequired(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'api_logged_in' in session:
-            return f(*args, **kwargs)
-        return jsonify({'error': 'Authentication failed'})
-    return decorated_function
 
 @app.route('/api/login', methods=['POST'])
 def apiLogin():
@@ -595,14 +588,14 @@ def apiRegister():
 
 def validate_username(username):
     for u in User.query.all():
-        if username.data==u.username:
+        if username==u.username:
             return True
         else:
             return False
 
 def validate_email(email):
     for u in User.query.all():
-        if email.data==u.email:
+        if email==u.email:
             return True
         else:
             return False
@@ -645,8 +638,8 @@ def apiBooking():
     email = user.email
     stime = content['startTime']
     etime = content['endTime']
-    sLocation = content['startLocation']
-    eLocation = content['endLocation']
+    slocation = content['startLocation']
+    elocation = content['endLocation']
     numbikes = content['bikeNumber']
 
     data = createBooking(email,stime,etime,slocation,elocation,numbikes)
@@ -665,7 +658,7 @@ def apiGetOrders():
     username = content['username']
     password = content['password']
 
-    user=models.User.query.filter_by(username = username, password = password).first()
+    user=models.User.query.filter_by(username = username).first()
 
     if user is not None:
 
@@ -675,7 +668,6 @@ def apiGetOrders():
 
         for order in orders:
             returned = "false"
-            bikeNumber = 0
             location = models.Location.query.filter_by(id=order.start_location).first()
 
             if order.complete:
@@ -686,7 +678,7 @@ def apiGetOrders():
                 "cost":str(order.cost),
                 "startDate":str(order.start_time),
                 "endDate":str(order.end_time),
-                "bikeNumber":str(bikeNumber),
+                "bikeNumber":str(order.bike_amount),
                 "location":str(location.name),
                 "bikesInUse":returned,
                 "username":"",
@@ -702,24 +694,132 @@ def apiGetOrders():
     else:
         return jsonify({'error': 'Authentication failed'})
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 2069bfd250e4de7c5a622cc90ebaf262021c81a5
 @app.route('/api/collectbikes', methods=['POST'])
 def apiCollectBikes():
     """
     Marks a bike as unavailable
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    data = []
 
-@app.route('/api/returnBike', methods=['POST'])
+    content = request.get_json(force=True)
+    list = content['list']
+
+    if len(list) == 0:
+        returnData = {
+            "bookingId": "0",
+            "username": "",
+            "password": "",
+            "bikeId": "0",
+            "response": "error"
+        }
+        data.append(returnData)
+    else:
+        username = list[0]['username']
+        bookingId = int(list[0]['bookingId'])
+
+
+        user=models.User.query.filter_by(username = username).first()
+        order=models.Booking.query.filter_by(id=bookingId).first()
+
+        if user is not None and order is not None:
+            for bike in order.bikes:
+                takeBike(bike.id, bookingId)
+
+            order.complete = True
+            db.session.add(order)
+            db.session.commit()
+
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "success"
+            }
+            data.append(returnData)
+
+        else:
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "error"
+            }
+            data.append(returnData)
+
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+@app.route('/api/returnbikes', methods=['POST'])
 def apiReturnBike():
     """
     Marks a bike as available
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    data = []
 
+    content = request.get_json(force=True)
+    list = content['list']
+
+    if len(list) == 0:
+        returnData = {
+            "bookingId": "0",
+            "username": "",
+            "password": "",
+            "bikeId": "0",
+            "response": "error"
+        }
+        data.append(returnData)
+    else:
+        username = list[0]['username']
+        bookingId = int(list[0]['bookingId'])
+
+
+        user=models.User.query.filter_by(username = username).first()
+        order=models.Booking.query.filter_by(id=bookingId).first()
+
+        if user is not None and order is not None:
+            for bike in order.bikes:
+                returnBike(bike.id, bookingId)
+
+            order.complete = False
+            db.session.add(order)
+            db.session.commit()
+
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "success"
+            }
+            data.append(returnData)
+
+        else:
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "error"
+            }
+            data.append(returnData)
+
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+    
 
 @app.route('/api/logout', methods=['POST'])
 def apiLogout():
