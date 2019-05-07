@@ -48,9 +48,6 @@ public class CreateBooking extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener dateDataSetListener;
     private TimePickerDialog.OnTimeSetListener timeDataSetListener;
 
-    private LinearLayout dateViewContainer;
-    private LinearLayout timeViewContainer;
-    private TextView bookingLocation;
     private TextView textViewDayOfMonth;
     private TextView textViewMonth;
     private TextView textViewDayOfWeek;
@@ -63,21 +60,24 @@ public class CreateBooking extends AppCompatActivity {
     private int rentalDuration;
     private int bookingHour, bookingMinute;
     private float price;
-    private BubbleSeekBar bubbleSeekBar;
-    private ElegantNumberButton bikeNumberWidget;
+
+    private String startDateTime;
+    private String endDateTime;
+    private String apiDate;
+    private String apiTime;
 
     private Boolean is24HourView = false;
 
     private static final int REQUEST_CODE = 4949;
 
 
-    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String BASE_URL = "https://sc17gs.pythonanywhere.com/api/";
     private static final String TAG = CreateBooking.class.getSimpleName();
 
     Book book = new Book();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_booking);
 
@@ -102,11 +102,11 @@ public class CreateBooking extends AppCompatActivity {
 
         rentalReturnDate = (TextView)findViewById(R.id.rentalReturnDate);
 
-        dateViewContainer = (LinearLayout)findViewById(R.id.dateViewContainer);
-        timeViewContainer = (LinearLayout)findViewById(R.id.timeViewContainer);
+        LinearLayout dateViewContainer = (LinearLayout)findViewById(R.id.dateViewContainer);
+        LinearLayout timeViewContainer = (LinearLayout)findViewById(R.id.timeViewContainer);
 
-        bikeNumberWidget = (ElegantNumberButton)findViewById(R.id.bikeNumber);
-        bubbleSeekBar = (BubbleSeekBar)findViewById(R.id.bubbleSeekBar);
+        ElegantNumberButton bikeNumberWidget = (ElegantNumberButton)findViewById(R.id.bikeNumber);
+        BubbleSeekBar bubbleSeekBar = (BubbleSeekBar)findViewById(R.id.bubbleSeekBar);
 
         TextView elegantCounter = (TextView)findViewById(R.id.number_counter);
         Button elegantAdd = (Button)findViewById(R.id.add_btn);
@@ -162,50 +162,28 @@ public class CreateBooking extends AppCompatActivity {
 
         setReturnDate();
 
-        ///////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////
-
 
         completeBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                  onBraintreeSubmit(null);
-//                booking.setBikeQuantity(numberOfBikes);
-//                booking.setOrderPrice(price);
+
+                  book.setUsername(SaveSharedPreference.getPrefUsername(getApplicationContext()));//from shared prer
+                  book.setPassword(SaveSharedPreference.getPrefPassword(getApplicationContext()));
+                  book.setBikeNumber(numberOfBikes);
+
+                  startDateTime = apiDate + apiTime;
+
+                  book.setStartTime(startDateTime);
+                  book.setEndTime(endDateTime);
+                  book.setStartLocation(booking.getBookingLocation());
+                  book.setEndLocation(booking.getBookingLocation());
+                  //onBraintreeSubmit(null);
+                  Toast.makeText(getApplicationContext(), startDateTime, Toast.LENGTH_SHORT).show();
+
+                  sendNetworkRequest(book);
 
             }
         });
-
-//        completeBooking.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                EditText username = (EditText) findViewById(R.id.usernameRegisterEntry);
-//                EditText password = (EditText) findViewById(R.id.passwordRegisterEntry);
-//                EditText repeatPassword = (EditText) findViewById(R.id.passwordCheckerRegisterEntry);
-//                EditText email = (EditText) findViewById(R.id.emailRegisterEntry);
-//                EditText phone = (EditText) findViewById(R.id.phoneRegisterEntry);
-//
-//                book.setRequestType(username.getText().toString());
-//                book.setBikeNumber(password.getText().toString());
-//                book.setRentalLength(repeatPassword.getText().toString());
-//                book.setRentalDate(email.getText().toString());
-//                book.setRentalTime(phone.getText().toString());
-//                book.setCost();
-//
-//                sendNetworkRequest(book);
-//
-//            }
-//        });
-
-
-
-        ///////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////
 
 
         dateViewContainer.setOnClickListener(new View.OnClickListener() {
@@ -247,7 +225,9 @@ public class CreateBooking extends AppCompatActivity {
                 textViewMonth.setText(stringDate);
                 textViewDayOfMonth.setText(convertDate(day));
 
-                setReturnDate();
+                apiDate = year + "-" + month + "-" + day;
+
+                        setReturnDate();
             }
         };
 
@@ -287,6 +267,8 @@ public class CreateBooking extends AppCompatActivity {
                 String date = hour + ":" + convertDate(minute);
                 textViewTimeOfDay.setText(date);
                 textViewTimeId.setText(timeOfDay);
+
+                apiTime = "T" + hour + ":" + minute;
 
                 setReturnDate();
             }
@@ -353,7 +335,10 @@ public class CreateBooking extends AppCompatActivity {
         int hour = temp.get(Calendar.HOUR_OF_DAY);
         int min = temp.get(Calendar.MINUTE);
         int day = temp.get(Calendar.DAY_OF_MONTH);
+        int month = temp.get(Calendar.MONTH);
         int year = temp.get(Calendar.YEAR);
+
+        endDateTime = year + "-" + month + "-" + day + "T" + hour + ":" + min;
 
         String timeOfDay;
         if (hour < 12) {
@@ -371,45 +356,45 @@ public class CreateBooking extends AppCompatActivity {
         rentalReturnDate.setText(returnDate);
     }
 
-//    private void sendNetworkRequest(final Book request) {
-//
-//        ////Create retrofit object for network call
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        ///implement instance of restAPI interface
-//        restAPI sampleAPI = retrofit.create(restAPI.class);
-//
-//        //create call which uses attemptRegister method from restAPI interface
-//        Call<Book> call = sampleAPI.makeBooking(request);
-//
-//        //add call to queue (in this case nothing in queue)
-//        call.enqueue(new Callback<Book>() {
-//            @Override
-//            public void onResponse(Call<Book> call, Response<Book> response) {
-//
-//                String reply = response.body().getBookingStatus();
-//                Log.d(TAG, reply);
-//
-//                if(reply.equals("Login Accepted")){ ////////////Update once server has been changed
-//                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
-//                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                    startActivity(startMainMenu);
-//                    finish();
-//                }
-//                if(reply.equals("Incorrect Login Information")){
-//                    Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Book> call, Throwable t) {
-//                Log.e("error", "Could not connect to external API");
-//            }
-//        });
-//    }
+    private void sendNetworkRequest(final Book request) {
+
+        ////Create retrofit object for network call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ///implement instance of restAPI interface
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        //create call which uses attemptRegister method from restAPI interface
+        Call<Book> call = sampleAPI.makeBooking(request);
+
+        //add call to queue (in this case nothing in queue)
+        call.enqueue(new Callback<Book>() {
+            @Override
+            public void onResponse(Call<Book> call, Response<Book> response) {
+
+                String reply = response.body().getBookingStatus();
+                Log.d(TAG, reply);
+
+                if(reply.equals("Login Accepted")){ ////////////Update once server has been changed
+                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
+                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(startMainMenu);
+                    finish();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Book> call, Throwable t) {
+                Log.e("error", "Could not connect to external API");
+            }
+        });
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {

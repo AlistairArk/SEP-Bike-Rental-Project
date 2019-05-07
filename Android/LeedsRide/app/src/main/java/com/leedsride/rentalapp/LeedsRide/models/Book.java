@@ -8,50 +8,57 @@ public class Book {
      * Declared fields are only used internally,
      * what needs to match the API key names are the Serialized names
      */
-    @SerializedName("requestType")
+    @SerializedName("username")
     @Expose
-    private String requestType;
+    private String username;
+    @SerializedName("password")
+    @Expose
+    private String password;
     @SerializedName("bikeNumber")
     @Expose
     private int bikeNumber;
-    @SerializedName("rentalLength")
+    @SerializedName("startTime")
     @Expose
-    private int rentalLength;
-    @SerializedName("rentalDate")
+    private String startTime;
+    @SerializedName("endTime")
     @Expose
-    private String rentalDate;
-    @SerializedName("rentalTime")
+    private String endTime;
+    @SerializedName("startLocation")
     @Expose
-    private String rentalTime;
-    @SerializedName("cost")
+    private String startLocation;
+    @SerializedName("endLocation")
     @Expose
-    private int cost;
+    private String endLocation;
     @SerializedName("bookingStatus")
     @Expose
     private String bookingStatus;
 
-    public void setRequestType(String requestType) {
-        this.requestType = requestType;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setBikeNumber(int bikeNumber) {
         this.bikeNumber = bikeNumber;
     }
 
-    public void setRentalLength(int rentalLength) {
-        this.rentalLength = rentalLength;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public void setRentalDate(String rentalDate) {
-        this.rentalDate = rentalDate;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
-    public void setRentalTime(String rentalTime) {
-        this.rentalTime = rentalTime;
+    public void setStartLocation(String startLocation) {
+        this.startLocation = startLocation;
     }
 
-    public void setCost(int cost) {
-        this.cost = cost;
+    public void setEndLocation(String endLocation) {
+        this.endLocation = endLocation;
     }
 
     public String getBookingStatus() {
@@ -61,11 +68,13 @@ public class Book {
     @Override
     public String toString() {
         return "Book{" +
-                "requestType='" + requestType + '\'' +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", bikeNumber=" + bikeNumber +
-                ", rentalLength=" + rentalLength +
-                ", rentalDate='" + rentalDate + '\'' +
-                ", rentalTime='" + rentalTime + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", startLocation='" + startLocation + '\'' +
+                ", endLocation='" + endLocation + '\'' +
                 ", bookingStatus='" + bookingStatus + '\'' +
                 '}';
     }

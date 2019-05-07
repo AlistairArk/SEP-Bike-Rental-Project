@@ -24,7 +24,7 @@ public interface restAPI {
     Call<Register> attemptRegister(@Body Register register);
 
     @Headers("Content-Type: application/json")
-    @POST("Live")
+    @POST("booking")
     Call<Book> makeBooking(@Body Book book);
 
     @GET("getlocations")
