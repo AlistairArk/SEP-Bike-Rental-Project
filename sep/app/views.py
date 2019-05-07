@@ -89,9 +89,8 @@ def webLoginRequest():
     loginData = function.login(username=username, password=password)
 
 
-    # log(str(loginData))
 
-    if loginData[0]:
+    if loginData[0] and loginData[1]!="cutsomer":
         session["userType"] = loginData[1]
         session["username"] = loginData[2]
         session["name"] = loginData[3]
@@ -275,7 +274,7 @@ def locationStats():
 
 
 
-###############   BOOKING CONFIMATION ROUTES   ##########################
+###############   BOOKING PDF ROUTES   ##########################
 
 @app.route('/<sdatetime>/<booking>.pdf')
 def receipt(sdatetime, booking):
@@ -302,11 +301,57 @@ def receipt(sdatetime, booking):
 
     return render_pdf(HTML(string=html))
 
-###############   END OF BOOKING CONFIMATION ROUTES   ##########################
+###############   END OF BOOKING PDF ROUTES   ##################################
 
 
 
-################## CREATE BOOKING ROUTES #########
+###############   AVAILABILITY ROUTES   ########################################
+
+@app.route('/availability', methods=['GET','POST'])
+@loginRequired
+def availability():
+    form=availabilityForm()
+
+    form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+
+    if request.method=="POST" and form.validate_on_submit():
+        stime=request.form['stime']
+        etime=request.form['etime']
+        slocation = form.slocation.data
+        elocation = form.elocation.data
+
+        sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+        edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
+
+        sloc = models.Location.query.filter_by(id=slocation).first()
+        eloc = models.Location.query.filter_by(id=elocation).first()
+
+        amount = 1
+        m = " "
+        while (amount < 5):
+            message = checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
+            if message != "Success" and amount == 1:
+                m="There are no bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+                break
+            elif message == "Success":
+                amount += 1
+            elif message != "Success" and amount != 1:
+                m = "There are " + str(amount-1) + " bike/s available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+                break
+            elif amount == 4:
+                m = "There are at least 4 bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+            else:
+                m = "Something is wrong"
+        flash(m)
+
+    return render_template("availability.html", form=form, topname = session["name"])
+
+###############   END OF AVAILABILITY ROUTES   #################################
+
+
+
+###############   CREATE BOOKING ROUTES   ######################################
 
 
 @app.route('/newBooking', methods=['GET','POST'])
@@ -334,8 +379,9 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
     edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
-    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
-    if message=="Booking successfully created! Booking confirmation has been emailed to "+email+".":
+    # message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
+    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)
+    if message=="Success":
         duration=edatetime-sdatetime
         duration_hours=duration.total_seconds()/3600.0
         if duration_hours<=24.0:
@@ -356,13 +402,14 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
 
         db.session.add(b)
         db.session.commit()
-        message=message+" Booking cost: "+str(cost)
+        message="Booking successfully created.Booking confirmation has been emailed to "+email+". Booking cost: "+str(cost)
         send_confirmation(email, b.id, sdatetime)
     # m = "sdatetime: ",sdatetime," | edatetime: ",edatetime," | slocation: ",slocation," | elocation: ",elocation," | numbikes",numbikes
     # flash(m)
     return message
 
-def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
+# def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
+def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     #simulating bike_amount at slocation between now and stime
 
     #checking bike amount in slocation currently (exclude bikes that are in use)
@@ -376,12 +423,25 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
     now=datetime.datetime.utcnow()
 
     bike_amount=queries(sdatetime,edatetime,slocation,elocation,bike_amount,now)
+<<<<<<< HEAD
+    m3="bike_amount after previous bookings: ",bike_amount
+=======
     # m3="bike_amount after previous bookings: ",bike_amount
+>>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
     # flash(m3)
 
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
+<<<<<<< HEAD
+        m="Checking future booking Id ",b.id
+        # flash(m)
+        if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
+            m1="Start location matches and booking ",b.id," starts after new booking."
+            # flash(m1)
+            if edatetime>b.start_time:
+                m2="new booking ends after the start of booking ",b.id
+=======
         # m="Checking future booking Id ",b.id
         # flash(m)
         if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
@@ -389,21 +449,34 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
             # flash(m1)
             # if edatetime>b.start_time:
                 # m2="new booking ends after the start of booking ",b.id
+>>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m2)
             # if elocation!=slocation:
                 # flash("new elocation!=new slocation")
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
+<<<<<<< HEAD
+            m4="Number of bikes available before future booking ",b.id,": ",futureba
+            # flash(m4)
+            if (futureba-numbikes)<=b.bike_amount:
+                m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
+=======
             # m4="Number of bikes available before future booking ",b.id,": ",futureba
             # flash(m4)
             if (futureba-numbikes)<=b.bike_amount:
                 # m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
+>>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m5)
                 futureBookingsFeasible=False
                 # m="Booking affects future booking ",b.id
                 # flash(m)
                 break
+<<<<<<< HEAD
+            else:
+                m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
+=======
             # else:
                 # m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
+>>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m6)
 
     #checking that there will be space in the end location on their return time
@@ -417,7 +490,8 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
     #then booking is successful
     if bike_amount>=numbikes and futureBookingsFeasible==True and endLocationSpace==True:
         # flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
-        message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+        message="Success"
+                                                # Booking confirmation has been emailed to "+email+"."
         return message
     else:
         # flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
@@ -661,7 +735,7 @@ def apiGetOrders():
 
     user=models.User.query.filter_by(username = username).first()
 
-    if user is not None and sha256_crypt.verify(sha256_crypt.encrypt(password), user.password)==True:
+    if user is not None and sha256_crypt.verify(user.password,sha256_crypt.encrypt(password))==True:
 
         orders=models.Booking.query.filter_by(user_id=user.id).all()
 
