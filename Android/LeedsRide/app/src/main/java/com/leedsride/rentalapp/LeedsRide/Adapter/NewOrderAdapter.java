@@ -120,6 +120,9 @@ public class NewOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (currentItem.getItemOrderType().equals("active")) {
                         colour = context.getResources().getColor(R.color.lightGreen);
                         viewHolder.colouredCircle.getDrawable().setColorFilter(colour, PorterDuff.Mode.SRC_ATOP);
+                    } else if (currentItem.getItemOrderType().equals("late")) {
+                        colour = context.getResources().getColor(R.color.red);
+                        viewHolder.colouredCircle.getDrawable().setColorFilter(colour, PorterDuff.Mode.SRC_ATOP);
 
                     } else if (currentItem.getItemOrderType().equals("available")) {
                         colour = context.getResources().getColor(R.color.Orange);
@@ -141,6 +144,8 @@ public class NewOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 if (currentItem.getItemOrderType().equals("active")) {
                     viewHolder.colourStrip.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
+                } else if (currentItem.getItemOrderType().equals("late")) {
+                    viewHolder.colourStrip.setBackgroundColor(context.getResources().getColor(R.color.red));
                 } else if (currentItem.getItemOrderType().equals("available")) {
                     viewHolder.colourStrip.setBackgroundColor(context.getResources().getColor(R.color.Orange));
                 } else if (currentItem.getItemOrderType().equals("upComing")) {

@@ -19,6 +19,7 @@ import com.leedsride.rentalapp.LeedsRide.models.Register;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    //private static final String BASE_URL = "https://sc17gs.pythonanywhere.com/api/";
     private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
@@ -46,13 +47,21 @@ public class RegisterActivity extends AppCompatActivity {
                 storedUsername = username.getText().toString();
                 storedPassword = password.getText().toString();
 
+                String password1 = password.getText().toString();
+                String password2 = repeatPassword.getText().toString();
+
                 register.setUsername(username.getText().toString());
-                register.setPassword(password.getText().toString());
-                register.setRepeatPassword(repeatPassword.getText().toString());
+                register.setPassword(password1);
+                register.setRepeatPassword(password2);
                 register.setEmail(email.getText().toString());
                 register.setPhone(phone.getText().toString());
 
-                sendNetworkRequest(register);
+                if(password1==password2){
+                    sendNetworkRequest(register);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Those passwords don't match!!!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -85,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(startMainMenu);
                     finish();
                 }
-                if(reply.equals("Registration could not be completed")){
+                else{//if(reply.equals("Registration could not be completed")){
                     Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
                 }
             }
