@@ -79,6 +79,26 @@ class addBookingForm(Form):
         sdatetime = datetime.datetime.strptime(self.stime.data,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
         if edatetime <= sdatetime:
+            raise ValidationError('End time must be after starttime.')
+
+class availabilityForm(Form):
+    stime = StringField('stime', validators=[DataRequired()])
+    etime = StringField('etime', validators=[DataRequired()])
+    slocation = SelectField('slocation', coerce=int, validators=[DataRequired()])
+    elocation = SelectField('elocation', coerce=int, validators=[DataRequired()])
+
+    def validate_stime(self,stime):
+        now = datetime.datetime.utcnow()
+        sdatetime = datetime.datetime.strptime(stime.data,"%Y-%m-%dT%H:%M")
+        if sdatetime < now:
+            raise ValidationError("Availability can only be checked for the future.")
+        if sdatetime>now+timedelta(weeks=2):
+            raise ValidationError("Availability can only be checked up to 2 weeks in from now.")
+
+    def validate_etime(self,etime):
+        sdatetime = datetime.datetime.strptime(self.stime.data,"%Y-%m-%dT%H:%M")
+        edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
+        if edatetime <= sdatetime:
             raise ValidationError('End time must be after the specified start time.')
         if (edatetime-sdatetime)>timedelta(weeks=1):
             raise ValidationError("Bikes can only be hired for maximum 7 days at a time.")
