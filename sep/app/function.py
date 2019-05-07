@@ -16,7 +16,7 @@ def login(*args, **kwargs):
     user = models.User.query.filter_by(username=username).first()
 
     # If user not found, or, passwords don't match
-    if user==None or sha256_crypt.verify(user.password, password)==False:
+    if user==None or sha256_crypt.verify(password, user.password)==False:
         return [False, 0, 0, 0]
 
     else: # confirm valid user
