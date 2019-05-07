@@ -498,13 +498,6 @@ def returnBike(bike_id,booking_id):
 #           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
 #           the_file.write("\n["+str(time)+"] "+line)
 
-def api_loginRequired(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'api_logged_in' in session:
-            return f(*args, **kwargs)
-        return jsonify({'error': 'Authentication failed'})
-    return decorated_function
 
 @app.route('/api/login', methods=['POST'])
 def apiLogin():
@@ -673,32 +666,6 @@ def apiGetOrders():
 
         data = []
 
-<<<<<<< HEAD
-    for order in orders:
-        returned = False
-        bikeNumber = 0
-        locations = models.Location.query.filter_by(id=order.start_location).first()
-        for bike in order.bikes:
-            if bike.in_use:
-                bikeNumber += 1
-                returned = True
-
-        orderData = {
-            "id":str(order.id),
-            "cost":str(order.cost),
-            "startTime":str(order.start_time),
-            "endTime":str(order.end_time),
-            "bikeNumber":str(bikeNumber),
-            "location":str(location.name),
-            "bikesReturned":str(returned)
-        }
-        data.append(orderData)
-
-    print(data)
-
-    jsonifiedData = json.dumps(data)
-    return jsonifiedData
-=======
         for order in orders:
             returned = "false"
             bikeNumber = 0
@@ -728,7 +695,7 @@ def apiGetOrders():
     else:
         return jsonify({'error': 'Authentication failed'})
 
->>>>>>> 19b8ecbc24693398ca4b1129fc5a0adc570294aa
+
 
 @app.route('/api/collectbikes', methods=['POST'])
 def apiCollectBikes():
