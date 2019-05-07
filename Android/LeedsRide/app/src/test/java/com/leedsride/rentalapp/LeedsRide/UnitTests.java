@@ -1,5 +1,6 @@
 package com.leedsride.rentalapp.LeedsRide;
 
+import com.leedsride.rentalapp.LeedsRide.models.Locations;
 import com.leedsride.rentalapp.LeedsRide.models.Login;
 
 import org.junit.Test;
@@ -18,8 +19,10 @@ import static org.junit.Assert.*;
  */
 
 import com.leedsride.rentalapp.LeedsRide.models.Login;
+import com.leedsride.rentalapp.LeedsRide.models.Register;
 
 import java.io.IOException;
+import java.util.List;
 
 public class UnitTests {
 
@@ -79,14 +82,104 @@ public class UnitTests {
             e.printStackTrace();
         }
     }
+
     @Test
-    public void register() {
-        assertEquals(4, 2 + 2);
+    public void successfulRegister() {
+        Register register = new Register();
+
+        register.setUsername("androidTest");
+        register.setPassword("testing");
+        register.setEmail("testing@test.com");
+        register.setPhone("07951399157");
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        Call<Register> call = sampleAPI.attemptRegister(register);
+
+        try {
+            Response<Register> response = call.execute();
+            Register result = response.body();
+
+            assertEquals("User Registered", result.getRegistrationStatus());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void emailFailureRegister() {
+        Register register = new Register();
+
+        register.setUsername("androidTest");
+        register.setPassword("testing");
+        register.setEmail("testing@test.com"); ///////////////////Set this to an email that is already in the database
+        register.setPhone("07951399157");
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        Call<Register> call = sampleAPI.attemptRegister(register);
+
+        try {
+            Response<Register> response = call.execute();
+            Register result = response.body();
+
+            assertEquals("That email is taken", result.getRegistrationStatus());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void usernameFailureRegister() {
+        Register register = new Register();
+
+        register.setUsername("androidTest"); ///////////////////Set this to a username that is already in the database
+        register.setPassword("testing");
+        register.setEmail("testing@test.com");
+        register.setPhone("07951399157");
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        Call<Register> call = sampleAPI.attemptRegister(register);
+
+        try {
+            Response<Register> response = call.execute();
+            Register result = response.body();
+
+            assertEquals("That username is taken", result.getRegistrationStatus());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void locations() {
-        assertEquals(4, 2 + 2);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        Call<List<Locations>> call = sampleAPI.getLocations();
     }
 
     @Test
