@@ -588,14 +588,14 @@ def apiRegister():
 
 def validate_username(username):
     for u in User.query.all():
-        if username.data==u.username:
+        if username==u.username:
             return True
         else:
             return False
 
 def validate_email(email):
     for u in User.query.all():
-        if email.data==u.email:
+        if email==u.email:
             return True
         else:
             return False
