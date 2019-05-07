@@ -644,7 +644,11 @@ def apiBooking():
 
     data = createBooking(email,stime,etime,slocation,elocation,numbikes)
 
-    jsonifiedData = json.dumps(data)
+    response =  {
+            "registrationStatus":data
+            }
+
+    jsonifiedData = json.dumps(response)
     return jsonifiedData
 
 
