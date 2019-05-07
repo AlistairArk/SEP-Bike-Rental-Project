@@ -645,8 +645,8 @@ def apiBooking():
     email = user.email
     stime = content['startTime']
     etime = content['endTime']
-    sLocation = content['startLocation']
-    eLocation = content['endLocation']
+    slocation = content['startLocation']
+    elocation = content['endLocation']
     numbikes = content['bikeNumber']
 
     data = createBooking(email,stime,etime,slocation,elocation,numbikes)
