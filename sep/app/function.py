@@ -6,20 +6,6 @@ from . import db, models
 from passlib.hash import sha256_crypt
 
 
-'''
-Test data in user table:
-
-+----+--------------------+----------+-----------------------+--------------+--------------+--------------+-----------+
-| id | name               | username | email                 | password     | image        | phone        | user_type |
-+----+--------------------+----------+-----------------------+--------------+--------------+--------------+-----------+
-|  1 | Paul Rudd          | prudd    | prudd@gmail.com       | password     | default_icon | 01234567890  | manager   |
-|  2 | Tahani Al Jamil    | Tahani   | taj@gmail.com         | plaintext    | default_icon | 98765432100  | employee  |
-|  3 | Ezekiel Figuero    | Zeke     | books@gmail.com       | mylenecruz   | default_icon | 2468135901   | customer  |
-|  4 | Rogelio De La Vega | Rogelio  | rdlv@gmail.com        | rogeliodlv   | default_icon | 019283746510 | customer  |
-|  5 | Isabelle Lightwood | Izzy     | i.lightwood@gmail.com | sizzyforever | default_icon | 00000000000  | employee  |
-|  6 | NULL               | Alec     | a.lightwood@gmail.com | magnusbane   | default_icon | 11111111111  | employee  |
-+----+--------------------+----------+-----------------------+--------------+--------------+--------------+-----------+
-'''
 
 def login(*args, **kwargs):
     username = kwargs.get("username", 0)
@@ -30,19 +16,11 @@ def login(*args, **kwargs):
     user = models.User.query.filter_by(username=username).first()
 
     # If user not found, or, passwords don't match
-    if user==None or sha256_crypt.verify(sha256_crypt.encrypt(password), user.password)==False: 
+    if user==None or sha256_crypt.verify(user.password, password)==False:
         return [False, 0, 0, 0]
 
     else: # confirm valid user
         return [True, user.user_type, user.username, user.name]  # return user type
-
-    ## Comment in the following and comment out the above when testing locally
-    # user_type  = "manager"
-    # username   = "prudd"
-    # name       = "Paul Rudd"
-
-    # return [True, user_type, username, name]  # return user type
-
 
 
 
@@ -50,12 +28,8 @@ def login(*args, **kwargs):
 
 def resetRequest(*args, **kwargs):
     email = kwargs.get("email", 0)
-
-
     if emailExists(email):
-
         # Generate and send email
-
         return 1
     else:
         return 0 # Email could not be found
