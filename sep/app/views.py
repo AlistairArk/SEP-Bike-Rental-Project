@@ -89,9 +89,8 @@ def webLoginRequest():
     loginData = function.login(username=username, password=password)
 
 
-    # log(str(loginData))
 
-    if loginData[0]:
+    if loginData[0] and loginData[1]!="cutsomer":
         session["userType"] = loginData[1]
         session["username"] = loginData[2]
         session["name"] = loginData[3]
@@ -736,7 +735,7 @@ def apiGetOrders():
 
     user=models.User.query.filter_by(username = username).first()
 
-    if user is not None and sha256_crypt.verify(sha256_crypt.encrypt(password), user.password)==True:
+    if user is not None and sha256_crypt.verify(user.password,sha256_crypt.encrypt(password))==True:
 
         orders=models.Booking.query.filter_by(user_id=user.id).all()
 
