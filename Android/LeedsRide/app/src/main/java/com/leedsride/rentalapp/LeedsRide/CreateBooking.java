@@ -139,6 +139,13 @@ public class CreateBooking extends AppCompatActivity {
         bookingMinute = bookingDateTime.get(Calendar.MINUTE);
         int year = bookingDateTime.get(Calendar.YEAR);
         int day = bookingDateTime.get(Calendar.DAY_OF_MONTH);
+        int month = bookingDateTime.get(Calendar.MONTH);
+        String apiDay = convertDate(day);
+        String apiMonth = convertDate(month);
+
+        apiDate = year + "-" + apiMonth + "-" + apiDay;
+        apiTime = "T" + convertDate(bookingHour) + ":" + convertDate(bookingMinute);
+
         String dayOfWeek = bookingDateTime.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
         String monthOfYear = bookingDateTime.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale);
 
