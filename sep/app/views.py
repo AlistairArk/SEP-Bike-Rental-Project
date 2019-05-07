@@ -6,6 +6,7 @@ from app import app, models, db
 from functools import wraps
 from .forms import *
 import json
+from passlib.hash import sha256_crypt
 
 
 mail = Mail(app)
@@ -56,9 +57,9 @@ def webLogin():
 @app.route('/index')
 @loginRequired
 def webIndex():
-    return render_template("index.html", topname = session["name"])
-
-
+    locations = models.Location.query.all()
+    return render_template('locationStats.html',
+                        locations=locations, topname = session["name"])
 @app.route('/resetPassword')
 @loginPresent
 def webResetPassword():
@@ -88,9 +89,8 @@ def webLoginRequest():
     loginData = function.login(username=username, password=password)
 
 
-    # log(str(loginData))
 
-    if loginData[0]:
+    if loginData[0] and loginData[1]!="cutsomer":
         session["userType"] = loginData[1]
         session["username"] = loginData[2]
         session["name"] = loginData[3]
@@ -100,7 +100,7 @@ def webLoginRequest():
         message = "Error: The User Name or Password entered is incorrect. Please try again."
         return render_template("staffLogin.html", message = message)
 
-###############   END OG LOG IN ROUTES   #######################################
+###############   END OF LOG IN ROUTES   #######################################
 
 
 
@@ -121,7 +121,7 @@ def addUser():
                         email=email,
                         phone=phone,
                         username=username,
-                        password=password,
+                        password=sha256_crypt.encrypt(password),
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
@@ -150,7 +150,7 @@ def userAdded():
                             email=email,
                             phone=phone,
                             username=username,
-                            password=password,
+                            password=sha256_crypt.encrypt(password),
                             user_type=usertype)
         db.session.add(u)
         db.session.commit()
@@ -218,13 +218,13 @@ def addEmployee():
                         email=email,
                         phone=phone,
                         username=username,
-                        password=password,
+                        password=sha256_crypt.encrypt(password),
                         user_type=usertype)
         db.session.add(e)
         db.session.commit()
         flash("Employee added!")
     return render_template('addEmployee.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
@@ -254,7 +254,7 @@ def addLocation():
         db.session.commit()
 
     return render_template('newLocation.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 
 ###############   END OF ADD LOCATION ROUTES   #################################
@@ -274,7 +274,7 @@ def locationStats():
 
 
 
-###############   BOOKING CONFIMATION ROUTES   ##########################
+###############   BOOKING PDF ROUTES   ##########################
 
 @app.route('/<sdatetime>/<booking>.pdf')
 def receipt(sdatetime, booking):
@@ -301,11 +301,57 @@ def receipt(sdatetime, booking):
 
     return render_pdf(HTML(string=html))
 
-###############   END OF BOOKING CONFIMATION ROUTES   ##########################
+###############   END OF BOOKING PDF ROUTES   ##################################
 
 
 
-################## CREATE BOOKING ROUTES #########
+###############   AVAILABILITY ROUTES   ########################################
+
+@app.route('/availability', methods=['GET','POST'])
+@loginRequired
+def availability():
+    form=availabilityForm()
+
+    form.slocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+    form.elocation.choices=[(l.id,l.name) for l in models.Location.query.all()]
+
+    if request.method=="POST" and form.validate_on_submit():
+        stime=request.form['stime']
+        etime=request.form['etime']
+        slocation = form.slocation.data
+        elocation = form.elocation.data
+
+        sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
+        edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
+
+        sloc = models.Location.query.filter_by(id=slocation).first()
+        eloc = models.Location.query.filter_by(id=elocation).first()
+
+        amount = 1
+        m = " "
+        while (amount < 5):
+            message = checkAvailability(sdatetime,edatetime,slocation,elocation,amount)
+            if message != "Success" and amount == 1:
+                m="There are no bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+                break
+            elif message == "Success":
+                amount += 1
+            elif message != "Success" and amount != 1:
+                m = "There are " + str(amount-1) + " bike/s available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+                break
+            elif amount == 4:
+                m = "There are at least 4 bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+            else:
+                m = "Something is wrong"
+        flash(m)
+
+    return render_template("availability.html", form=form, topname = session["name"])
+
+###############   END OF AVAILABILITY ROUTES   #################################
+
+
+
+###############   CREATE BOOKING ROUTES   ######################################
 
 
 @app.route('/newBooking', methods=['GET','POST'])
@@ -333,8 +379,9 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
     sdatetime = datetime.datetime.strptime(stime,"%Y-%m-%dT%H:%M")
     edatetime = datetime.datetime.strptime(etime,"%Y-%m-%dT%H:%M")
 
-    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
-    if message=="Booking successfully created! Booking confirmation has been emailed to "+email+".":
+    # message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email)
+    message=checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes)
+    if message=="Success":
         duration=edatetime-sdatetime
         duration_hours=duration.total_seconds()/3600.0
         if duration_hours<=24.0:
@@ -355,13 +402,14 @@ def createBooking(email,stime,etime,slocation,elocation,numbikes):
 
         db.session.add(b)
         db.session.commit()
-        message=message+" Booking cost: "+str(cost)
+        message="Booking successfully created.Booking confirmation has been emailed to "+email+". Booking cost: "+str(cost)
         send_confirmation(email, b.id, sdatetime)
     # m = "sdatetime: ",sdatetime," | edatetime: ",edatetime," | slocation: ",slocation," | elocation: ",elocation," | numbikes",numbikes
     # flash(m)
     return message
 
-def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
+# def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
+def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     #simulating bike_amount at slocation between now and stime
 
     #checking bike amount in slocation currently (exclude bikes that are in use)
@@ -375,12 +423,14 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
     now=datetime.datetime.utcnow()
 
     bike_amount=queries(sdatetime,edatetime,slocation,elocation,bike_amount,now)
+
     # m3="bike_amount after previous bookings: ",bike_amount
     # flash(m3)
 
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
+
         # m="Checking future booking Id ",b.id
         # flash(m)
         if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
@@ -401,6 +451,7 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
                 # m="Booking affects future booking ",b.id
                 # flash(m)
                 break
+
             # else:
                 # m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
                 # flash(m6)
@@ -416,7 +467,8 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes,email):
     #then booking is successful
     if bike_amount>=numbikes and futureBookingsFeasible==True and endLocationSpace==True:
         # flash("Bike amount "+str(bike_amount)+" > numbikes "+str(numbikes))
-        message="Booking successfully created! Booking confirmation has been emailed to "+email+"."
+        message="Success"
+                                                # Booking confirmation has been emailed to "+email+"."
         return message
     else:
         # flash("Bike amount "+str(bike_amount)+" < numbikes "+str(numbikes))
@@ -465,8 +517,9 @@ def send_confirmation(recemail, bookingid, sdatetime):
 @app.route('/')
 @loginRequired
 def index():
-    return render_template("index.html", topname = session["name"])
-
+    locations = models.Location.query.all()
+    return render_template('locationStats.html',
+                        locations=locations, topname = session["name"])
 def takeBike(bike_id,booking_id):
     bike = models.Bike.query.get(bike_id)
     bike.in_use=True
@@ -578,7 +631,7 @@ def apiRegister():
                     email=email,
                     phone=phone,
                     username=username,
-                    password=password,
+                    password=sha256_crypt.encrypt(password),
                     user_type=usertype)
     db.session.add(e)
     db.session.commit()
@@ -662,9 +715,9 @@ def apiGetOrders():
     username = content['username']
     password = content['password']
 
-    user=models.User.query.filter_by(username = username, password = password).first()
+    user=models.User.query.filter_by(username = username).first()
 
-    if user is not None:
+    if user is not None and sha256_crypt.verify(password,user.password)==True:
 
         orders=models.Booking.query.filter_by(user_id=user.id).all()
 
@@ -672,7 +725,6 @@ def apiGetOrders():
 
         for order in orders:
             returned = "false"
-            bikeNumber = 0
             location = models.Location.query.filter_by(id=order.start_location).first()
 
             if order.complete:
@@ -683,7 +735,7 @@ def apiGetOrders():
                 "cost":str(order.cost),
                 "startDate":str(order.start_time),
                 "endDate":str(order.end_time),
-                "bikeNumber":str(bikeNumber),
+                "bikeNumber":str(order.bike_amount),
                 "location":str(location.name),
                 "bikesInUse":returned,
                 "username":"",
@@ -700,24 +752,126 @@ def apiGetOrders():
         return jsonify({'error': 'Authentication failed'})
 
 
-
 @app.route('/api/collectbikes', methods=['POST'])
 def apiCollectBikes():
     """
     Marks a bike as unavailable
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    data = []
 
-@app.route('/api/returnBike', methods=['POST'])
+    content = request.get_json(force=True)
+    list = content['list']
+
+    if len(list) == 0:
+        returnData = {
+            "bookingId": "0",
+            "username": "",
+            "password": "",
+            "bikeId": "0",
+            "response": "error"
+        }
+        data.append(returnData)
+    else:
+        username = list[0]['username']
+        bookingId = int(list[0]['bookingId'])
+
+
+        user=models.User.query.filter_by(username = username).first()
+        order=models.Booking.query.filter_by(id=bookingId).first()
+
+        if user is not None and order is not None:
+            for bike in order.bikes:
+                takeBike(bike.id, bookingId)
+
+            order.complete = True
+            db.session.add(order)
+            db.session.commit()
+
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "success"
+            }
+            data.append(returnData)
+
+        else:
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "error"
+            }
+            data.append(returnData)
+
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+@app.route('/api/returnbikes', methods=['POST'])
 def apiReturnBike():
     """
     Marks a bike as available
     """
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    data = []
+
+    content = request.get_json(force=True)
+    list = content['list']
+
+    if len(list) == 0:
+        returnData = {
+            "bookingId": "0",
+            "username": "",
+            "password": "",
+            "bikeId": "0",
+            "response": "error"
+        }
+        data.append(returnData)
+    else:
+        username = list[0]['username']
+        bookingId = int(list[0]['bookingId'])
+
+
+        user=models.User.query.filter_by(username = username).first()
+        order=models.Booking.query.filter_by(id=bookingId).first()
+
+        if user is not None and order is not None:
+            for bike in order.bikes:
+                returnBike(bike.id, bookingId)
+
+            order.complete = False
+            db.session.add(order)
+            db.session.commit()
+
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "success"
+            }
+            data.append(returnData)
+
+        else:
+            returnData = {
+                "bookingId": "0",
+                "username": "",
+                "password": "",
+                "bikeId": "0",
+                "response": "error"
+            }
+            data.append(returnData)
+
+
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
 
 
 @app.route('/api/logout', methods=['POST'])

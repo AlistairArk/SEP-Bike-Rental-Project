@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
                 register.setEmail(email.getText().toString());
                 register.setPhone(phone.getText().toString());
 
-                if(password1==password2){
+                if(password1.equals(password2)){
                     sendNetworkRequest(register);
                 } else {
                     Toast.makeText(getApplicationContext(), "Those passwords don't match!!!", Toast.LENGTH_SHORT).show();
@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         call.enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
-
+                System.out.println(response.message());
                 String reply = response.body().getRegistrationStatus();
                 Log.d(TAG, reply);
 
