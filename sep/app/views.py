@@ -423,25 +423,14 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
     now=datetime.datetime.utcnow()
 
     bike_amount=queries(sdatetime,edatetime,slocation,elocation,bike_amount,now)
-<<<<<<< HEAD
-    m3="bike_amount after previous bookings: ",bike_amount
-=======
+
     # m3="bike_amount after previous bookings: ",bike_amount
->>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
     # flash(m3)
 
     futureBookingsFeasible=True
     #checking future bookings in same location - will this booking mean they won't have bikes?
     for b in models.Booking.query.all():
-<<<<<<< HEAD
-        m="Checking future booking Id ",b.id
-        # flash(m)
-        if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
-            m1="Start location matches and booking ",b.id," starts after new booking."
-            # flash(m1)
-            if edatetime>b.start_time:
-                m2="new booking ends after the start of booking ",b.id
-=======
+
         # m="Checking future booking Id ",b.id
         # flash(m)
         if b.start_location == slocation and b.start_time>=sdatetime and (edatetime>b.start_time or elocation!=slocation):
@@ -449,34 +438,22 @@ def checkAvailability(sdatetime,edatetime,slocation,elocation,numbikes):
             # flash(m1)
             # if edatetime>b.start_time:
                 # m2="new booking ends after the start of booking ",b.id
->>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m2)
             # if elocation!=slocation:
                 # flash("new elocation!=new slocation")
             futureba = queries(b.start_time,b.end_time,b.start_location,b.end_location,bike_amount,sdatetime)
-<<<<<<< HEAD
-            m4="Number of bikes available before future booking ",b.id,": ",futureba
-            # flash(m4)
-            if (futureba-numbikes)<=b.bike_amount:
-                m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
-=======
             # m4="Number of bikes available before future booking ",b.id,": ",futureba
             # flash(m4)
             if (futureba-numbikes)<=b.bike_amount:
                 # m5="futureba ",futureba," - numbikes ",numbikes," <= b.bike_amount",b.bike_amount," SO THERE ARE NOT ENOUGH BIKES FOR FUTURE"
->>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m5)
                 futureBookingsFeasible=False
                 # m="Booking affects future booking ",b.id
                 # flash(m)
                 break
-<<<<<<< HEAD
-            else:
-                m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
-=======
+
             # else:
                 # m6="futureba ",futureba," - numbikes ",numbikes," >= b.bike_amount",b.bike_amount," SO THERE ARE ENOUGH BIKES FOR FUTURE"
->>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
                 # flash(m6)
 
     #checking that there will be space in the end location on their return time
