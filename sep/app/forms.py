@@ -79,7 +79,6 @@ class addBookingForm(Form):
         sdatetime = datetime.datetime.strptime(self.stime.data,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
         if edatetime <= sdatetime:
-<<<<<<< HEAD
             raise ValidationError('End time must be after starttime.')
 
 class availabilityForm(Form):
@@ -100,8 +99,6 @@ class availabilityForm(Form):
         sdatetime = datetime.datetime.strptime(self.stime.data,"%Y-%m-%dT%H:%M")
         edatetime = datetime.datetime.strptime(etime.data,"%Y-%m-%dT%H:%M")
         if edatetime <= sdatetime:
-=======
->>>>>>> 7a79d246e9f7c4449699e4e290ae537614fa13b4
             raise ValidationError('End time must be after the specified start time.')
         if (edatetime-sdatetime)>timedelta(weeks=1):
             raise ValidationError("Bikes can only be hired for maximum 7 days at a time.")
