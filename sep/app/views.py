@@ -498,13 +498,6 @@ def returnBike(bike_id,booking_id):
 #           time = f"{datetime.datetime.now():%Y/%m/%d - %H:%M:%S}"
 #           the_file.write("\n["+str(time)+"] "+line)
 
-def api_loginRequired(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'api_logged_in' in session:
-            return f(*args, **kwargs)
-        return jsonify({'error': 'Authentication failed'})
-    return decorated_function
 
 @app.route('/api/login', methods=['POST'])
 def apiLogin():
@@ -546,7 +539,7 @@ def apiLogin():
 
     jsonifiedData = json.dumps(data)
     return jsonifiedData
-        
+
 
 @app.route('/api/register', methods=['POST'])
 def apiRegister():
@@ -554,9 +547,58 @@ def apiRegister():
     Attempt to create a new account for the request
     return the message to the device depending on the outcome
     """
-    json = request.get_json()
 
-    return jsonify({'error': 'Authentication failed'})
+    content = request.get_json(force=True)
+
+    username = content['username']
+    password = content['password']
+    email = content['email']
+    phone = content['phone']
+    name = content['username']   #!!!!!! add name field to register activity
+    usertype="customer"
+
+    if validate_email(email):
+        data =  {
+                "registrationStatus":"That email is taken"
+                }
+        jsonifiedData = json.dumps(data)
+        return jsonifiedData
+    elif validate_username(username):
+        data =  {
+                "registrationStatus":"That username is taken"
+                }
+        jsonifiedData = json.dumps(data)
+        return jsonifiedData
+    else:
+        data =  {
+                "registrationStatus":"User Registered"
+                }
+
+    e = models.User(name=name,
+                    email=email,
+                    phone=phone,
+                    username=username,
+                    password=password,
+                    user_type=usertype)
+    db.session.add(e)
+    db.session.commit()
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
+
+def validate_username(username):
+    for u in User.query.all():
+        if username==u.username:
+            return True
+        else:
+            return False
+
+def validate_email(email):
+    for u in User.query.all():
+        if email==u.email:
+            return True
+        else:
+            return False
 
 @app.route('/api/getlocations', methods=['GET'])
 def apiGetLocations():
@@ -588,9 +630,22 @@ def apiBooking():
     Creates a booking by invoking the create booking function
     Handle card details
     """
+    content = request.get_json(force=True)
 
-    json = request.get_json()
-    return jsonify({'error': 'Authentication failed'})
+    name = content['username']
+    user = models.User.query.filter_by(username=name).first()
+
+    email = user.email
+    stime = content['startTime']
+    etime = content['endTime']
+    slocation = content['startLocation']
+    elocation = content['endLocation']
+    numbikes = content['bikeNumber']
+
+    data = createBooking(email,stime,etime,slocation,elocation,numbikes)
+
+    jsonifiedData = json.dumps(data)
+    return jsonifiedData
 
 
 @app.route('/api/getorders', methods=['POST', 'GET'])
@@ -617,7 +672,7 @@ def apiGetOrders():
 
             if order.complete:
                 returned = "true"
-            
+
             orderData = {
                 "id":str(order.id),
                 "cost":str(order.cost),
@@ -630,14 +685,15 @@ def apiGetOrders():
                 "password":""
             }
             data.append(orderData)
-        
-        print(data) 
-        
+
+        print(data)
+
         jsonifiedData = json.dumps(data)
         return jsonifiedData
 
     else:
         return jsonify({'error': 'Authentication failed'})
+
 
 
 @app.route('/api/collectbikes', methods=['POST'])
@@ -767,5 +823,3 @@ def apiLogout():
 
     session.clear()
     return jsonify({'message': 'Complete'})
-
-

@@ -58,7 +58,7 @@ public class CreateBooking extends AppCompatActivity {
     private TextView textViewTimeId;
     private TextView rentalReturnDate;
     private Calendar bookingDateTime;
-    private Button completeBooking;
+
     private int numberOfBikes;
     private int rentalDuration;
     private int bookingHour, bookingMinute;
@@ -88,9 +88,9 @@ public class CreateBooking extends AppCompatActivity {
          * Initialising UI objects
          */
 
-        completeBooking = (Button) findViewById(R.id.completeBooking);
+        Button completeBooking = (Button) findViewById(R.id.completeBooking);
 
-        bookingLocation = (TextView)findViewById(R.id.bookingLocation);
+        TextView bookingLocation = (TextView)findViewById(R.id.bookingLocation);
         bookingLocation.setText(booking.getBookingLocation());
 
         textViewDayOfMonth = (TextView)findViewById(R.id.textViewDayOfMonth);

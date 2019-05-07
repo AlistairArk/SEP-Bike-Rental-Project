@@ -195,7 +195,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ///implement instance of restAPI interface
         restAPI sampleAPI = retrofit.create(restAPI.class);
 
-        //create call which uses attemptLogin method from restAPI interface
+        //create call which uses getLocations method from restAPI interface
         Call<List<Locations>> call = sampleAPI.getLocations();
 
         //add call to queue (in this case nothing in queue)

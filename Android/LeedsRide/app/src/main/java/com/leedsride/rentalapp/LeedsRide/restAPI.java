@@ -22,7 +22,7 @@ public interface restAPI {
     Call<Login> attemptLogin(@Body Login login); //When POST request is made, the body should be an instance of Login class called login
 
     @Headers("Content-Type: application/json")
-    @POST("Live")
+    @POST("register")
     Call<Register> attemptRegister(@Body Register register);
 
     @Headers("Content-Type: application/json")
