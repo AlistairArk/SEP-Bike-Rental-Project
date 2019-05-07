@@ -631,7 +631,7 @@ def apiRegister():
                     email=email,
                     phone=phone,
                     username=username,
-                    password=password,
+                    password=sha256_crypt.encrypt(password),
                     user_type=usertype)
     db.session.add(e)
     db.session.commit()
