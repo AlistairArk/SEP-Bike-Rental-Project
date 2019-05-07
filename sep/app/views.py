@@ -224,7 +224,7 @@ def addEmployee():
         db.session.commit()
         flash("Employee added!")
     return render_template('addEmployee.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 
 ###############   END OF ADD EMPLOYEE ROUTES   #################################
@@ -254,7 +254,7 @@ def addLocation():
         db.session.commit()
 
     return render_template('newLocation.html',
-                            form=form)
+                            form=form, topname = session["name"])
 
 
 ###############   END OF ADD LOCATION ROUTES   #################################
