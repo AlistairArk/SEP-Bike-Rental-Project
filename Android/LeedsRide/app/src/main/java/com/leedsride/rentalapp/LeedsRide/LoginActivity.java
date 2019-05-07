@@ -19,7 +19,7 @@ import com.leedsride.rentalapp.LeedsRide.models.Login;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String BASE_URL = "https://733y6weqb0.execute-api.eu-west-2.amazonaws.com/"; ////base url does not include exact path ///should make this available to all activities
+    private static final String BASE_URL = "https://sc17gs.pythonanywhere.com/api/"; ////base url does not include exact path ///should make this available to all activities
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     Login login = new Login();
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<Login>() {
             @Override
             public void onResponse(Call<Login> call, Response<Login> response) {
-
+                System.out.println(response.body());
                 String reply = response.body().getLoginStatus();
                 Log.d(TAG, reply);
 
@@ -101,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 Log.e("error", "Could not connect to external API");
+                Toast.makeText(getApplicationContext(), "Could not connect to external API", Toast.LENGTH_SHORT).show();
             }
         });
     }
