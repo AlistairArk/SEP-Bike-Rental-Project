@@ -370,7 +370,7 @@ public class CreateBooking extends AppCompatActivity {
                 //Log.d(TAG, reply);
 
                 if(reply.equals("Accepted")){ ////////////Update once server has been changed
-                    Toast.makeText(getApplicationContext(), startDateTime+endDateTime, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Booking completed, please check your email for confirmation.", Toast.LENGTH_LONG).show();
                     Intent startMainMenu = new Intent(getApplicationContext(), MyOrders.class);
                     startActivity(startMainMenu);
                     finish();

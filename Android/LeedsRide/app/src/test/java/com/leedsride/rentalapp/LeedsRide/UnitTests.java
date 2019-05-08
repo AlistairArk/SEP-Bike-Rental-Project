@@ -1,5 +1,6 @@
 package com.leedsride.rentalapp.LeedsRide;
 
+import com.leedsride.rentalapp.LeedsRide.models.Book;
 import com.leedsride.rentalapp.LeedsRide.models.Locations;
 import com.leedsride.rentalapp.LeedsRide.models.Login;
 
@@ -185,7 +186,7 @@ public class UnitTests {
             List<Locations> result = response.body();
 
             assertEquals("Leeds City Centre", result.get(0).getName());
-            assertEquals(5.8116, result.get(0).getLatitude(), 0.01);
+            assertEquals(53.81159973144531, result.get(0).getLatitude(), 0.01);
             assertEquals(-1.62727, result.get(0).getLongitude(), 0.01);
             assertEquals(5, result.get(0).getBikesAvailable());
 
@@ -195,8 +196,67 @@ public class UnitTests {
     }
 
     @Test
-    public void booking() {
-        assertEquals(4, 2 + 2);
+    public void succesfulBooking() {
+        Book booking = new Book();
+
+        booking.setUsername("prudd"); ///////////////////Set this to a username that is already in the database
+        booking.setPassword("password");
+        booking.setStartTime("2019-05-24T09:30");
+        booking.setEndTime("2019-05-24T12:30");
+        booking.setStartLocation("Kirkstall");
+        booking.setEndLocation("Hyde Park");
+        booking.setBikeNumber(2);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        Call<Book> call = sampleAPI.makeBooking(booking);
+
+        try {
+            Response<Book> response = call.execute();
+            Book result = response.body();
+
+            assertEquals("Accepted", result.getBookingStatus());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void unsuccessfulBooking() {
+        Book booking = new Book();
+
+        booking.setUsername("prudd"); ///////////////////Set this to a username that is already in the database
+        booking.setPassword("password");
+        booking.setStartTime("2019-05-24T09:30");
+        booking.setEndTime("2019-05-24T12:30");
+        booking.setStartLocation("Kirkstall");
+        booking.setEndLocation("Hyde Park");
+        booking.setBikeNumber(42);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        restAPI sampleAPI = retrofit.create(restAPI.class);
+
+        Call<Book> call = sampleAPI.makeBooking(booking);
+
+        try {
+            Response<Book> response = call.execute();
+            Book result = response.body();
+
+            assertEquals("Booking unavailable as the start location will not have enough bikes at the start time.", result.getBookingStatus());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

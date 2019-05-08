@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="This is group 17"
+        android:text="This is group 12"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
