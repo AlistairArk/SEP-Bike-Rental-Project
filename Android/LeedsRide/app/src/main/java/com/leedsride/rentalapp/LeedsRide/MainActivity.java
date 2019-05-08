@@ -84,11 +84,10 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
-
-        Intent StartMenuIntent = new Intent(getApplicationContext(), StartMenu.class);
-        startActivity(StartMenuIntent);
-        finish();
-
-
+        else {
+            Intent StartMenuIntent = new Intent(getApplicationContext(), StartMenu.class);
+            startActivity(StartMenuIntent);
+            finish();
+        }
     }
 }

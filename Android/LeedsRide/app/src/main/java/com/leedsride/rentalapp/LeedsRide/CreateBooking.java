@@ -141,7 +141,7 @@ public class CreateBooking extends AppCompatActivity {
         int day = bookingDateTime.get(Calendar.DAY_OF_MONTH);
         int month = bookingDateTime.get(Calendar.MONTH);
         String apiDay = convertDate(day);
-        String apiMonth = convertDate(month);
+        String apiMonth = convertDate(month+1);
 
         apiDate = year + "-" + apiMonth + "-" + apiDay;
         apiTime = "T" + convertDate(bookingHour) + ":" + convertDate(bookingMinute);
@@ -185,9 +185,11 @@ public class CreateBooking extends AppCompatActivity {
                   book.setStartLocation(booking.getBookingLocation());
                   book.setEndLocation(booking.getBookingLocation());
                   //onBraintreeSubmit(null);
-                  Toast.makeText(getApplicationContext(), startDateTime, Toast.LENGTH_SHORT).show();
+                  Toast.makeText(getApplicationContext(), startDateTime+endDateTime, Toast.LENGTH_LONG).show();
 
-                  sendNetworkRequest(book);
+                  Log.d(TAG, book.toString());
+
+                  //sendNetworkRequest(book);
 
             }
         });
@@ -232,9 +234,8 @@ public class CreateBooking extends AppCompatActivity {
                 textViewMonth.setText(stringDate);
                 textViewDayOfMonth.setText(convertDate(day));
 
-                apiDate = year + "-" + month + "-" + day;
-
-                        setReturnDate();
+                apiDate = year + "-" + convertDate(month+1) + "-" + convertDate(day);
+                setReturnDate();
             }
         };
 
@@ -275,7 +276,7 @@ public class CreateBooking extends AppCompatActivity {
                 textViewTimeOfDay.setText(date);
                 textViewTimeId.setText(timeOfDay);
 
-                apiTime = "T" + hour + ":" + minute;
+                apiTime = "T" + convertDate(hour) + ":" + convertDate(minute);
 
                 setReturnDate();
             }
@@ -345,7 +346,7 @@ public class CreateBooking extends AppCompatActivity {
         int month = temp.get(Calendar.MONTH);
         int year = temp.get(Calendar.YEAR);
 
-        endDateTime = year + "-" + month + "-" + day + "T" + hour + ":" + min;
+        endDateTime = year + "-" + convertDate(month+1) + "-" + convertDate(day)+ "T" + convertDate(hour) + ":" + convertDate(min);
 
         String timeOfDay;
         if (hour < 12) {

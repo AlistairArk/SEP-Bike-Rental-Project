@@ -695,7 +695,10 @@ def apiBooking():
     elocation = content['endLocation']
     numbikes = content['bikeNumber']
 
-    data = createBooking(email,stime,etime,slocation,elocation,numbikes)
+    startLocation = models.Location.query.filter_by(name=slocation).first()
+    endLocation = models.Location.query.filter_by(name=elocation).first()
+
+    data = createBooking(email,stime,etime,startLocation.id ,endLocation.id ,numbikes)
 
     response =  {
             "registrationStatus":data
