@@ -49,7 +49,7 @@ public class OnBookingActivity extends AppCompatActivity {
 
         Locale locale = Locale.getDefault();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss", locale);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", locale);
 
         try {
             endDateTime.setTime(sdf.parse(endDate));

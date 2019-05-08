@@ -70,7 +70,7 @@ public class CreateBooking extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 4949;
 
-
+    private Booking booking;
     private static final String BASE_URL = "https://sc17gs.pythonanywhere.com/api/";
     private static final String TAG = CreateBooking.class.getSimpleName();
 
@@ -82,7 +82,7 @@ public class CreateBooking extends AppCompatActivity {
         setContentView(R.layout.activity_create_booking);
 
         Intent intent = getIntent();
-        final Booking booking = intent.getParcelableExtra("booking");
+        booking = intent.getParcelableExtra("booking");
 
         /**
          * Initialising UI objects
@@ -173,24 +173,7 @@ public class CreateBooking extends AppCompatActivity {
         completeBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                  book.setUsername(SaveSharedPreference.getPrefUsername(getApplicationContext()));//from shared prer
-                  book.setPassword(SaveSharedPreference.getPrefPassword(getApplicationContext()));
-                  book.setBikeNumber(numberOfBikes);
-
-                  startDateTime = apiDate + apiTime;
-
-                  book.setStartTime(startDateTime);
-                  book.setEndTime(endDateTime);
-                  book.setStartLocation(booking.getBookingLocation());
-                  book.setEndLocation(booking.getBookingLocation());
-                  //onBraintreeSubmit(null);
-                  Toast.makeText(getApplicationContext(), startDateTime+endDateTime, Toast.LENGTH_LONG).show();
-
-                  Log.d(TAG, book.toString());
-
-                  sendNetworkRequest(book);
-
+                  onBraintreeSubmit(null);
             }
         });
 
@@ -386,9 +369,9 @@ public class CreateBooking extends AppCompatActivity {
                 String reply = response.body().getBookingStatus();
                 //Log.d(TAG, reply);
 
-                if(reply.equals("Login Accepted")){ ////////////Update once server has been changed
-                    Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);
-                    startMainMenu.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                if(reply.equals("Accepted")){ ////////////Update once server has been changed
+                    Toast.makeText(getApplicationContext(), startDateTime+endDateTime, Toast.LENGTH_LONG).show();
+                    Intent startMainMenu = new Intent(getApplicationContext(), MyOrders.class);
                     startActivity(startMainMenu);
                     finish();
                 }
@@ -400,6 +383,7 @@ public class CreateBooking extends AppCompatActivity {
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
                 Log.e("error", "Could not connect to external API");
+                Toast.makeText(getApplicationContext(), "Network Error: please check connection", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -409,6 +393,20 @@ public class CreateBooking extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
 //                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
                 // use the result to update your UI and send the payment method nonce to your server
+                book.setUsername(SaveSharedPreference.getPrefUsername(getApplicationContext()));//from shared prer
+                book.setPassword(SaveSharedPreference.getPrefPassword(getApplicationContext()));
+                book.setBikeNumber(numberOfBikes);
+
+                startDateTime = apiDate + apiTime;
+
+                book.setStartTime(startDateTime);
+                book.setEndTime(endDateTime);
+                book.setStartLocation(booking.getBookingLocation());
+                book.setEndLocation(booking.getBookingLocation());
+
+                Log.d(TAG, book.toString());
+
+                sendNetworkRequest(book);
             } else if (resultCode == RESULT_CANCELED) {
                 // the user canceled
             } else {

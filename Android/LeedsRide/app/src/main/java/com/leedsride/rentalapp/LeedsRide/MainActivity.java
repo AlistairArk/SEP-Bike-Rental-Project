@@ -73,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
                     if(reply.equals("Incorrect Login Information")){
                         SaveSharedPreference.clearLoginDetails(getApplicationContext());
                         Toast.makeText(getApplicationContext(), "Login authentication failed", Toast.LENGTH_SHORT).show();
+                        Intent startMainMenu = new Intent(getApplicationContext(), StartMenu.class);
+                        startActivity(startMainMenu);
+                        finish();
                     }
                 }
 
@@ -80,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onFailure(Call<Login> call, Throwable t) {
                     Log.e("error", t.getMessage());
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Intent startMainMenu = new Intent(getApplicationContext(), StartMenu.class);
+                    startActivity(startMainMenu);
+                    finish();
                 }
             });
 

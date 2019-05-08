@@ -117,7 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         } else if (id == R.id.nav_logOut) {
                             SaveSharedPreference.clearLoginDetails(getApplicationContext());
-                            Intent loginOutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                            Intent loginOutIntent = new Intent(getApplicationContext(), StartMenu.class);
                             loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             loginOutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
