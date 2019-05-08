@@ -701,7 +701,7 @@ def apiBooking():
     data = createBooking(email,stime,etime,startLocation.id ,endLocation.id ,numbikes)
 
     response =  {
-            "registrationStatus":data
+            "bookingStatus":data
             }
 
     jsonifiedData = json.dumps(response)
@@ -787,7 +787,7 @@ def apiCollectBikes():
             for bike in order.bikes:
                 takeBike(bike.id, bookingId)
 
-            order.complete = True
+            order.complete = False
             db.session.add(order)
             db.session.commit()
 
@@ -847,7 +847,7 @@ def apiReturnBike():
             for bike in order.bikes:
                 returnBike(bike.id, bookingId)
 
-            order.complete = False
+            order.complete = True
             db.session.add(order)
             db.session.commit()
 

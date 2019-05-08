@@ -189,7 +189,7 @@ public class CreateBooking extends AppCompatActivity {
 
                   Log.d(TAG, book.toString());
 
-                  //sendNetworkRequest(book);
+                  sendNetworkRequest(book);
 
             }
         });
@@ -384,7 +384,7 @@ public class CreateBooking extends AppCompatActivity {
             public void onResponse(Call<Book> call, Response<Book> response) {
 
                 String reply = response.body().getBookingStatus();
-                Log.d(TAG, reply);
+                //Log.d(TAG, reply);
 
                 if(reply.equals("Login Accepted")){ ////////////Update once server has been changed
                     Intent startMainMenu = new Intent(getApplicationContext(), MapsActivity.class);

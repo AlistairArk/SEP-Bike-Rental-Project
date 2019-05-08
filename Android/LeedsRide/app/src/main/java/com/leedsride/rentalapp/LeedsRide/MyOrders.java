@@ -143,11 +143,13 @@ public class MyOrders extends AppCompatActivity {
                         Calendar startDateTime = Calendar.getInstance();
                         Calendar endDateTime = Calendar.getInstance();
 
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss", locale);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
 
                         try {
+                            Log.d("dateError", order.getStartDate()+ " :: "+order.getEndDate());
                             startDateTime.setTime(sdf.parse(order.getStartDate()));
                             endDateTime.setTime(sdf.parse(order.getEndDate()));
+                            Log.d("dateError", startDateTime.toString()+" :: "+endDateTime.toString());
                         }
                         catch (ParseException e) {
                             Log.e("Parse", "Error");
@@ -156,7 +158,7 @@ public class MyOrders extends AppCompatActivity {
                             return;
                         }
 
-                        Calendar allowance = startDateTime;
+                        Calendar allowance = (Calendar)startDateTime.clone();
                         allowance.add(Calendar.MINUTE, -ALLOWANCE_TIME);
 
 
@@ -165,14 +167,19 @@ public class MyOrders extends AppCompatActivity {
                         int endCompare = calendar.compareTo(endDateTime);
 
                         int bookingHour = startDateTime.get(Calendar.HOUR_OF_DAY);
+
                         int bookingMinute = startDateTime.get(Calendar.MINUTE);
                         int year = startDateTime.get(Calendar.YEAR);
                         int day = startDateTime.get(Calendar.DAY_OF_MONTH);
+
+                        String stringHour = convertDate(bookingHour);
+                        String stringMinute = convertDate(bookingMinute);
+
                         String dayOfWeek = startDateTime.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale);
                         String monthOfYear = startDateTime.getDisplayName(Calendar.MONTH, Calendar.LONG, locale);
 
                         String header = dayOfWeek+" "+ day  +" "+monthOfYear+", "+year;
-                        String info = bookingHour+":"+bookingMinute+" - "+order.getLocation()+"\n Booking amount £ "+order.getCost();
+                        String info = stringHour+":"+stringMinute+" - "+order.getLocation()+"\n Booking amount £ "+order.getCost();
 
                         System.out.println(" ########################## Order found ################################### "+order.getId()+" :::: "+order.getBikeNumber()+"   ::::   "+order.getEndDate());
 
@@ -261,6 +268,14 @@ public class MyOrders extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Network Error: Could not fetch orders", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String convertDate(int input) {
+        if (input >= 10) {
+            return String.valueOf(input);
+        } else {
+            return "0" + String.valueOf(input);
+        }
     }
 
 }
