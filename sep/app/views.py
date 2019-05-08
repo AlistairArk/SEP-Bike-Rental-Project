@@ -334,15 +334,17 @@ def availability():
             if message != "Success" and amount == 1:
                 m="There are no bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
                 break
-            elif message == "Success":
-                amount += 1
+            elif amount == 4:
+                m = "There are at least 4 bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+                break
             elif message != "Success" and amount != 1:
                 m = "There are " + str(amount-1) + " bike/s available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
                 break
-            elif amount == 4:
-                m = "There are at least 4 bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+            elif message == "Success":
+                amount += 1
             else:
                 m = "Something is wrong"
+                break
         flash(m)
 
     return render_template("availability.html", form=form, topname = session["name"])
