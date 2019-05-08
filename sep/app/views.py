@@ -341,6 +341,7 @@ def availability():
                 break
             elif amount == 4:
                 m = "There are at least 4 bikes available from "+stime+" to "+etime+", from "+sloc.name+" to "+eloc.name+"."
+                break
             else:
                 m = "Something is wrong"
         flash(m)
