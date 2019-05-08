@@ -214,8 +214,4 @@ public class UnitTests {
         assertEquals(4, 2 + 2);
     }
 
-    @Test
-    public void logout() {
-        assertEquals(4, 2 + 2);
-    }
 }

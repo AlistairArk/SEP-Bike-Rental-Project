@@ -700,9 +700,14 @@ def apiBooking():
 
     data = createBooking(email,stime,etime,startLocation.id ,endLocation.id ,numbikes)
 
-    response =  {
-            "bookingStatus":data
-            }
+    if data[:18] == "Booking successful":
+        response =  {
+                        "bookingStatus":"Accepted"
+                    }
+    else:
+        response =  {
+                        "bookingStatus":data
+                    }
 
     jsonifiedData = json.dumps(response)
     return jsonifiedData
